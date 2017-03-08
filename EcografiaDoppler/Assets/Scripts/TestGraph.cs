@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class TestGraph : MonoBehaviour {
-	int sizeScreen = 128;
+	int sizeScreen = 256;
 	Texture2D texture;
 	int indiceActual = 0;
 	float zero = 0;
@@ -17,6 +17,7 @@ public class TestGraph : MonoBehaviour {
 	float redAux = 0;
 	public float[] blue = new float[3];
 	float blueAux = 0;
+	public int pathology = 2;
 	void Start() {
 		texture = new Texture2D(sizeScreen, sizeScreen);
 		GetComponent<Renderer>().material.mainTexture = texture;
@@ -38,21 +39,26 @@ public class TestGraph : MonoBehaviour {
 			test = 0;
 		}
 		for (int i = 0; i < Random.Range (5, 15); i++) {
-			aux = (gain * Random.Range (-20, -1)) + sizeScreen / 2 + (5f * test);
-			aux = Mathf.Clamp (aux, sizeScreen/2 + (int)(5f*zero), sizeScreen);
-
+			aux = (gain * Random.Range (-20, -1)) + sizeScreen / pathology + (5f * test);
+			if (pathology != 1) {
+				aux = Mathf.Clamp (aux, sizeScreen / pathology + (int)(5f * zero), sizeScreen);
+			}
 			texture.SetPixel(indiceActual % sizeScreen, (int)aux, Color.HSVToRGB(blue[0],blue[1],blue[2]));
 		}
 		for (int i = 0; i < Random.Range (5, 10); i++) {
-			aux = (gain * Random.Range (-40, -1)) + sizeScreen / 2 + (5f * test);
-			aux = Mathf.Clamp (aux, sizeScreen/2 + (int)(5f*zero), sizeScreen);
+			aux = (gain * Random.Range (-40, -1)) + sizeScreen / pathology + (5f * test);
+			if (pathology != 1) {
+				aux = Mathf.Clamp (aux, sizeScreen / pathology + (int)(5f * zero), sizeScreen);
+			}
 			texture.SetPixel(indiceActual % sizeScreen, (int)aux, Color.HSVToRGB(red[0],red[1],red[2]));
 		}
-		aux = sizeScreen/ 2 + 5f * test;
-		aux = Mathf.Clamp (aux, sizeScreen/2 + (int)(5f*zero), sizeScreen);
+		aux = sizeScreen/ pathology + 5f * test;
+		if (pathology != 1) {
+			aux = Mathf.Clamp (aux, sizeScreen / pathology + (int)(5f * zero), sizeScreen);
+		}
 		texture.SetPixel(indiceActual % sizeScreen, (int)aux, Color.white);
 
-		texture.SetPixel (indiceActual % sizeScreen, sizeScreen / 2 + (int)(5f * zero), Color.white);
+		texture.SetPixel (indiceActual % sizeScreen, sizeScreen / pathology + (int)(5f * zero), Color.white);
 
 		texture.Apply();
 		indiceActual++;
@@ -94,5 +100,17 @@ public class TestGraph : MonoBehaviour {
 			redAux += 0.05f * n;
 			red [0] = Mathf.Clamp (redAux, 0, 1);
 		}
+	}
+
+	public void PathologyMode(){
+		if (pathology == 1) {
+			pathology = 2;
+			zero = 0;
+		}
+		else if (pathology == 2){
+			pathology = 1;
+			zero = 25.6f;
+		}
+		Mathf.Clamp (pathology, 1, 2);
 	}
 }
