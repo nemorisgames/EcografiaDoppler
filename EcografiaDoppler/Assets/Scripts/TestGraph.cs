@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TestGraph : MonoBehaviour {
 	int sizeScreen = 256;
@@ -50,6 +51,8 @@ public class TestGraph : MonoBehaviour {
 			if (pathology != 1) {
 				aux = Mathf.Clamp (aux, sizeScreen / pathology + (int)(5f * zero), sizeScreen);
 			}
+			if (aux < zero)
+				aux += sizeScreen / pathology + (5f * test);
 			texture.SetPixel(indiceActual % sizeScreen, (int)aux, Color.HSVToRGB(red[0],red[1],red[2]));
 		}
 		aux = sizeScreen/ pathology + 5f * test;
@@ -62,7 +65,22 @@ public class TestGraph : MonoBehaviour {
 
 		texture.Apply();
 		indiceActual++;
+
+		if (Input.GetKeyDown (KeyCode.Escape)) {
+			SceneManager.LoadScene ("Login");
+		}
 	}
+
+	public void GraphZero1(){ GraphZero (1); }
+	public void GraphZero2(){ GraphZero (-1); }
+	public void GraphScale1(){ GraphScale (1); }
+	public void GraphScale2(){ GraphScale (-1); }
+	public void GraphGain1(){ GraphGain (1); }
+	public void GraphGain2(){ GraphGain (-1); }
+	public void GraphDepth1(){ GraphDepth (1); }
+	public void GraphDepth2(){ GraphDepth (-1); }
+	public void GraphPower1(){ GraphPower (1); }
+	public void GraphPower2(){ GraphPower (-1); }
 
 	public void GraphZero(int n){
 		if (Mathf.Abs (n) == 1) {
@@ -112,5 +130,6 @@ public class TestGraph : MonoBehaviour {
 			zero = 25.6f;
 		}
 		Mathf.Clamp (pathology, 1, 2);
+		print (pathology);
 	}
 }
