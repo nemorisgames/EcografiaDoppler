@@ -19,6 +19,10 @@ public class Login : MonoBehaviour {
 		if (Input.GetKeyDown (KeyCode.Tab)) {
 			NextInput ();
 		}
+
+		if (Input.GetKeyDown (KeyCode.Escape)) {
+			Application.Quit ();
+		}
 	}
 
 	public void NextInput(){
