@@ -44,6 +44,7 @@ public class TestGraph : MonoBehaviour {
 			if (pathology != 1) {
 				aux = Mathf.Clamp (aux, sizeScreen / pathology + (int)(5f * zero), sizeScreen);
 			}
+
 			texture.SetPixel(indiceActual % sizeScreen, (int)aux, Color.HSVToRGB(blue[0],blue[1],blue[2]));
 		}
 		for (int i = 0; i < Random.Range (5, 10); i++) {
@@ -53,7 +54,8 @@ public class TestGraph : MonoBehaviour {
 			}
 			if (aux < zero)
 				aux += sizeScreen / pathology + (5f * test);
-			texture.SetPixel(indiceActual % sizeScreen, (int)aux, Color.HSVToRGB(red[0],red[1],red[2]));
+			else
+				texture.SetPixel(indiceActual % sizeScreen, (int)aux, Color.HSVToRGB(red[0],red[1],red[2]));
 		}
 		aux = sizeScreen/ pathology + 5f * test;
 		if (pathology != 1) {
