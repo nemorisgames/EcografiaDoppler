@@ -39,26 +39,69 @@ public class TestGraph : MonoBehaviour {
 		if (power <= 0) {
 			test = 0;
 		}
-		for (int i = 0; i < Random.Range (5, 15); i++) {
-			aux = (gain * Random.Range (-20, -1)) + sizeScreen / pathology + (5f * test);
-			if (pathology != 1) {
-				aux = Mathf.Clamp (aux, sizeScreen / pathology + (int)(5f * zero), sizeScreen);
-			}
+		if (pathology == 2) {
+			for (int i = 0; i < Random.Range (5, 15); i++) {
+				aux = (gain * Random.Range (-20, -1)) + sizeScreen / pathology + (5f * test);
+				if (pathology != 1) {
+					aux = Mathf.Clamp (aux, sizeScreen / pathology + (int)(5f * zero), sizeScreen);
+				}
 
-			texture.SetPixel(indiceActual % sizeScreen, (int)aux, Color.HSVToRGB(blue[0],blue[1],blue[2]));
-		}
-		for (int i = 0; i < Random.Range (5, 10); i++) {
-			aux = (gain * Random.Range (-40, -1)) + sizeScreen / pathology + (5f * test);
-			if (pathology != 1) {
-				aux = Mathf.Clamp (aux, sizeScreen / pathology + (int)(5f * zero), sizeScreen);
+				texture.SetPixel (indiceActual % sizeScreen, (int)aux, Color.HSVToRGB (blue [0], blue [1], blue [2]));
 			}
-			if (indiceActual % sizeScreen == 0)
-				print (aux);
-			if (aux < zero)
-				aux += sizeScreen / pathology + (5f * test);
-			else
-				texture.SetPixel(indiceActual % sizeScreen, (int)aux, Color.HSVToRGB(red[0],red[1],red[2]));
+			for (int i = 0; i < Random.Range (5, 10); i++) {
+				aux = (gain * Random.Range (-40, -1)) + sizeScreen / pathology + (5f * test);
+				if (pathology != 1) {
+					aux = Mathf.Clamp (aux, sizeScreen / pathology + (int)(5f * zero), sizeScreen);
+				}
+				else {
+					aux = Mathf.Clamp (aux, sizeScreen / pathology + (int)(5f * zero), test - sizeScreen / pathology + (int)(5f * zero));
+				}
+				if (indiceActual % sizeScreen == 0)
+					print (aux);
+				if (aux < zero)
+					aux += sizeScreen / pathology + (5f * test);
+				else
+					texture.SetPixel (indiceActual % sizeScreen, (int)aux, Color.HSVToRGB (red [0], red [1], red [2]));
+			}
+		} 
+		else if (pathology == 1) {
+			//25 = zero
+			if(test > 25){
+				for (int i = 0; i < Random.Range (5, 15); i++) {
+					aux = (gain * Random.Range (-20, -1)) + sizeScreen / pathology + (5f * test);
+					aux = Mathf.Clamp (aux, sizeScreen / pathology + (int)(5f * zero), aux);
+					texture.SetPixel (indiceActual % sizeScreen, (int)aux, Color.HSVToRGB (blue [0], blue [1], blue [2]));
+				}
+				for (int i = 0; i < Random.Range (5, 10); i++) {
+					aux = (gain * Random.Range (-40, -1)) + sizeScreen / pathology + (5f * test);
+					aux = Mathf.Clamp (aux, sizeScreen / pathology + (int)(5f * zero), aux);
+					if (indiceActual % sizeScreen == 0)
+						print (aux);
+					if (aux < zero)
+						aux += sizeScreen / pathology + (5f * test);
+					else
+						texture.SetPixel (indiceActual % sizeScreen, (int)aux, Color.HSVToRGB (red [0], red [1], red [2]));
+				}
+			} else{
+				for (int i = 0; i > Random.Range (-5, -15); i--) {
+					aux = (gain * Random.Range (20, 1)) + sizeScreen / pathology + (5f * test);
+					aux = Mathf.Clamp (aux, aux, sizeScreen / pathology + (int)(5f * zero));
+					texture.SetPixel (indiceActual % sizeScreen, (int)aux, Color.HSVToRGB (blue [0], blue [1], blue [2]));
+
+				}
+				for (int i = 0; i > Random.Range (-5, -10); i--) {
+					aux = (gain * Random.Range (40, 1)) + sizeScreen / pathology + (5f * test);
+					aux = Mathf.Clamp (aux, aux, sizeScreen / pathology + (int)(5f * zero));
+					if (indiceActual % sizeScreen == 0)
+						print (aux);
+					if (aux < zero)
+						aux += sizeScreen / pathology + (5f * test);
+					else
+						texture.SetPixel (indiceActual % sizeScreen, (int)aux, Color.HSVToRGB (red [0], red [1], red [2]));
+				}
+			}
 		}
+
 		aux = sizeScreen/ pathology + 5f * test;
 		if (pathology != 1) {
 			aux = Mathf.Clamp (aux, sizeScreen / pathology + (int)(5f * zero), sizeScreen);
