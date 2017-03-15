@@ -52,6 +52,8 @@ public class TestGraph : MonoBehaviour {
 			if (pathology != 1) {
 				aux = Mathf.Clamp (aux, sizeScreen / pathology + (int)(5f * zero), sizeScreen);
 			}
+			if (indiceActual % sizeScreen == 0)
+				print (aux);
 			if (aux < zero)
 				aux += sizeScreen / pathology + (5f * test);
 			else
