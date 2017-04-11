@@ -11,9 +11,10 @@ public class TestGraph : MonoBehaviour {
 	public float zeroScale;
 	public float scale = 1;
 	public float gain = 1;
-	public float depth = 1;
+	public float speed = 0.5f;
 	public float power = 1;
-	float depthAux = 0;
+	public int sign = 1;
+	float speedAux = 0;
 	public float[] red = new float[3];
 	float redAux = 0;
 	public float[] blue = new float[3];
@@ -43,12 +44,12 @@ public class TestGraph : MonoBehaviour {
 		float aux = 0;
 
 		//float f0 = Mathf.Sin (1.333f * indiceActual * 360f / sizeScreen * Mathf.PI / 180f);
-		float test = scale*(Mathf.Sin (depth*(0.5f * indiceActual * 360f / sizeScreen * Mathf.PI/180f * Mathf.PI/0.5f - 0.8f + depth*Mathf.Sin(0.5f*indiceActual* 360f / sizeScreen * Mathf.PI/180f * Mathf.PI/0.5f)))* Mathf.Log (indiceActual) + 2f + zero);
+		float test = sign*scale*(Mathf.Sin ((0.5f * indiceActual * 360f / sizeScreen * Mathf.PI/180f * Mathf.PI/speed - 0.8f + Mathf.Sin(0.5f*indiceActual* 360f / sizeScreen * Mathf.PI/180f * Mathf.PI/speed)))* Mathf.Log (indiceActual) + 2f + zero);
 		if (power <= 0) {
 			test = 0;
 		}
 		if (pathology == 2) {
-			if (scale == 1) {
+			if (sign == 1) {
 				//bordes azules
 				for (int i = 0; i < Random.Range (5, 15); i++) {
 					aux = (gain * Random.Range (-lowRnd, -5)) + sizeScreen / pathology + (5f * test);
@@ -92,7 +93,7 @@ public class TestGraph : MonoBehaviour {
 		} 
 		else if (pathology == 1) {
 			//25 = zero
-			if (scale == 1) {
+			if (sign == 1) {
 				if (test > 25) {
 					for (int i = 0; i < Random.Range (5, 15); i++) {
 						aux = (gain * Random.Range (-lowRnd, -5)) + sizeScreen / pathology + (5f * test);
@@ -199,8 +200,8 @@ public class TestGraph : MonoBehaviour {
 	public void GraphScale2(){ GraphScale (-1); }
 	public void GraphGain1(){ GraphGain (1); }
 	public void GraphGain2(){ GraphGain (-1); }
-	public void GraphDepth1(){ GraphDepth (1); }
-	public void GraphDepth2(){ GraphDepth (-1); }
+	public void GraphSpeed1(){ GraphSpeed (1); }
+	public void GraphSpeed2(){ GraphSpeed (-1); }
 	public void GraphPower1(){ GraphPower (1); }
 	public void GraphPower2(){ GraphPower (-1); }
 	public void GraphTIC1(){ GraphTIC (1); }
@@ -222,14 +223,14 @@ public class TestGraph : MonoBehaviour {
 	public void GraphGain(int n){
 		if (Mathf.Abs (n) == 1) {
 			gain += 0.1f * n;
-			gain = Mathf.Clamp (gain, 0, 2);
+			gain = Mathf.Clamp (gain, 0, 1);
 		}
 	}
 
-	public void GraphDepth(int n){
+	public void GraphSpeed(int n){
 		if (Mathf.Abs (n) == 1) {
-			//depthAux += 0.1f * n;
-			depth = Mathf.Clamp(depth + 0.1f*n,0,2);
+			//speedAux += 0.1f * n;
+			speed = Mathf.Clamp(speed + 0.1f*n,0,2);
 		}
 	}
 
@@ -246,7 +247,7 @@ public class TestGraph : MonoBehaviour {
 
 	public void GraphTIC(int n){
 		if (Mathf.Abs (n) == 1) {
-			scale = n;
+			sign = n;
 		}
 	}
 
