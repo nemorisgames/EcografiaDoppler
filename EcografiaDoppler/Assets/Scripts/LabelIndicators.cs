@@ -10,11 +10,29 @@ public class LabelIndicators : MonoBehaviour {
 	public int horizontalScale = 0;
 	// Use this for initialization
 	void Start (){
+		changeVerticalPosition (0);
+	}
+
+	public void lowerVerticalPosition(){
+		changeVerticalPosition (-1);
+	}
+	public void upperVerticalPosition(){
 		changeVerticalPosition (1);
 	}
 
 	public void changeVerticalPosition(int v){
 		verticalPosition += v;
+	}
+
+
+	public void scaleUpVertical(){
+		changeVerticalScale (10);
+	}
+	public void scaleDownVertical(){
+		changeVerticalScale (-10);
+	}
+	public void changeVerticalScale(int i){
+		verticalScale += i;
 	}
 	
 	// Update is called once per frame
