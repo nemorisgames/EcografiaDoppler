@@ -5,15 +5,12 @@ using UnityEngine;
 public class LabelIndicators : MonoBehaviour {
 	public UILabel verticalLabel;
 	public UILabel horizontalLabel;
-	public int verticalScale = 0;
+	public int verticalScale = 100;
 	public int verticalPosition = 1;
 	public int horizontalScale = 0;
 	// Use this for initialization
 	void Start (){
-		verticalLabel.text = "";
-		for(int i = 0; i <= 17; i++){
-			verticalLabel.text += "" + ((verticalPosition - i) * 100) + "\n\n"; 
-		}
+		changeVerticalPosition (1);
 	}
 
 	public void changeVerticalPosition(int v){
@@ -22,6 +19,23 @@ public class LabelIndicators : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+		if (Input.GetKeyDown (KeyCode.W)) {
+			changeVerticalPosition (1);
+		}
+		if (Input.GetKeyDown (KeyCode.S)) {
+			changeVerticalPosition (-1);
+		}
+		if (Input.GetKeyDown (KeyCode.A)) {
+			verticalScale -= 10;
+		}
+		if (Input.GetKeyDown (KeyCode.D)) {
+			verticalScale += 10;
+		}
+
+
+		verticalLabel.text = "";
+		for(int i = 0; i <= 17; i++){
+			verticalLabel.text += "" + ((verticalPosition - i) * verticalScale) + "\n\n"; 
+		}
 	}
 }
