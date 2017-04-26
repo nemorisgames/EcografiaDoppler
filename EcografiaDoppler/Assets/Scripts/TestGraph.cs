@@ -297,7 +297,7 @@ public class TestGraph : MonoBehaviour {
 	public void GraphSpeed(int n){
 		if (Mathf.Abs (n) == 1) {
 			//speedAux += 0.1f * n;
-			speed = Mathf.Clamp(speed + 0.1f*n,0,0.9f);
+			speed = Mathf.Clamp(speed + 0.1f*n,0.1f,1);
 		}
 	}
 

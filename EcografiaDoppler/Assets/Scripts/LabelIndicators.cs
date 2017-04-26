@@ -50,9 +50,13 @@ public class LabelIndicators : MonoBehaviour {
 	public void changeHorizontalScale(int i){
 		i = Mathf.Clamp (i, -1, 1);
 		if (i > 0) {
-			horizontalSpace += horizontalSpace.Substring(0,horizontalSpace.Length/4);
+			float aux = horizontalSpace.Length + horizontalSpace.Length / 4;
+			aux = Mathf.Clamp (aux, horizontalScale, horizontalScale * Mathf.Pow (1.25f, 4)) - horizontalSpace.Length;
+			horizontalSpace += horizontalSpace.Substring(0,(int)aux);
 		} else {
-			horizontalSpace = horizontalSpace.Substring (0, 3*horizontalSpace.Length/4);
+			float aux = horizontalSpace.Length - horizontalSpace.Length / 4;
+			aux = Mathf.Clamp (aux, horizontalScale * Mathf.Pow (0.75f, 4), horizontalScale);
+			horizontalSpace = horizontalSpace.Substring (0, (int)aux);
 		}
 	}
 	
@@ -78,7 +82,7 @@ public class LabelIndicators : MonoBehaviour {
 		}
 
 		horizontalLabel.text = "";
-		for (int i = 0; i <= 8; i++) {
+		for (int i = 0; i <= 20; i++) {
 			horizontalLabel.text += i.ToString() + horizontalSpace;
 		}
 		//horizontalLabel.text = "0" + horizontalSpace + "1" + horizontalSpace + "2" + horizontalSpace + "3" + horizontalSpace + "4" + horizontalSpace + "5" + horizontalSpace + "6";
