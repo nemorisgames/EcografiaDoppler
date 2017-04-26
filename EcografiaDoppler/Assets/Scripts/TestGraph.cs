@@ -29,6 +29,7 @@ public class TestGraph : MonoBehaviour {
 	MovieTexture mov;
 	public UITexture mov1;
 	public UILabel ticLabel;
+	public LabelIndicators labels;
 
 	void Start() {
 		texture = new Texture2D(sizeScreen, sizeScreen);
@@ -242,14 +243,32 @@ public class TestGraph : MonoBehaviour {
 		}
 	}
 
-	public void GraphZero1(){ GraphZero (1); }
-	public void GraphZero2(){ GraphZero (-1); }
-	public void GraphScale1(){ GraphScale (1); }
-	public void GraphScale2(){ GraphScale (-1); }
+	public void GraphZero1(){ 
+		labels.lowerVerticalPosition ();
+		GraphZero (1);
+	}
+	public void GraphZero2(){ 
+		GraphZero (-1);
+		labels.upperVerticalPosition ();
+	}
+	public void GraphScale1(){ 
+		labels.scaleUpVertical();
+		GraphScale (1);
+	}
+	public void GraphScale2(){
+		labels.scaleDownVertical ();
+		GraphScale (-1);
+	}
 	public void GraphGain1(){ GraphGain (1); }
 	public void GraphGain2(){ GraphGain (-1); }
-	public void GraphSpeed1(){ GraphSpeed (1); }
-	public void GraphSpeed2(){ GraphSpeed (-1); }
+	public void GraphSpeed1(){ 
+		labels.scaleDownHorizontal ();
+		GraphSpeed (1);
+	}
+	public void GraphSpeed2(){
+		labels.scaleUpHorizontal ();
+		GraphSpeed (-1);
+	}
 	public void GraphPower1(){ GraphPower (1); }
 	public void GraphPower2(){ GraphPower (-1); }
 	public void GraphTIC1(){ GraphTIC (1); }
