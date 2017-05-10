@@ -5,17 +5,26 @@ using UnityEngine;
 public class LabelIndicators : MonoBehaviour {
 	public UILabel verticalLabel;
 	public UILabel horizontalLabel;
-	public int verticalScale = 100;
+	public float verticalScale = 100;
 	public int verticalPosition = 1;
-	public int horizontalScale = 36;
+	public int horizontalScale = 52;
+	float horizontalStringLength;
 	string horizontalSpace = "";
+	float verticalStep = 1f;
 	// Use this for initialization
 	void Start (){
 		changeVerticalPosition (0);
-		for (int i = 0; i < horizontalScale; i++) {
+		BuildString (horizontalScale);
+		horizontalStringLength = horizontalSpace.Length;
+	}
+
+	void BuildString(int length){
+		horizontalSpace = "";
+		for (int i = 0; i < length; i++) {
 			horizontalSpace += " ";
 		}
 	}
+
 
 	public void lowerVerticalPosition(){
 		changeVerticalPosition (-1);
@@ -30,10 +39,12 @@ public class LabelIndicators : MonoBehaviour {
 
 
 	public void scaleUpVertical(){
-		changeVerticalScale (10);
+		//changeVerticalScale (10);
+		verticalStep*=1.5f;
 	}
 	public void scaleDownVertical(){
-		changeVerticalScale (-10);
+		//changeVerticalScale (-10);
+		verticalStep/=1.5f;
 	}
 	public void changeVerticalScale(int i){
 		verticalScale += i;
@@ -50,13 +61,18 @@ public class LabelIndicators : MonoBehaviour {
 	public void changeHorizontalScale(int i){
 		i = Mathf.Clamp (i, -1, 1);
 		if (i > 0) {
-			float aux = horizontalSpace.Length + horizontalSpace.Length / 4;
-			aux = Mathf.Clamp (aux, horizontalScale, horizontalScale * Mathf.Pow (1.25f, 4)) - horizontalSpace.Length;
-			horizontalSpace += horizontalSpace.Substring(0,(int)aux);
+			horizontalStringLength *= 2f;
+			float aux = Mathf.Clamp(horizontalStringLength,horizontalScale,horizontalScale*Mathf.Pow(2f,2));
+			BuildString ((int)aux);
 		} else {
-			float aux = horizontalSpace.Length - horizontalSpace.Length / 4;
-			aux = Mathf.Clamp (aux, horizontalScale * Mathf.Pow (0.75f, 4), horizontalScale);
-			horizontalSpace = horizontalSpace.Substring (0, (int)aux);
+			/*float aux = horizontalSpace.Length - horizontalSpace.Length / 2;
+			aux = Mathf.Clamp (aux, horizontalScale * Mathf.Pow (0.5f, 2), horizontalScale);
+			horizontalSpace = horizontalSpace.Substring (0, (int)aux);*/
+			/*horizontalStringLength /= 1.8f;
+			BuildString ((int)horizontalStringLength);*/
+			horizontalStringLength /= 2f;
+			float aux = Mathf.Clamp(horizontalStringLength,horizontalScale*Mathf.Pow(2f,-2),horizontalScale);
+			BuildString ((int)aux);
 		}
 	}
 	
@@ -78,12 +94,12 @@ public class LabelIndicators : MonoBehaviour {
 
 		verticalLabel.text = "";
 		for(int i = 0; i <= 17; i++){
-			verticalLabel.text += "" + ((verticalPosition - i) * verticalScale) + "\n\n"; 
+			verticalLabel.text += "" + (Mathf.Round((verticalPosition - i) * (verticalScale/verticalStep))).ToString() + "\n\n"; 
 		}
 
 		horizontalLabel.text = "";
-		for (int i = 0; i <= 20; i++) {
-			horizontalLabel.text += i.ToString() + horizontalSpace;
+		for (float i = 0; i <= 20; i++) {
+			horizontalLabel.text += (i/2).ToString() + horizontalSpace;
 		}
 		//horizontalLabel.text = "0" + horizontalSpace + "1" + horizontalSpace + "2" + horizontalSpace + "3" + horizontalSpace + "4" + horizontalSpace + "5" + horizontalSpace + "6";
 	}
