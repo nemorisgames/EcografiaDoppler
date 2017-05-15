@@ -31,6 +31,20 @@ public class ControladorGrafica : MonoBehaviour {
 	public UILabel ticLabel;
 	public LabelIndicators labels;
 	public float val;
+	public float angle = 1;
+	public UISlider [] sliders;
+	public float [] sliderLastValue;
+	//indices sliders
+	[HideInInspector]
+	public int speedIndex = 0;
+	[HideInInspector]
+	public int scaleIndex = 1;
+	[HideInInspector]
+	public int zeroIndex = 2;
+	[HideInInspector]
+	public int gainIndex = 3;
+	[HideInInspector]
+	public int powerIndex = 4;
 
 	void Start() {
 		texture = new Texture2D(sizeScreen, sizeScreen);
@@ -43,6 +57,58 @@ public class ControladorGrafica : MonoBehaviour {
 		mov.loop = true;
 		mov.Play ();
 		speedAux = speed;
+		sliderLastValue = new float[sliders.Length];
+		for (int i = 0; i < sliderLastValue.Length; i++) {
+			sliderLastValue [i] = sliders [i].value;
+		}
+		GraphSpeed1 ();
+		GraphScale2 ();
+		GraphZero2 ();
+		GraphGain2 ();
+		GraphPower2 ();
+	}
+
+	public void SliderChange(int index){
+		float aux = sliders [index].value;
+		if (aux < sliderLastValue [index]) {
+			switch (index) {
+			case 0:
+				GraphSpeed1 ();
+				break;
+			case 1:
+				GraphScale2 ();
+				break;
+			case 2:
+				GraphZero2 ();
+				break;
+			case 3:
+				GraphGain2 ();
+				break;
+			case 4:
+				GraphPower2 ();
+				break;
+			}
+			
+		} else {
+			switch (index) {
+			case 0:
+				GraphSpeed2 ();
+				break;
+			case 1:
+				GraphScale1 ();
+				break;
+			case 2:
+				GraphZero1 ();
+				break;
+			case 3:
+				GraphGain1 ();
+				break;
+			case 4:
+				GraphPower1 ();
+				break;
+			}
+		}
+		sliderLastValue [index] = sliders [index].value;
 	}
 
 	void Update(){
@@ -58,7 +124,7 @@ public class ControladorGrafica : MonoBehaviour {
 		float aux = 0;
 
 		//float test = Mathf.Sin (5f * indiceActual * 360f / sizeScreen * Mathf.PI / 180f)*5f+ 2f + zero;
-		float test = sign*scale*(Mathf.Sin ((0.5f * indiceActual * 360f / sizeScreen * Mathf.PI/180f * Mathf.PI/speed - 0.8f + Mathf.Sin(0.5f*indiceActual* 360f / sizeScreen * Mathf.PI/180f * Mathf.PI/speed)))* Mathf.Log (indiceActual) + 2f + zero);
+		float test = angle*sign*scale*(Mathf.Sin ((0.5f * indiceActual * 360f / sizeScreen * Mathf.PI/180f * Mathf.PI/speed - 0.8f + Mathf.Sin(0.5f*indiceActual* 360f / sizeScreen * Mathf.PI/180f * Mathf.PI/speed)))* Mathf.Log (indiceActual) + 2f + zero);
 		if (power <= 0) {
 			test = 0;
 		}
@@ -247,6 +313,7 @@ public class ControladorGrafica : MonoBehaviour {
 	}
 	public void GraphGain1(){ GraphGain (1); }
 	public void GraphGain2(){ GraphGain (-1); }
+
 	public void GraphSpeed1(){ 
 		labels.scaleDownHorizontal ();
 		GraphSpeed (1);
@@ -275,7 +342,7 @@ public class ControladorGrafica : MonoBehaviour {
 
 	public void GraphGain(int n){
 		if (Mathf.Abs (n) == 1) {
-			gain += 0.1f * n;
+			gain += 0.2f * n;
 			gain = Mathf.Clamp (gain, 0, 1);
 		}
 	}
@@ -284,16 +351,16 @@ public class ControladorGrafica : MonoBehaviour {
 		if (Mathf.Abs (n) == 1) {
 			//speed = Mathf.Clamp(speed + 0.1f*n,0.1f,1);
 			if (n > 0)
-				speedAux = Mathf.Clamp(speedAux *= 2, 0.39f, 0.39f + Mathf.Pow(2,2));
+				speedAux = Mathf.Clamp(speedAux *= 2, 0.1f, 0.39f * Mathf.Pow(2,2));
 			else
-				speedAux = Mathf.Clamp (speedAux /= 2, 0.39f * Mathf.Pow (2, -2), 0.39f);
+				speedAux = Mathf.Clamp (speedAux /= 2, 0.39f * Mathf.Pow (2, -2), 0.8f);
 		}
 		indiceActual = 0;
 	}
 
 	public void GraphPower(int n){
 		if (Mathf.Abs (n) == 1) {
-			power += 0.1f * n;
+			power += 0.2f * n;
 			power = Mathf.Clamp (power, 0, 2);
 			blueAux += 0.05f * n;
 			blue [0] = Mathf.Clamp (blueAux, 0, 1);
