@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Cursor_NJ : MonoBehaviour {
+public class ControladorCursores : MonoBehaviour {
 
 	public Transform cursorP1;
 	public Transform cursorP2;
@@ -22,10 +22,6 @@ public class Cursor_NJ : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		angle = AngleBetweenAnB (cursorP1.position, cursorP2.position);
-		if (Input.GetKeyDown (KeyCode.A)) {
-			Debug.Log ("Angle: "+angle);
-			controller.angle = CursorAngleValue ();
-		}
 	}
 
 	float AngleBetweenAnB(Vector2 a, Vector2 b){
@@ -34,7 +30,7 @@ public class Cursor_NJ : MonoBehaviour {
 		return Vector2.Angle (Vector2.right, dif) * sign;
 	}
 
-	float CursorAngleValue(){
+	public float CursorAngleValue(){
 		float aux = Mathf.Abs (angle);
 		if (aux < 90f) {
 			aux = (90f - aux) / 90f;
@@ -44,4 +40,6 @@ public class Cursor_NJ : MonoBehaviour {
 			aux = 0f;
 		return aux;
 	}
+
+
 }

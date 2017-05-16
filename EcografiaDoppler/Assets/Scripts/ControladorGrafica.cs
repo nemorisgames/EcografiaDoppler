@@ -15,6 +15,7 @@ public class ControladorGrafica : MonoBehaviour {
 	public float speed = 0.39f;
 	public float power = 1;
 	public int sign = 1;
+	public int cursorNull = 1;
 	float speedAux = 0;
 	public float[] red = new float[3];
 	float redAux = 0;
@@ -124,7 +125,7 @@ public class ControladorGrafica : MonoBehaviour {
 		float aux = 0;
 
 		//float test = Mathf.Sin (5f * indiceActual * 360f / sizeScreen * Mathf.PI / 180f)*5f+ 2f + zero;
-		float test = angle*sign*scale*(Mathf.Sin ((0.5f * indiceActual * 360f / sizeScreen * Mathf.PI/180f * Mathf.PI/speed - 0.8f + Mathf.Sin(0.5f*indiceActual* 360f / sizeScreen * Mathf.PI/180f * Mathf.PI/speed)))* Mathf.Log (indiceActual) + 2f + zero);
+		float test = cursorNull*angle*sign*scale*(Mathf.Sin ((0.5f * indiceActual * 360f / sizeScreen * Mathf.PI/180f * Mathf.PI/speed - 0.8f + Mathf.Sin(0.5f*indiceActual* 360f / sizeScreen * Mathf.PI/180f * Mathf.PI/speed)))* Mathf.Log (indiceActual) + 2f + zero);
 		if (power <= 0) {
 			test = 0;
 		}
@@ -394,5 +395,12 @@ public class ControladorGrafica : MonoBehaviour {
 			pauseButton.alpha = 255f;
 		else
 			pauseButton.alpha = 0f;
+	}
+
+	public void GraphCursorNull(bool b){
+		if (b)
+			cursorNull = 1;
+		else
+			cursorNull = 0;
 	}
 }
