@@ -8,6 +8,13 @@ public class Login : MonoBehaviour {
 	public UIInput[] inputs;
 	public UILabel error;
 	int active = -1;
+	public bool withPass = false;
+
+	void Start(){
+		if (!withPass) {
+			StartCoroutine (countdownStart (3f));
+		}
+	}
 
 	// Update is called once per frame
 	void Update () {
@@ -46,5 +53,10 @@ public class Login : MonoBehaviour {
 				error.text = "Please enter your password.";
 			}
 		}
+	}
+
+	IEnumerator countdownStart(float s){
+		yield return new WaitForSeconds (s);
+		SceneManager.LoadScene (1);
 	}
 }

@@ -46,6 +46,8 @@ public class ControladorGrafica : MonoBehaviour {
 	public int gainIndex = 3;
 	[HideInInspector]
 	public int powerIndex = 4;
+	public AudioSource sound;
+	public float videoSpeed;
 
 	void Start() {
 		texture = new Texture2D(sizeScreen, sizeScreen);
@@ -56,7 +58,7 @@ public class ControladorGrafica : MonoBehaviour {
 		blueAux = blue [0];
 		mov = (MovieTexture)mov1.mainTexture;
 		mov.loop = true;
-		mov.Play ();
+		//SetVideoSpeed (videoSpeed);
 		speedAux = speed;
 		sliderLastValue = new float[sliders.Length];
 		for (int i = 0; i < sliderLastValue.Length; i++) {
@@ -402,5 +404,14 @@ public class ControladorGrafica : MonoBehaviour {
 			cursorNull = 1;
 		else
 			cursorNull = 0;
+	}
+
+	AudioSource source;
+	void SetVideoSpeed(float speed){
+		speed = Mathf.Clamp (speed, 0f, 3f);
+		source.clip = mov.audioClip;
+		source.pitch = speed;
+		mov.Play ();
+		source.Play ();
 	}
 }
