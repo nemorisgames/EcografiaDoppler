@@ -10,18 +10,23 @@ public class ControladorGrafica : MonoBehaviour {
 	int indiceActual = 0;
 	public float zero = 0;
 	public float zeroScale;
-	public float scale = 2;
+	public float scale = 1; //old: 2
 	public float gain = 1;
-	public float speed = 0.39f;
+	public float speed = 1; //old: 0.39f
 	public float power = 1;
 	public int sign = 1;
+	public int heartRate = 100;
+	[HideInInspector]
 	public int cursorNull = 1;
 	float speedAux = 0;
+	[HideInInspector]
 	public float[] red = new float[3];
 	float redAux = 0;
+	[HideInInspector]
 	public float[] blue = new float[3];
 	float blueAux = 0;
 	public int pathology = 2;
+	[HideInInspector]
 	public bool pause = false;
 	public UISprite pauseButton;
 	public int rangoRnd = 20;
@@ -31,10 +36,12 @@ public class ControladorGrafica : MonoBehaviour {
 	public UITexture mov1;
 	public UILabel ticLabel;
 	public LabelIndicators labels;
-	public float val;
-	public float angle = 1;
 	public UISlider [] sliders;
-	public float [] sliderLastValue;
+	public float[] sliderLastValue;
+	[HideInInspector]
+	public float val;
+	[HideInInspector]
+	public float angle = 1;
 	//indices sliders
 	[HideInInspector]
 	public int speedIndex = 0;
@@ -46,11 +53,16 @@ public class ControladorGrafica : MonoBehaviour {
 	public int gainIndex = 3;
 	[HideInInspector]
 	public int powerIndex = 4;
-	public AudioSource sound;
-	public float videoSpeed;
+
+	public float C_SPEED = 30f;
+	public float C_SCALE = 15f;
+
+	public float refreshDelay;
+	bool refreshing;
 
 	void Start() {
 		texture = new Texture2D(sizeScreen, sizeScreen);
+		PaintItBlack ();
 		GetComponent<Renderer>().material.mainTexture = texture;
 		Color.RGBToHSV (Color.red, out red[0], out red[1], out red[2]);
 		redAux = red [0];
@@ -58,7 +70,6 @@ public class ControladorGrafica : MonoBehaviour {
 		blueAux = blue [0];
 		mov = (MovieTexture)mov1.mainTexture;
 		mov.loop = true;
-		//SetVideoSpeed (videoSpeed);
 		speedAux = speed;
 		sliderLastValue = new float[sliders.Length];
 		for (int i = 0; i < sliderLastValue.Length; i++) {
@@ -69,6 +80,19 @@ public class ControladorGrafica : MonoBehaviour {
 		GraphZero2 ();
 		GraphGain2 ();
 		GraphPower2 ();
+	}
+
+	void PaintItBlack(){
+		Color ini = new Color(0,0,0,0);
+		Color[] colArray = texture.GetPixels ();
+		for (int i = 0; i < colArray.Length; i++) {
+			colArray [i] = ini;
+		}
+		texture.SetPixels (colArray);
+		for (int i = 0; i < sizeScreen; i++) {
+			texture.SetPixel (i, sizeScreen / pathology + (int)(val * zero), Color.white);
+		}
+		texture.Apply ();
 	}
 
 	public void SliderChange(int index){
@@ -115,7 +139,7 @@ public class ControladorGrafica : MonoBehaviour {
 	}
 
 	void Update(){
-		if (pause)
+		if (pause || refreshing)
 			return;
 		if (indiceActual % sizeScreen == 0) {
 			indiceActual = 0;
@@ -126,8 +150,16 @@ public class ControladorGrafica : MonoBehaviour {
 		}
 		float aux = 0;
 
+		//v0: seno
 		//float test = Mathf.Sin (5f * indiceActual * 360f / sizeScreen * Mathf.PI / 180f)*5f+ 2f + zero;
-		float test = cursorNull*angle*sign*scale*(Mathf.Sin ((0.5f * indiceActual * 360f / sizeScreen * Mathf.PI/180f * Mathf.PI/speed - 0.8f + Mathf.Sin(0.5f*indiceActual* 360f / sizeScreen * Mathf.PI/180f * Mathf.PI/speed)))* Mathf.Log (indiceActual) + 2f + zero);
+
+		//v1: seno ajustado
+		//float test = cursorNull*angle*sign*scale*(Mathf.Sin ((0.5f * indiceActual * 360f / sizeScreen * Mathf.PI/180f * Mathf.PI/speed - 0.8f + Mathf.Sin(0.5f*indiceActual* 360f / sizeScreen * Mathf.PI/180f * Mathf.PI/speed)))* Mathf.Log (indiceActual) + 2f + zero);
+
+		//v2: sawtooth
+
+		float test = cursorNull*angle*sign*(0.33f*((C_SPEED*scale) - ((indiceActual*scale*speed) % (C_SPEED*scale)))) + 2f*sign + zero; 
+		//Debug.Log (test);
 		if (power <= 0) {
 			test = 0;
 		}
@@ -287,9 +319,11 @@ public class ControladorGrafica : MonoBehaviour {
 		texture.SetPixel (indiceActual % sizeScreen, sizeScreen / pathology + (int)(val * zero), Color.white);
 
 		texture.Apply();
-		indiceActual++;
+		refreshing = true;
+		//indiceActual++;
+		StartCoroutine(refreshRate());
 
-		ticLabel.text = (Mathf.Round((1-speed+0.5f)*10)/10).ToString();
+		ticLabel.text = (1+(heartRate-100f)/100f).ToString();
 		if (ticLabel.text == "1")
 			ticLabel.text = "1.0";
 
@@ -334,6 +368,8 @@ public class ControladorGrafica : MonoBehaviour {
 		if (Mathf.Abs (n) == 1) {
 			zero += n * zeroScale;
 		}
+		indiceActual = 0;
+		PaintItBlack ();
 	}
 
 	public void GraphScale(int n){
@@ -353,12 +389,18 @@ public class ControladorGrafica : MonoBehaviour {
 	public void GraphSpeed(int n){
 		if (Mathf.Abs (n) == 1) {
 			//speed = Mathf.Clamp(speed + 0.1f*n,0.1f,1);
-			if (n > 0)
-				speedAux = Mathf.Clamp(speedAux *= 2, 0.1f, 0.39f * Mathf.Pow(2,2));
-			else
-				speedAux = Mathf.Clamp (speedAux /= 2, 0.39f * Mathf.Pow (2, -2), 0.8f);
+			if (n > 0) {
+				//speedAux = Mathf.Clamp(speedAux *= 2, 0.1f, 1 * Mathf.Pow(2,2));
+				speedAux = Mathf.Clamp (speedAux /= C_SCALE, 1 * Mathf.Pow (C_SCALE, -3), float.MaxValue);
+			} else {
+				//speedAux = Mathf.Clamp (speedAux /= 2, 1 * Mathf.Pow (2, -2), 0.8f);
+				speedAux = Mathf.Clamp (speedAux *= C_SCALE, 0, 1 * Mathf.Pow (C_SCALE, 3));
+			}
 		}
+		heartRate = (int)Mathf.Clamp (heartRate + -n*10f, 70f, 140f);
 		indiceActual = 0;
+		speed = speedAux;
+		PaintItBlack ();
 	}
 
 	public void GraphPower(int n){
@@ -406,12 +448,9 @@ public class ControladorGrafica : MonoBehaviour {
 			cursorNull = 0;
 	}
 
-	AudioSource source;
-	void SetVideoSpeed(float speed){
-		speed = Mathf.Clamp (speed, 0f, 3f);
-		source.clip = mov.audioClip;
-		source.pitch = speed;
-		mov.Play ();
-		source.Play ();
+	IEnumerator refreshRate(){
+		yield return new WaitForSeconds (refreshDelay);
+		indiceActual++;
+		refreshing = false;
 	}
 }
