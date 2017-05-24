@@ -15,7 +15,7 @@ public class ControladorGrafica : MonoBehaviour {
 	public float speed = 1; //old: 0.39f
 	public float power = 1;
 	public int sign = 1;
-	public int heartRate = 100;
+	public int heartRate = 120;
 	[HideInInspector]
 	public int cursorNull = 1;
 	float speedAux = 0;
@@ -60,7 +60,15 @@ public class ControladorGrafica : MonoBehaviour {
 	public float refreshDelay;
 	bool refreshing;
 
+	public UILabel scaleNumber;
+	GameObject horizontalScale;
+	GameObject verticalScale;
+
+	public UILabel hrLabel;
+
 	void Start() {
+		horizontalScale = transform.FindChild ("Horizontal").gameObject;
+		verticalScale = transform.FindChild ("Vertical").gameObject;
 		texture = new Texture2D(sizeScreen, sizeScreen);
 		PaintItBlack ();
 		GetComponent<Renderer>().material.mainTexture = texture;
@@ -81,6 +89,50 @@ public class ControladorGrafica : MonoBehaviour {
 		GraphGain2 ();
 		GraphPower2 ();
 	}
+
+	void UpdateHScale(){
+		//Limpiar numeros antiguos
+		GameObject[] auxH = GameObject.FindGameObjectsWithTag ("HScale");
+		for (int i = 0; i < auxH.Length; i++)
+			Destroy (auxH [i]);
+		//Crear numeros nuevos con separacion actual
+		float cnt = 0;
+		float hScale = 0;
+		scaleNumber.fontSize = Mathf.Clamp(Mathf.RoundToInt((C_SPEED / speed) / 3f),3,8);
+		while(cnt <= sizeScreen){
+			scaleNumber.text = (Mathf.Round(hScale*10f)/10f).ToString ();
+			GameObject aux = (GameObject)Instantiate (scaleNumber.gameObject, horizontalScale.transform.position, horizontalScale.transform.rotation, horizontalScale.transform);
+			aux.transform.localPosition = new Vector2 (aux.transform.localPosition.x + cnt, aux.transform.localPosition.y);
+			aux.tag = "HScale";
+			cnt += C_SPEED / speed;
+			float spb = Mathf.Round((60f / heartRate)*10f)/10f;
+			hScale += spb;
+		}
+	}
+
+	/*void UpdateVScale(){
+		//Limpiar numeros antiguos
+		GameObject[] auxV = GameObject.FindGameObjectsWithTag ("VScale");
+		for (int i = 0; i < auxV.Length; i++)
+			Destroy (auxV [i]);
+		//Crear numeros nuevos con separacion actual
+		float cnt = 0;
+		float vScale = 0;
+		scaleNumber.fontSize = 8;
+		while(cnt <= sizeScreen/2){
+			//pos
+			scaleNumber.text = vScale.ToString ();
+			GameObject aux = (GameObject)Instantiate (scaleNumber.gameObject, verticalScale.transform.position, verticalScale.transform.rotation, verticalScale.transform);
+			aux.transform.localPosition = new Vector2 (aux.transform.localPosition.x, aux.transform.localPosition.y + sizeScreen/2 + cnt);
+			aux.tag = "VScale";
+			//neg
+			aux = (GameObject)Instantiate (scaleNumber.gameObject, verticalScale.transform.position, verticalScale.transform.rotation, verticalScale.transform);
+			aux.transform.localPosition = new Vector2 (aux.transform.localPosition.x, aux.transform.localPosition.y + sizeScreen/2 - cnt);
+			aux.tag = "VScale";
+			cnt += sizeScreen/20;
+			vScale += 0.5f;
+		}
+	}*/
 
 	void PaintItBlack(){
 		Color ini = new Color(0,0,0,0);
@@ -144,9 +196,10 @@ public class ControladorGrafica : MonoBehaviour {
 		if (indiceActual % sizeScreen == 0) {
 			indiceActual = 0;
 			speed = speedAux;
+			UpdateHScale ();
 		}
 		for (int i = 0; i < sizeScreen; i++) {
-			texture.SetPixel(indiceActual % sizeScreen, i, Color.black);
+			texture.SetPixel (indiceActual % sizeScreen, i, Color.black);
 		}
 		float aux = 0;
 
@@ -157,8 +210,8 @@ public class ControladorGrafica : MonoBehaviour {
 		//float test = cursorNull*angle*sign*scale*(Mathf.Sin ((0.5f * indiceActual * 360f / sizeScreen * Mathf.PI/180f * Mathf.PI/speed - 0.8f + Mathf.Sin(0.5f*indiceActual* 360f / sizeScreen * Mathf.PI/180f * Mathf.PI/speed)))* Mathf.Log (indiceActual) + 2f + zero);
 
 		//v2: sawtooth
-
-		float test = cursorNull*angle*sign*(0.33f*((C_SPEED*scale) - ((indiceActual*scale*speed) % (C_SPEED*scale)))) + 2f*sign + zero; 
+		float test = cursorNull * angle * sign * (0.15f * ((C_SPEED * scale) - ((indiceActual * scale * speed) % (C_SPEED * scale)))) + 2f * sign + zero;
+	
 		//Debug.Log (test);
 		if (power <= 0) {
 			test = 0;
@@ -319,6 +372,7 @@ public class ControladorGrafica : MonoBehaviour {
 		texture.SetPixel (indiceActual % sizeScreen, sizeScreen / pathology + (int)(val * zero), Color.white);
 
 		texture.Apply();
+
 		refreshing = true;
 		//indiceActual++;
 		StartCoroutine(refreshRate());
@@ -391,16 +445,19 @@ public class ControladorGrafica : MonoBehaviour {
 			//speed = Mathf.Clamp(speed + 0.1f*n,0.1f,1);
 			if (n > 0) {
 				//speedAux = Mathf.Clamp(speedAux *= 2, 0.1f, 1 * Mathf.Pow(2,2));
-				speedAux = Mathf.Clamp (speedAux /= C_SCALE, 1 * Mathf.Pow (C_SCALE, -3), float.MaxValue);
+				speedAux = Mathf.Clamp (speedAux /= C_SCALE, 2f * Mathf.Pow (C_SCALE, -3), float.MaxValue);
 			} else {
 				//speedAux = Mathf.Clamp (speedAux /= 2, 1 * Mathf.Pow (2, -2), 0.8f);
-				speedAux = Mathf.Clamp (speedAux *= C_SCALE, 0, 1 * Mathf.Pow (C_SCALE, 3));
+				speedAux = Mathf.Clamp (speedAux *= C_SCALE, 0, 2f * Mathf.Pow (C_SCALE, 4));
 			}
 		}
 		heartRate = (int)Mathf.Clamp (heartRate + -n*10f, 70f, 140f);
+		hrLabel.text = heartRate.ToString ();
 		indiceActual = 0;
 		speed = speedAux;
+		refreshDelay = (speed / 100)*(speed/100);
 		PaintItBlack ();
+		UpdateHScale ();
 	}
 
 	public void GraphPower(int n){

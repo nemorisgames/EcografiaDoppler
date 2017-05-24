@@ -40,11 +40,11 @@ public class LabelIndicators : MonoBehaviour {
 
 	public void scaleUpVertical(){
 		//changeVerticalScale (10);
-		verticalStep*=1.5f;
+		verticalStep*=1.25f;
 	}
 	public void scaleDownVertical(){
 		//changeVerticalScale (-10);
-		verticalStep/=1.5f;
+		verticalStep/=1.25f;
 	}
 	public void changeVerticalScale(int i){
 		verticalScale += i;
