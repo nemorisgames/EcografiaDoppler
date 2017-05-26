@@ -53,6 +53,8 @@ public class ControladorGrafica : MonoBehaviour {
 	public int gainIndex = 3;
 	[HideInInspector]
 	public int powerIndex = 4;
+	[HideInInspector]
+	public int pathologyIndex = 5;
 
 	public float C_SPEED = 30f;
 	public float C_SCALE = 15f;
@@ -65,6 +67,8 @@ public class ControladorGrafica : MonoBehaviour {
 	GameObject verticalScale;
 
 	public UILabel hrLabel;
+	public float patologiaLimite = 3f;
+	public float patologiaSuma = 5f;
 
 	void Start() {
 		horizontalScale = transform.FindChild ("Horizontal").gameObject;
@@ -88,6 +92,7 @@ public class ControladorGrafica : MonoBehaviour {
 		GraphZero2 ();
 		GraphGain2 ();
 		GraphPower2 ();
+		GraphPathology2 ();
 	}
 
 	void UpdateHScale(){
@@ -166,6 +171,9 @@ public class ControladorGrafica : MonoBehaviour {
 			case 4:
 				GraphPower2 ();
 				break;
+			case 5:
+				GraphPathology2 ();
+				break;
 			}
 			
 		} else {
@@ -185,6 +193,9 @@ public class ControladorGrafica : MonoBehaviour {
 			case 4:
 				GraphPower1 ();
 				break;
+			case 5:
+				GraphPathology1 ();
+				break;
 			}
 		}
 		sliderLastValue [index] = sliders [index].value;
@@ -202,7 +213,7 @@ public class ControladorGrafica : MonoBehaviour {
 			texture.SetPixel (indiceActual % sizeScreen, i, Color.black);
 		}
 		float aux = 0;
-
+		patologiaLimite = (C_SPEED * scale)*(2f/3f);
 		//v0: seno
 		//float test = Mathf.Sin (5f * indiceActual * 360f / sizeScreen * Mathf.PI / 180f)*5f+ 2f + zero;
 
@@ -210,7 +221,12 @@ public class ControladorGrafica : MonoBehaviour {
 		//float test = cursorNull*angle*sign*scale*(Mathf.Sin ((0.5f * indiceActual * 360f / sizeScreen * Mathf.PI/180f * Mathf.PI/speed - 0.8f + Mathf.Sin(0.5f*indiceActual* 360f / sizeScreen * Mathf.PI/180f * Mathf.PI/speed)))* Mathf.Log (indiceActual) + 2f + zero);
 
 		//v2: sawtooth
-		float test = cursorNull * angle * sign * (0.15f * ((C_SPEED * scale) - ((indiceActual * scale * speed) % (C_SPEED * scale)))) + 2f * sign + zero;
+		float waveAux = (C_SPEED * scale) - ((indiceActual * scale * speed) % (C_SPEED * scale));
+		if (waveAux < patologiaLimite)
+			waveAux += Random.Range(2f,patologiaSuma*scale*0.5f);
+		if (waveAux > waveAux*0.95f)
+			waveAux -= Random.Range(0f,1f);
+		float test = cursorNull * angle * sign * (0.15f * (waveAux)) + 2f * sign + zero;
 	
 		//Debug.Log (test);
 		if (power <= 0) {
@@ -218,16 +234,17 @@ public class ControladorGrafica : MonoBehaviour {
 		}
 
 		if (pathology == 2) {
+			int zeroAux = sizeScreen / pathology + (int)(val * zero);
 			if (sign == 1) {
 				//bordes azules
 				for (int i = 0; i < Random.Range (5, 15); i++) {
 					aux = (gain * Random.Range (-lowRnd, -5)) + sizeScreen / pathology + (val * test);
-					aux = Mathf.Clamp (aux, sizeScreen / pathology + (int)(val * zero), aux + Random.Range (10, rangoRnd));
+					aux = Mathf.Clamp (aux, (int)Mathf.Min(zeroAux, zeroAux + waveAux), aux + Random.Range (10, rangoRnd));
 					texture.SetPixel (indiceActual % sizeScreen, (int)aux, Color.white);
 				}
 				for (int i = 0; i < Random.Range (5, 20); i++) {
 					aux = (gain * Random.Range (-highRnd, -5)) + sizeScreen / pathology + (val * test);
-					aux = Mathf.Clamp (aux, sizeScreen / pathology + (int)(val * zero), aux + Random.Range (10, rangoRnd));
+					aux = Mathf.Clamp (aux, (int)Mathf.Min(zeroAux, zeroAux + waveAux), aux + Random.Range (10, rangoRnd));
 					if (aux < zero)
 						aux += sizeScreen / pathology + (val * test);
 					else
@@ -252,41 +269,7 @@ public class ControladorGrafica : MonoBehaviour {
 				//DrawWave (test, aux - Random.Range (10, rangoRnd), sizeScreen / pathology + (int)(val * zero), false);
 				
 			}
-		}/* else if (pathology == 3) {
-			for (int i = 0; i < Random.Range (5, 15); i++) {
-				aux = (gain * Random.Range (-lowRnd, -5)) + sizeScreen / pathology + (val * test);
-				aux = Mathf.Clamp (aux, sizeScreen / pathology + (int)(val * zero), aux + Random.Range(10,rangoRnd));
-				texture.SetPixel (indiceActual % sizeScreen, (int)aux, Color.white);
-			}
-			for (int i = 0; i < Random.Range (5, 20); i++) {
-				aux = (gain * Random.Range (-highRnd, -5)) + sizeScreen / pathology + (val * test);
-				aux = Mathf.Clamp (aux, sizeScreen / pathology + (int)(val * zero), aux + Random.Range(10,rangoRnd));
-				if (indiceActual % sizeScreen == 0)
-					print (aux);
-				if (aux < zero)
-					aux += sizeScreen / pathology + (val * test);
-				else
-					texture.SetPixel (indiceActual % sizeScreen, (int)aux, Color.white);
-			}
-
-			for (int i = 0; i > Random.Range (-5, -15); i--) {
-				aux = (gain * Random.Range (lowRnd, 5)) + sizeScreen / pathology + (val * test);
-				aux = Mathf.Clamp (aux, aux - Random.Range (10, rangoRnd), sizeScreen / pathology + (int)(val * zero));
-				aux = sizeScreen / pathology + (int)(val * zero) - aux;
-				texture.SetPixel (indiceActual % sizeScreen, (int)aux, Color.white);
-			}
-			for (int i = 0; i > Random.Range (-5, -20); i--) {
-				aux = (gain * Random.Range (highRnd, 5)) + sizeScreen / pathology + (val * test);
-				aux = Mathf.Clamp (aux, aux - Random.Range (10, rangoRnd), sizeScreen / pathology + (int)(val * zero));
-				aux = sizeScreen / pathology + (int)(val * zero) - aux;
-				if (indiceActual % sizeScreen == 0)
-					print (aux);
-				if (aux < zero)
-					aux += sizeScreen / pathology + (val * test);
-				else
-					texture.SetPixel (indiceActual % sizeScreen, (int)aux, Color.white);
-			}
-		}*/
+		}
 		else if (pathology == 1) {
 			//25 = zero
 			if (sign == 1) {
@@ -417,6 +400,8 @@ public class ControladorGrafica : MonoBehaviour {
 	public void GraphPower2(){ GraphPower (-1); }
 	public void GraphTIC1(){ GraphTIC (1); }
 	public void GraphTIC2(){ GraphTIC(-1);}
+	public void GraphPathology1(){GraphPathology (-1);}
+	public void GraphPathology2(){GraphPathology (1);}
 
 	public void GraphZero(int n){
 		if (Mathf.Abs (n) == 1) {
@@ -437,6 +422,12 @@ public class ControladorGrafica : MonoBehaviour {
 		if (Mathf.Abs (n) == 1) {
 			gain += 0.2f * n;
 			gain = Mathf.Clamp (gain, 0, 1);
+		}
+	}
+
+	public void GraphPathology(int n){
+		if (Mathf.Abs (n) == 1) {
+			patologiaSuma += 5f*Mathf.Sign(n);
 		}
 	}
 
@@ -477,7 +468,7 @@ public class ControladorGrafica : MonoBehaviour {
 		}
 	}
 
-	public void PathologyMode(){
+	public void PathologyMode_old(){
 		if (pathology == 1) {
 			pathology = 2;
 			zero = 0;
