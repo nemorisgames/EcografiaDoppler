@@ -57,6 +57,7 @@ public class CursorPoint : MonoBehaviour {
                 cc.changeImages(4);
                 break;
         }
+        transform.parent.Find("cursorP1").SendMessage("GetPixelColor");
     }
 
 	void GetPixelColor(){

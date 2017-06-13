@@ -272,13 +272,13 @@ public class ControladorGrafica : MonoBehaviour {
 		if (sign == 1) {
 			//relleno menor
 			for (int i = 0; i < Random.Range (5, 15); i++) {
-				aux = (gain * Random.Range (-lowRnd, -5)) + sizeVertical / pathology + (val * test);
+				aux = (gain * power * Random.Range (-lowRnd, -5)) + sizeVertical / pathology + (val * test);
 				aux = Mathf.Clamp (aux, (int)Mathf.Min(zeroAux, zeroAux + waveAux), aux + Random.Range (10, rangoRnd));
 				texture.SetPixel (indiceActual % sizeScreen, (int)aux, Color.white);
 			}
 			//relleno mayor
 			for (int i = 0; i < Random.Range (5, 20); i++) {
-				aux = (gain * Random.Range (-highRnd, -5)) + sizeVertical / pathology + (val * test);
+				aux = (gain * power * Random.Range (-highRnd, -5)) + sizeVertical / pathology + (val * test);
 				aux = Mathf.Clamp (aux, (int)Mathf.Min(zeroAux, zeroAux + waveAux), aux + Random.Range (10, rangoRnd));
 				if (aux < zero)
 					aux += sizeVertical / pathology + (val * test);
@@ -291,13 +291,13 @@ public class ControladorGrafica : MonoBehaviour {
 		else {
 			//relleno menor
 			for (int i = 0; i > Random.Range (-5, -15); i--) {
-				aux = (gain * Random.Range (lowRnd, 5)) + sizeVertical / pathology + (val * test);
+				aux = (gain * power * Random.Range (lowRnd, 5)) + sizeVertical / pathology + (val * test);
 				aux = Mathf.Clamp (aux, aux - Random.Range (10, rangoRnd), sizeVertical / pathology + (int)(val * zero));
 				texture.SetPixel (indiceActual % sizeScreen, (int)aux, Color.white);
 			}
 			//relleno mayor
 			for (int i = 0; i > Random.Range (-5, -20); i--) {
-				aux = (gain * Random.Range (highRnd, 5)) + sizeVertical / pathology + (val * test);
+				aux = (gain * power * Random.Range (highRnd, 5)) + sizeVertical / pathology + (val * test);
 				aux = Mathf.Clamp (aux, aux - Random.Range (10, rangoRnd), sizeVertical / pathology + (int)(val * zero));
 				if (aux < zero)
 					aux += sizeVertical / pathology + (val * test);
@@ -399,7 +399,7 @@ public class ControladorGrafica : MonoBehaviour {
 	public void GraphPathology(int n){
 		//posicion de desfase patologia aumenta/disminuye en 5 pixeles
 		if (Mathf.Abs (n) == 1) {
-			patologiaSuma += 5f*Mathf.Sign(n);
+			patologiaSuma += 8f*Mathf.Sign(n);
 		}
 	}
 
@@ -451,11 +451,11 @@ public class ControladorGrafica : MonoBehaviour {
 
 	public void GraphPower(int n){
 		if (Mathf.Abs (n) == 1) {
-			power += 0.2f * n;
+			power -= 0.2f * n;
 			power = Mathf.Clamp (power, 0, 2);
-			blueAux += 0.05f * n;
+			blueAux -= 0.05f * n;
 			blue [0] = Mathf.Clamp (blueAux, 0, 1);
-			redAux += 0.05f * n;
+			redAux -= 0.05f * n;
 			red [0] = Mathf.Clamp (redAux, 0, 1);
 		}
 	}
