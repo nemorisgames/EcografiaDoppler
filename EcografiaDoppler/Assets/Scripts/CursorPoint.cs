@@ -81,6 +81,7 @@ public class CursorPoint : MonoBehaviour {
 			Color c = hitTexture.GetPixel ((int)hitPoint.x, (int)hitPoint.y);
             Color cDurezas = durezasTexture.GetPixel((int)hitPoint.x, (int)hitPoint.y);
             Debug.Log ("RGB: " + c.r + "," + c.g + "," + c.b);
+			//rangos de color para detectar rojo, azul o n/a
 			if (c.r > 0.6f && c.b < 0.5f) {
 				Debug.Log ("R");
 				cg.GraphCursorNull (true);
