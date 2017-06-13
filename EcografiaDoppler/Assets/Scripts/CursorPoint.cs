@@ -4,19 +4,24 @@ using UnityEngine;
 
 public class CursorPoint : MonoBehaviour {
 	public bool pivot;
-	Texture2D hitTexture;
-	MovieTexture movTexture;
+	public Texture2D hitTexture;
+    public UITexture durezasUITexture;
+    public Texture2D durezasTexture;
+    public float durezasAngle = 0f;
+    MovieTexture movTexture;
 	ControladorGrafica cg;
-	ControladorCursores cc;
+	public ControladorCursores cc;
 	public bool movie = true;
 	public Camera renderCam;
 
 	// Use this for initialization
-	void Start () {
-		cg = GameObject.FindGameObjectWithTag ("GameController").GetComponent<ControladorGrafica> ();
+	void Start ()
+    {
+        durezasTexture = (Texture2D)durezasUITexture.mainTexture;
+        cg = GameObject.FindGameObjectWithTag ("GameController").GetComponent<ControladorGrafica> ();
 		cc = GameObject.FindGameObjectWithTag ("CursorController").GetComponent<ControladorCursores> ();
 		GetPixelColor ();
-	}
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -29,6 +34,30 @@ public class CursorPoint : MonoBehaviour {
 		}
 		cg.angle = cc.CursorAngleValue ();
 	}
+
+    public void changePosition(Transform t)
+    {
+        cc = GameObject.FindGameObjectWithTag("CursorController").GetComponent<ControladorCursores>();
+        transform.position = t.position;
+        switch (t.name)
+        {
+            case "0":
+                cc.changeImages(0);
+                break;
+            case "45":
+                cc.changeImages(1);
+                break;
+            case "90":
+                cc.changeImages(2);
+                break;
+            case "-45":
+                cc.changeImages(3);
+                break;
+            case "-90":
+                cc.changeImages(4);
+                break;
+        }
+    }
 
 	void GetPixelColor(){
 		RaycastHit hit;
@@ -50,7 +79,8 @@ public class CursorPoint : MonoBehaviour {
 			hitPoint.x *= hitTexture.width;
 			hitPoint.y *= hitTexture.height;
 			Color c = hitTexture.GetPixel ((int)hitPoint.x, (int)hitPoint.y);
-			Debug.Log ("RGB: " + c.r + "," + c.g + "," + c.b);
+            Color cDurezas = durezasTexture.GetPixel((int)hitPoint.x, (int)hitPoint.y);
+            Debug.Log ("RGB: " + c.r + "," + c.g + "," + c.b);
 			if (c.r > 0.6f && c.b < 0.5f) {
 				Debug.Log ("R");
 				cg.GraphCursorNull (true);
@@ -63,6 +93,8 @@ public class CursorPoint : MonoBehaviour {
 				cg.GraphCursorNull (false);
 				Debug.Log ("N/A");
 			}
-		}
+            durezasAngle = cDurezas.g * 90f + 90f;
+
+        }
 	}
 }

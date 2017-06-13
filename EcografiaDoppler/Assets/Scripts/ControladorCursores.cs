@@ -5,12 +5,17 @@ using UnityEngine;
 public class ControladorCursores : MonoBehaviour {
 
 	public Transform cursorP1;
-	public Transform cursorP2;
-	float angle;
+    public Transform cursorP2;
+    float angle;
 	ControladorGrafica controller;
+    public Texture2D[] texturesRedBlue;
+    public Texture2D[] texturesAngle;
+    public int index = 0;
+    public UITexture textureRedBlue;
+    public UITexture textureAngle;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 		if (cursorP1 == null)
 			cursorP1 = GameObject.Find ("cursorP1").GetComponent<Transform>();
 		if (cursorP2 == null)
@@ -24,14 +29,26 @@ public class ControladorCursores : MonoBehaviour {
 		angle = AngleBetweenAnB (cursorP1.position, cursorP2.position);
 	}
 
+    public void changeImages(int i) {
+        index = i;
+        textureRedBlue.mainTexture = texturesRedBlue[index];
+        textureAngle.mainTexture = texturesAngle[index];
+
+        //textureRedBlue.mainTexture.Apply();
+        //textureAngle.mainTexture.Apply();
+    }
+
+ 
+
 	float AngleBetweenAnB(Vector2 a, Vector2 b){
-		Vector2 dif = b - a;
+        /*Vector2 dif = b - a;
 		float sign = (b.y < a.y) ? -1f : 1f;
-		return Vector2.Angle (Vector2.right, dif) * sign;
+		return Vector2.Angle (Vector2.right, dif) * sign;*/
+        return cursorP1.GetComponent<CursorPoint>().durezasAngle;
 	}
 
 	public float CursorAngleValue(){
-		float aux = Mathf.Abs (angle);
+        float aux = Mathf.Abs (angle);
 		if (aux < 90f) {
 			aux = (90f - aux) / 90f;
 		} else if (aux > 90f) {
@@ -39,7 +56,7 @@ public class ControladorCursores : MonoBehaviour {
 		} else
 			aux = 0f;
 		return aux;
-	}
+    }
 
 
 }
