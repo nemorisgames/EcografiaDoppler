@@ -101,6 +101,7 @@ public class ControladorGrafica : MonoBehaviour {
 		blueAux = blue [0];
 		mov = (MovieTexture)mov1.mainTexture;
 		mov.loop = true;
+        mov.Play();
 		speedAux = speed;
 
 		//crea arreglo de ultimo valor para sliders a partir de la cantidad de sliders existentes
@@ -259,26 +260,70 @@ public class ControladorGrafica : MonoBehaviour {
 	
 		//Debug.Log (test);
 		if (power <= 0) {
-			test = 0;
+			//test = 0;
 		}
 
 		//posicion del cero
 		int zeroAux = sizeVertical / pathology + (int)(val * zero);
 
-		//rellenar espacio entre cero y funcion con pixeles aleatorios (dos niveles: alto y bajo)
-		//realiza clamp para mantener pixeles entre el cero y la funcion
+        //rellenar espacio entre cero y funcion con pixeles aleatorios (dos niveles: alto y bajo)
+        //realiza clamp para mantener pixeles entre el cero y la funcion
 
-		//positivo
-		if (sign == 1) {
+        //positivo
+        if (sign == 1)
+        {
+            //relleno menor
+            for (int i = 0; i < Random.Range(5, 15) + (power * 40) + (gain * 40); i++)
+            {
+                aux = (Random.Range(-lowRnd, -5)) + sizeVertical / pathology + (val * test);
+                aux = Mathf.Clamp(aux, (int)Mathf.Min(zeroAux, zeroAux + waveAux), aux + Random.Range(10, rangoRnd));
+                texture.SetPixel(indiceActual % sizeScreen, (int)aux, Color.white);
+            }
+            //relleno mayor
+            for (int i = 0; i < Random.Range(5, 20) + (power * 40) + (gain * 40); i++)
+            {
+                aux = (Random.Range(-highRnd, -5)) + sizeVertical / pathology + (val * test);
+                aux = Mathf.Clamp(aux, (int)Mathf.Min(zeroAux, zeroAux + waveAux), aux + Random.Range(10, rangoRnd));
+                if (aux < zero)
+                    aux += sizeVertical / pathology + (val * test);
+                else
+                    texture.SetPixel(indiceActual % sizeScreen, (int)aux, Color.white);
+            }
+            //DrawWave (test, sizeScreen / pathology + (int)(val * zero), aux + Random.Range (10, rangoRnd), true);
+        }
+        //negativo
+        else
+        {
+            //relleno menor
+            for (int i = 0; i > Random.Range(-5, -15) - (power * 40) - (gain * 40); i--)
+            {
+                aux = (Random.Range(lowRnd, 5)) + sizeVertical / pathology + (val * test);
+                aux = Mathf.Clamp(aux, aux - Random.Range(10, rangoRnd), sizeVertical / pathology + (int)(val * zero));
+                texture.SetPixel(indiceActual % sizeScreen, (int)aux, Color.white);
+            }
+            //relleno mayor
+            for (int i = 0; i > Random.Range(-5, -20) - (power * 40) - (gain * 40); i--)
+            {
+                aux = (Random.Range(highRnd, 5)) + sizeVertical / pathology + (val * test);
+                aux = Mathf.Clamp(aux, aux - Random.Range(10, rangoRnd), sizeVertical / pathology + (int)(val * zero));
+                if (aux < zero)
+                    aux += sizeVertical / pathology + (val * test);
+                else
+                    texture.SetPixel(indiceActual % sizeScreen, (int)aux, Color.white);
+            }
+            //DrawWave (test, aux - Random.Range (10, rangoRnd), sizeScreen / pathology + (int)(val * zero), false);
+
+        }
+        /*if (sign == 1) {
 			//relleno menor
 			for (int i = 0; i < Random.Range (5, 15); i++) {
-				aux = (gain * power * Random.Range (-lowRnd, -5)) + sizeVertical / pathology + (val * test);
+				aux = (gain * Random.Range (-lowRnd, -5)) + sizeVertical / pathology + (val * test);
 				aux = Mathf.Clamp (aux, (int)Mathf.Min(zeroAux, zeroAux + waveAux), aux + Random.Range (10, rangoRnd));
 				texture.SetPixel (indiceActual % sizeScreen, (int)aux, Color.white);
 			}
 			//relleno mayor
 			for (int i = 0; i < Random.Range (5, 20); i++) {
-				aux = (gain * power * Random.Range (-highRnd, -5)) + sizeVertical / pathology + (val * test);
+				aux = (gain * Random.Range (-highRnd, -5)) + sizeVertical / pathology + (val * test);
 				aux = Mathf.Clamp (aux, (int)Mathf.Min(zeroAux, zeroAux + waveAux), aux + Random.Range (10, rangoRnd));
 				if (aux < zero)
 					aux += sizeVertical / pathology + (val * test);
@@ -291,13 +336,13 @@ public class ControladorGrafica : MonoBehaviour {
 		else {
 			//relleno menor
 			for (int i = 0; i > Random.Range (-5, -15); i--) {
-				aux = (gain * power * Random.Range (lowRnd, 5)) + sizeVertical / pathology + (val * test);
+				aux = (gain * Random.Range (lowRnd, 5)) + sizeVertical / pathology + (val * test);
 				aux = Mathf.Clamp (aux, aux - Random.Range (10, rangoRnd), sizeVertical / pathology + (int)(val * zero));
 				texture.SetPixel (indiceActual % sizeScreen, (int)aux, Color.white);
 			}
 			//relleno mayor
 			for (int i = 0; i > Random.Range (-5, -20); i--) {
-				aux = (gain * power * Random.Range (highRnd, 5)) + sizeVertical / pathology + (val * test);
+				aux = (gain * Random.Range (highRnd, 5)) + sizeVertical / pathology + (val * test);
 				aux = Mathf.Clamp (aux, aux - Random.Range (10, rangoRnd), sizeVertical / pathology + (int)(val * zero));
 				if (aux < zero)
 					aux += sizeVertical / pathology + (val * test);
@@ -306,10 +351,10 @@ public class ControladorGrafica : MonoBehaviour {
 			}
 			//DrawWave (test, aux - Random.Range (10, rangoRnd), sizeScreen / pathology + (int)(val * zero), false);
 				
-		}
+		}*/
 
-		//mantiene la linea de cero
-		texture.SetPixel (indiceActual % sizeScreen, sizeVertical / pathology + (int)(val * zero), Color.white);
+        //mantiene la linea de cero
+        texture.SetPixel (indiceActual % sizeScreen, sizeVertical / pathology + (int)(val * zero), Color.white);
 
 		texture.Apply();
 
@@ -391,8 +436,9 @@ public class ControladorGrafica : MonoBehaviour {
 	public void GraphGain(int n){
 		//gain aumenta/disminuye en 20%, entre 0 y 1
 		if (Mathf.Abs (n) == 1) {
-			gain += 0.2f * n;
+			gain += 1f/11f * n;
 			gain = Mathf.Clamp (gain, 0, 1);
+            print("gain " + gain);
 		}
 	}
 
@@ -416,7 +462,7 @@ public class ControladorGrafica : MonoBehaviour {
 			}
 		}
 		//actualiza heart rate aumentando/disminuyendo en 10
-		heartRate = (int)Mathf.Clamp (heartRate + -n*10f, 70f, 140f);
+		heartRate = (int)Mathf.Clamp (heartRate + -n*10f/11f, 70f, 140f);
 		hrLabel.text = heartRate.ToString ();
 		//reinicia el barrido
 		indiceActual = 0;
@@ -451,12 +497,13 @@ public class ControladorGrafica : MonoBehaviour {
 
 	public void GraphPower(int n){
 		if (Mathf.Abs (n) == 1) {
-			power -= 0.2f * n;
-			power = Mathf.Clamp (power, 0, 2);
-			blueAux -= 0.05f * n;
+			power += 1f/11f * n;
+			power = Mathf.Clamp (power, 0, 1);
+			/*blueAux += 1f / 11f * n;
 			blue [0] = Mathf.Clamp (blueAux, 0, 1);
-			redAux -= 0.05f * n;
-			red [0] = Mathf.Clamp (redAux, 0, 1);
+			redAux += 1f / 11f * n;
+			red [0] = Mathf.Clamp (redAux, 0, 1);*/
+            print("power " + power);
 		}
 	}
 

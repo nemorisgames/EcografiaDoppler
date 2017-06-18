@@ -65,7 +65,7 @@ public class CursorPoint : MonoBehaviour {
 		if (Physics.Raycast (transform.position, Vector3.forward, out hit)) {
 			if (!movie) {
 				hitTexture = hit.transform.gameObject.GetComponentInChildren<UITexture> ().mainTexture as Texture2D;
-			} else if (renderCam != null) {
+			} else if (renderCam != null && hit.transform.gameObject.GetComponentInChildren<UITexture>() != null) {
 				movTexture = hit.transform.gameObject.GetComponentInChildren<UITexture> ().mainTexture as MovieTexture;
 				RenderTexture rt = RenderTexture.GetTemporary (movTexture.width, movTexture.height, 24);
 				renderCam.targetTexture = rt;
