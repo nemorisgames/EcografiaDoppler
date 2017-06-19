@@ -55,6 +55,11 @@ public class Login : MonoBehaviour {
 		}
 	}
 
+    public void cargarUmbilical()
+    {
+        SceneManager.LoadScene("EcografiaUmbilical");
+    }
+
 	IEnumerator countdownStart(float s){
 		yield return new WaitForSeconds (s);
 		SceneManager.LoadScene (1);
