@@ -9,11 +9,14 @@ public class ControladorCursores : MonoBehaviour {
     float angle;
 	ControladorGrafica controller;
     public Texture2D[] texturesRedBlue;
+    public Texture2D[] texturesRedBlue_;
     public Texture2D[] texturesAngle;
     public int index = 0;
     public UITexture textureRedBlue;
     public UITexture textureAngle;
-
+    int cont = 0;
+    float contadorTiempo = 0f;
+    public float contadorTiempoIncremento = 0.25f;
     // Use this for initialization
     void Start () {
 		if (cursorP1 == null)
@@ -27,6 +30,17 @@ public class ControladorCursores : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		angle = AngleBetweenAnB (cursorP1.position, cursorP2.position);
+        if (contadorTiempo < Time.time) {
+            cont++;
+            contadorTiempo = Time.time + contadorTiempoIncremento;
+        }
+        if (cont % 2 == 0)
+        {
+            textureRedBlue.mainTexture = texturesRedBlue[index];
+        }
+        else{
+            textureRedBlue.mainTexture = texturesRedBlue_[index];
+        }
 	}
 
     public void changeImages(int i) {

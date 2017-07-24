@@ -25,8 +25,13 @@ public class CursorPoint : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		//Debug.DrawRay (transform.position, Vector3.forward,Color.red);
-	}
+        //Debug.DrawRay (transform.position, Vector3.forward,Color.red);
+        if (pivot)
+        {
+            GetPixelColor();
+        }
+        cg.angle = cc.CursorAngleValue();
+    }
 
 	void OnDragEnd(){
 		if (pivot) {
@@ -79,6 +84,7 @@ public class CursorPoint : MonoBehaviour {
 			Vector2 hitPoint = hit.textureCoord;
 			hitPoint.x *= hitTexture.width;
 			hitPoint.y *= hitTexture.height;
+            print(((int)hitPoint.x +" , " + (int)hitPoint.y));
 			Color c = hitTexture.GetPixel ((int)hitPoint.x, (int)hitPoint.y);
             Color cDurezas = durezasTexture.GetPixel((int)hitPoint.x, (int)hitPoint.y);
             Debug.Log ("RGB: " + c.r + "," + c.g + "," + c.b);
@@ -95,8 +101,17 @@ public class CursorPoint : MonoBehaviour {
 				cg.GraphCursorNull (false);
 				Debug.Log ("N/A");
 			}
-            durezasAngle = cDurezas.g * 90f + 90f;
 
+            if (cDurezas.r > 0.5f || cDurezas.b > 0.5f)
+            {
+                //Venas
+                print("en vena");
+                durezasAngle = cDurezas.g * 90f + 90f;
+            }
+            else
+            {
+                durezasAngle = cDurezas.g * 90f + 90f;
+            }
         }
 	}
 }

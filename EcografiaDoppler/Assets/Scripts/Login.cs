@@ -11,9 +11,9 @@ public class Login : MonoBehaviour {
 	public bool withPass = false;
 
 	void Start(){
-		if (!withPass) {
+		/*if (!withPass) {
 			StartCoroutine (countdownStart (3f));
-		}
+		}*/
 	}
 
 	// Update is called once per frame
@@ -60,7 +60,22 @@ public class Login : MonoBehaviour {
         SceneManager.LoadScene("EcografiaUmbilical");
     }
 
-	IEnumerator countdownStart(float s){
+    public void cargarCorazon()
+    {
+        SceneManager.LoadScene("EcografiaDuctus");
+    }
+
+    public void cargarCerebral()
+    {
+        SceneManager.LoadScene("EcografiaCerebral");
+    }
+
+    public void cargarUtero()
+    {
+        SceneManager.LoadScene("EcografiaUtero");
+    }
+
+    IEnumerator countdownStart(float s){
 		yield return new WaitForSeconds (s);
 		SceneManager.LoadScene (1);
 	}

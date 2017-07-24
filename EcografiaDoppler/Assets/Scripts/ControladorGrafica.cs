@@ -134,7 +134,7 @@ public class ControladorGrafica : MonoBehaviour {
 		//Crear numeros nuevos con separacion actual
 		float cnt = 0;
 		float hScale = 0;
-		scaleNumber.fontSize = Mathf.Clamp(Mathf.RoundToInt((C_SPEED / speed) / 3f),3,8);
+		scaleNumber.fontSize = (Mathf.FloorToInt(Mathf.Clamp(Mathf.RoundToInt((C_SPEED / speed) / 2f),3,8) * 10)) / 10;
 		while(cnt <= sizeScreen){
 			scaleNumber.text = (Mathf.Round(hScale*100f)/100f).ToString ();
 			GameObject aux = (GameObject)Instantiate (scaleNumber.gameObject, horizontalScale.transform.position, horizontalScale.transform.rotation, horizontalScale.transform);
@@ -143,7 +143,21 @@ public class ControladorGrafica : MonoBehaviour {
 			cnt += C_SPEED / speed;
 			float spb = Mathf.Round((60f / heartRate)*100f)/100f;
 			hScale += spb;
-		}
+            switch ((int)(hScale * 10))
+            {
+                case 125: hrLabel.text = "145"; break;
+                case 110: hrLabel.text = "140"; break;
+                case 115: hrLabel.text = "135"; break;
+                case 105: hrLabel.text = "130"; break;
+                case 95: hrLabel.text = "125"; break;
+                case 90: hrLabel.text = "120"; break;
+                case 80: hrLabel.text = "115"; break;
+                case 75: hrLabel.text = "110"; break;
+                case 65: hrLabel.text = "105"; break;
+            }
+            //hrLabel.text = "" + hScale;
+
+        }
 	}
 
 	void PaintItBlack(){
@@ -229,7 +243,7 @@ public class ControladorGrafica : MonoBehaviour {
 			indiceActual = 0; //indice vuelve a cero
 			speed = speedAux; //actualiza velocidad con el valor auxiliar utilizado por el slider
 			UpdateHScale (); //actualiza numeros de escala horizontal
-			Debug.Log (Time.time - time);
+			//Debug.Log (Time.time - time);
 			time = Time.time;
 		}
 
@@ -243,23 +257,40 @@ public class ControladorGrafica : MonoBehaviour {
 		//ej: c_speed * scale = 30 -> patologiaLimite = 20
 		//desde el pixel 20 se empieza a desplazar la señal
 		patologiaLimite = (C_SPEED * scale)*(2f/3f);
-		//v0: seno
-		//float test = Mathf.Sin (5f * indiceActual * 360f / sizeScreen * Mathf.PI / 180f)*5f+ 2f + zero;
+        //v0: seno
+        //float test = Mathf.Sin (5f * indiceActual * 360f / sizeScreen * Mathf.PI / 180f)*5f+ 2f + zero;
 
-		//v1: seno ajustado
-		//float test = cursorNull*angle*sign*scale*(Mathf.Sin ((0.5f * indiceActual * 360f / sizeScreen * Mathf.PI/180f * Mathf.PI/speed - 0.8f + Mathf.Sin(0.5f*indiceActual* 360f / sizeScreen * Mathf.PI/180f * Mathf.PI/speed)))* Mathf.Log (indiceActual) + 2f + zero);
+        //v1: seno ajustado
+        //float test = cursorNull*angle*sign*scale*(Mathf.Sin ((0.5f * indiceActual * 360f / sizeScreen * Mathf.PI/180f * Mathf.PI/speed - 0.8f + Mathf.Sin(0.5f*indiceActual* 360f / sizeScreen * Mathf.PI/180f * Mathf.PI/speed)))* Mathf.Log (indiceActual) + 2f + zero);
 
-		//v2: sawtooth
-		//funcion modulo descendiente
-		float waveAux = (C_SPEED * scale) - ((indiceActual * scale * speed) % (C_SPEED * scale));
+        //v2: sawtooth
+        //funcion modulo descendiente
+        /*float waveAux = (C_SPEED * scale) - ((indiceActual * scale * speed) % (C_SPEED * scale));
 		if (waveAux < patologiaLimite)
 			waveAux += Random.Range(2f,patologiaSuma*scale*0.5f);
 		if (waveAux > waveAux*0.95f)
 			waveAux -= Random.Range(0f,1f);
-		float test = cursorNull * angle * sign * (0.15f * (waveAux)) + 2f * sign + zero;
-	
-		//Debug.Log (test);
-		if (power <= 0) {
+		float test = cursorNull * angle * sign * (0.15f * (waveAux)) + 2f * sign + zero;*/
+        
+        //v3 silla de montar
+        /*
+        float waveAux = (C_SPEED * scale) - (Mathf.Sin(indiceActual * 0.1f) * scale * speed * indiceActual % (C_SPEED * scale));
+        if (waveAux < patologiaLimite)
+            waveAux += Random.Range(2f, patologiaSuma * scale * 0.5f);
+        if (waveAux > waveAux * 0.95f)
+            waveAux -= Random.Range(0f, 1f);
+        float test = cursorNull * angle * sign * (0.15f * (waveAux)) + 2f * sign + zero;
+        */
+
+        float waveAux = (C_SPEED * scale) - (scale * speed * indiceActual % (C_SPEED * scale));
+        if (waveAux < patologiaLimite)
+            waveAux += Random.Range(2f, patologiaSuma * scale * 0.5f);
+        if (waveAux > waveAux * 0.95f)
+            waveAux -= Random.Range(0f, 1f);
+        float test = cursorNull * angle * sign * (0.15f * (waveAux)) + 2f * sign + zero;
+
+        //Debug.Log (test);
+        if (power <= 0) {
 			//test = 0;
 		}
 
@@ -438,7 +469,7 @@ public class ControladorGrafica : MonoBehaviour {
 		if (Mathf.Abs (n) == 1) {
 			gain += 1f/11f * n;
 			gain = Mathf.Clamp (gain, 0, 1);
-            print("gain " + gain);
+            //print("gain " + gain);
 		}
 	}
 
@@ -462,7 +493,8 @@ public class ControladorGrafica : MonoBehaviour {
 			}
 		}
 		//actualiza heart rate aumentando/disminuyendo en 10
-		heartRate = (int)Mathf.Clamp (heartRate + -n*10f/11f, 70f, 140f);
+		heartRate = (int)Mathf.Clamp (heartRate + (-n*100f)/11f, 70f, 140f);
+        print(heartRate);
 		hrLabel.text = heartRate.ToString ();
 		//reinicia el barrido
 		indiceActual = 0;
@@ -503,7 +535,7 @@ public class ControladorGrafica : MonoBehaviour {
 			blue [0] = Mathf.Clamp (blueAux, 0, 1);
 			redAux += 1f / 11f * n;
 			red [0] = Mathf.Clamp (redAux, 0, 1);*/
-            print("power " + power);
+            //print("power " + power);
 		}
 	}
 
