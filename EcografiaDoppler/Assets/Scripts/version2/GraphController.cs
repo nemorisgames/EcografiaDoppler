@@ -100,26 +100,46 @@ public class GraphController : MonoBehaviour {
             if (SceneManager.GetActiveScene().name == "EcografiaUmbilical")
             {
                 //Funcion!!
-                currentValue = Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f - 19f) * 20f + 40;
-                
+                //currentValue = Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f - 19f) * 20f + 40;
+                //currentValue = Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f - 45f) * 20f + 40;
+                horizontalFactor = 3.5f;
+                //Funcion!!
+                //currentValue = Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f - 19f) * 30f + 50;
+                currentValue = Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / 4 % 65 < 8) ? 15f : 45f)) * ((indexScan * heartRate / 4 % 65 > 65 || indexScan * heartRate / 4 % 65 < 10) ? 0f : 30f) + ((indexScan * heartRate / 4 % 65 > 65 || indexScan * heartRate / 4 % 65 < 10) ? -25f : 0f) + 45;
+
             }
             if (SceneManager.GetActiveScene().name == "EcografiaDuctus")
             {
                 horizontalFactor = 1.0f;
                 //Funcion!!
-                //currentValue = (Mathf.Cos((indexScan * heartRate / 4 % 60) * horizontalFactor * Mathf.PI / 180f * 8) * 17f) + 50f;// + (Mathf.Sin((indexScan % 30) * Mathf.PI / 180f * 3f) * 60f) - (Mathf.Sin((indexScan % 60) * Mathf.PI / 180f * 3f) * 30f);
-                currentValue = (Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f * 8) * ((indexScan * heartRate / 4 % 65 < 30)?15f:30f)) + 60f;// + (Mathf.Sin((indexScan % 30) * Mathf.PI / 180f * 3f) * 60f) - (Mathf.Sin((indexScan % 60) * Mathf.PI / 180f * 3f) * 30f);
+                //currentValue = (Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f * 8) * ((indexScan * heartRate / 4 % 65 < 30)?15f:30f)) + 60f;// + (Mathf.Sin((indexScan % 30) * Mathf.PI / 180f * 3f) * 60f) - (Mathf.Sin((indexScan % 60) * Mathf.PI / 180f * 3f) * 30f);
+                if (cursorController.umbilicalDraw)
+                {
+                    horizontalFactor = 3.5f;
+                    currentValue = Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / 4 % 65 < 8) ? 15f : 45f)) * ((indexScan * heartRate / 4 % 65 > 65 || indexScan * heartRate / 4 % 65 < 10) ? 0f : 30f) + ((indexScan * heartRate / 4 % 65 > 65 || indexScan * heartRate / 4 % 65 < 10) ? -25f : 0f) + 45;
+                }
+                else
+                {
+                    currentValue = (Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f * 8) * ((indexScan * heartRate / 4 % 65 < 0) ? 15f : 35f) * ((indexScan * heartRate / 4 % 65 > 25f && indexScan * heartRate / 4 % 65 < 40f) ? 0f : 1f)) + ((indexScan * heartRate / 4 % 65 > 25f && indexScan * heartRate / 4 % 65 < 40f) ? -35f : 0f) + ((indexScan * heartRate / 4 % 65 < 60) ? 5f : 50f) + 45;// + (Mathf.Sin((indexScan % 30) * Mathf.PI / 180f * 3f) * 60f) - (Mathf.Sin((indexScan % 60) * Mathf.PI / 180f * 3f) * 30f);
+                }
             }
             if (SceneManager.GetActiveScene().name == "EcografiaCerebral")
             {
+                horizontalFactor = 3.5f;
                 //Funcion!!
-                currentValue = Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f - 19f) * 30f + 50;
+                //currentValue = Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f - 19f) * 30f + 50;
+                currentValue = Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / 4 % 65 < 8) ? 15f : 45f)) * ((indexScan * heartRate / 4 % 65 > 65 || indexScan * heartRate / 4 % 65 < 10) ? 0f : 50f - pathology * 0.75f) + ((indexScan * heartRate / 4 % 65 > 65 || indexScan * heartRate / 4 % 65 < 10) ? -50f + pathology * 0.75f : 0f) + 65 + pathology * 0.75f;
+                //currentValue = Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / 4 % 65 < 8) ? 15f : 45f)) * 50 + 65;
+                //print(indexScan * heartRate / 4 % 65);
             }
             if (SceneManager.GetActiveScene().name == "EcografiaUtero")
             {
-                horizontalFactor = 3.5f;
+                horizontalFactor = 7.0f;
                 //Funcion!!
-                currentValue = Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f - 19f) * 20f + 50;
+                currentValue = Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f - 19f) * ((indexScan * heartRate / 4 % 65 > 25) ? 0f : 40f) + ((indexScan * heartRate / 4 % 65 > 25) ? Mathf.Cos((indexScan * heartRate / 4 % 65) * 8f * Mathf.PI / 180f - 55f) * (15f - pathology * 1.5f) : 40f) + 35f;
+
+                //horizontalFactor = 17.0f - heartRate * 2f;;
+                // - heartRate * 2f;//currentValue = Mathf.Cos((indexScan * heartRate / 5f % 150) * horizontalFactor * Mathf.PI / 180f - 0f) * ((indexScan * heartRate / 5 % 50 > 30) ? 0f : 40f) + 55f; // ((indexScan * heartRate / 4 % 65 > 25) ? Mathf.Cos((indexScan * heartRate / 4 % 65) * 8f * Mathf.PI / 180f - 55f) * 10f : 40f) + 55f;
             }
             //currentValue = Mathf.Cos((indexScan % 60) * 4.5f * Mathf.PI / 180f - 19f) * 20f + 40; FUNCIONA!
             //currentValue = (Mathf.Cos(horizontalFactor * ((indexScan * heartRate / 4) % 67) * Mathf.PI / 180f) * 60f) + 20;
@@ -127,7 +147,9 @@ public class GraphController : MonoBehaviour {
             float amplitude = 50f;
             currentValue = (2 * amplitude / Mathf.PI) * Mathf.Atan(1f / Mathf.Tan(indexScan * heartRate * horizontalFactor * Mathf.PI / period)) + 50 + (Mathf.Cos(horizontalFactor * (indexScan % 67) * heartRate * Mathf.PI / 180f) * 30f);
             */
-            currentValue -= pathology * 1f;
+            if (SceneManager.GetActiveScene().name != "EcografiaCerebral")
+                currentValue -= pathology * 1f;
+
             currentValue *= inverseFunction ? -1 : 1;
             //revisa si la funcion esta arriba o abajo del cero
             positiveFunction = currentValue > 0;

@@ -7,9 +7,12 @@ public class CursorController : MonoBehaviour {
     public GraphController graphController;
     public UITexture durezasUITexture;
     public Texture2D durezasTexture;
+    public Transform puntoFoco;
+    public UISprite lineaPunteada;
     public float durezasAngle = 0f;
     public bool inVein = false;
     public bool positive = false;
+    public bool umbilicalDraw = false;
     // Use this for initialization
     void Start () {
         durezasTexture = (Texture2D)durezasUITexture.mainTexture;
@@ -52,7 +55,7 @@ public class CursorController : MonoBehaviour {
             //Debug.Log("N/A");
         }
 
-        if ((cDurezas.r > 0.5f && cDurezas.b < 0.5f) || (cDurezas.b > 0.5f && cDurezas.r < 0.5f))
+        if ((cDurezas.r > 0.5f && cDurezas.b < 0.5f) || (cDurezas.b > 0.5f && cDurezas.r < 0.5f) && !(cDurezas.b == cDurezas.r && cDurezas.g == cDurezas.r))
         {
             //Venas
             durezasAngle = 0f;
@@ -62,14 +65,31 @@ public class CursorController : MonoBehaviour {
         }
         else
         {
-            durezasAngle = cDurezas.g;
-            inVein = false;
-            print(durezasAngle);
+            if ((Mathf.Abs(cDurezas.b - cDurezas.r) <= 1f / 255f && Mathf.Abs(cDurezas.g - cDurezas.r) <= 1f / 255f && Mathf.Abs(cDurezas.g - cDurezas.b) <= 1f / 255f))
+            {
+                umbilicalDraw = true;
+                durezasAngle = cDurezas.g;
+                print("en dibujo umbilical");
+            }
+            else
+            {
+                durezasAngle = cDurezas.g;
+                umbilicalDraw = false;
+                inVein = false;
+                print(durezasAngle);
+            }
         }
     }
-	// Update is called once per frame
-	void Update () {
-        
-
+    // Update is called once per frame
+    void LateUpdate()
+    {
+        transform.LookAt(puntoFoco);
+        transform.Rotate(0f, -90f, 0f);
+        if (Mathf.Abs(transform.rotation.y + 0.5f) < 0.01f)
+        {
+            print("aqui");
+            transform.rotation = new Quaternion(transform.rotation.x, 180f, transform.rotation.z, transform.rotation.w);
+        }
+        lineaPunteada.height = (int)(Vector3.Distance(transform.position, puntoFoco.position) * 320f);
     }
 }
