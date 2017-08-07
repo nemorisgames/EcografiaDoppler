@@ -13,7 +13,8 @@ public class GraphController : MonoBehaviour {
     float verticalScale = 1f;
     int gain = 0;
     int power = 0;
-    float heartRate = 1;
+    [HideInInspector]
+    public float heartRate = 1;
     bool inverseFunction = false;
     bool sleep = false;
     int pathology = 0;
@@ -29,6 +30,7 @@ public class GraphController : MonoBehaviour {
     ArrayList horizontalNumbers = new ArrayList();
     public CursorController cursorController;
     public FocusController focusController;
+    float deltaTime;
     // Use this for initialization
     void Start () {
         texture = new Texture2D(sizeHorizontal, sizeVertical);
@@ -36,7 +38,8 @@ public class GraphController : MonoBehaviour {
         transform.localScale = new Vector3(sizeHorizontal, transform.localScale.y, transform.localScale.z);
         zero = sizeVertical / 2;
         PaintItBlack();
-		Time.fixedDeltaTime = 0.8f * Time.deltaTime;
+        deltaTime = Time.deltaTime;
+		Time.fixedDeltaTime = 0.8f * deltaTime - Time.timeScale * 0.00025f;
     }
 
     public void PaintItBlack()
@@ -89,7 +92,7 @@ public class GraphController : MonoBehaviour {
     {
         float currentValue = 0f;
         bool positiveFunction;
-        for (int i = 0; i < 10 + gain + power; i++)
+        for (int i = 0; i < 5 + (int)((gain + power) / 2); i++)
         {
             paintLineVerticalBlack(indexScan % sizeHorizontal + incrIndexScan);
             if(indexScan % sizeHorizontal == 0)
@@ -154,13 +157,16 @@ public class GraphController : MonoBehaviour {
             currentValue *= inverseFunction ? -1 : 1;
             //revisa si la funcion esta arriba o abajo del cero
             positiveFunction = currentValue > 0;
-            if (positiveFunction)
+            if (i != 0)
             {
-                currentValue += Random.Range(-currentValue, 0);
-            }
-            else
-            {
-                currentValue -= Random.Range(0, currentValue);
+                if (positiveFunction)
+                {
+                    currentValue += Random.Range(-currentValue, 0);
+                }
+                else
+                {
+                    currentValue -= Random.Range(0, currentValue);
+                }
             }
             //pinta la parte de abajo (al reves)
             if (!positiveFunction && currentValue > 0)
@@ -201,6 +207,72 @@ public class GraphController : MonoBehaviour {
         }
     }
 
+    public void adjustTimeFixedScale()
+    {
+        StartCoroutine(adjustTimeFixedScaleCoroutine());
+    }
+    IEnumerator adjustTimeFixedScaleCoroutine() {
+        yield return new WaitForFixedUpdate();
+        float value = 0f;
+        if (SceneManager.GetActiveScene().name == "EcografiaUtero")
+        {
+            if (sliderheart.value >= 0.5f)
+            {
+                value = 0.02f;
+                if (sliderheart.value >= 0.625f)
+                {
+                    value = 0.017f;
+                    if (sliderheart.value >= 0.75f)
+                    {
+                        value = 0.014f;
+                        if (sliderheart.value >= 0.875f)
+                        {
+                            value = 0.011f;
+                            if (sliderheart.value >= 1f)
+                            {
+                                value = 0.009f;
+                                print(sliderheart.value);
+                            }
+                        }
+                    }
+                }
+
+            }
+            else
+            {
+                if (sliderheart.value >= 0.375f)
+                    value = 0.03f;
+                else
+                    if (sliderheart.value >= 0.25f)
+                    value = 0.038f;
+                else
+                    if (sliderheart.value >= 0.25f)
+                    value = 0.045f;
+                else
+                    value = 0.067f;
+            }
+        }
+        else
+        {
+            if (sliderheart.value >= 0.5f)
+            {
+                value = 0.00025f;
+            }
+            else
+            {
+                if (sliderheart.value >= 0.375f)
+                    value = 0.003f;
+                else
+                    if (sliderheart.value >= 0.25f)
+                    value = 0.018f;
+                else
+                    value = 0.0485f;
+            }
+        }
+        Time.fixedDeltaTime = 0.8f * deltaTime - Time.timeScale * value;
+        print(Time.fixedDeltaTime);
+    }
+
     // Update is called once per frame
     void FixedUpdate() {
         if (sleep) return;
@@ -217,7 +289,7 @@ public class GraphController : MonoBehaviour {
         //slider heartrate
         heartRate = (int)((sliderheart.value + 0.5f) * 6f - 2f);
         beatsPerMinute.text = "" + (((sliderheart.value) * 100) + 70);
-        if (sliderheart.value >= 0.5f)
+        /*if (sliderheart.value >= 0.5f)
         {
             Time.timeScale = sliderheart.value * 1.5f + 0.25f;
         }
@@ -230,8 +302,23 @@ public class GraphController : MonoBehaviour {
                     Time.timeScale = sliderheart.value * 1.2f + 0.2f;
                 else
                     Time.timeScale = 0.25f;
+        }*/
+        if (sliderheart.value >= 0.5f)
+        {
+            Time.timeScale = sliderheart.value * 1.5f + 0.25f;
         }
-
+        else
+        {
+            if (sliderheart.value >= 0.375f)
+                Time.timeScale = sliderheart.value * 1.4f + 0.2f;
+            else
+                if (sliderheart.value >= 0.25f)
+                Time.timeScale = sliderheart.value * 1.2f + 0.2f;
+            else
+                Time.timeScale = 0.25f;
+        }
+        //print(0.8f * Time.deltaTime - Time.timeScale * 0.001f);
+        //Time.fixedDeltaTime = 0.8f * Time.deltaTime;
         if (SceneManager.GetActiveScene().name == "EcografiaUtero")
         {
             //heartRate = (int)((sliderheart.value * 2f + 1f) * 1f - 0f);
@@ -256,6 +343,7 @@ public class GraphController : MonoBehaviour {
                         Time.timeScale = 0.18f;
             }
         }
+        
         //Time.timeScale = sliderheart.value * 1.5f + 0.3f;
         //incrIndexScan *= heartRate;
         //slider pathology
