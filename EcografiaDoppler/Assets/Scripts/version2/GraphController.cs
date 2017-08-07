@@ -36,6 +36,7 @@ public class GraphController : MonoBehaviour {
         transform.localScale = new Vector3(sizeHorizontal, transform.localScale.y, transform.localScale.z);
         zero = sizeVertical / 2;
         PaintItBlack();
+		Time.fixedDeltaTime = 0.8f * Time.deltaTime;
     }
 
     public void PaintItBlack()
@@ -201,7 +202,7 @@ public class GraphController : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update() {
+    void FixedUpdate() {
         if (sleep) return;
         //slider speed
         incrIndexScan = (int)((sliderSpeed.value / 0.5f * 2.5f) + 1) * 2;
