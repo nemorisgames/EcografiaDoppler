@@ -28,9 +28,14 @@ public class Login : MonoBehaviour {
 		}
 
 		if (Input.GetKeyDown (KeyCode.Escape)) {
-			Application.Quit ();
+            salirAplicacion();
 		}
 	}
+
+    public void salirAplicacion()
+    {
+        Application.Quit();
+    }
 
 	public void NextInput(){
 		if (active < inputs.Length - 1) {

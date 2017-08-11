@@ -11,12 +11,13 @@ public class LabelIndicators : MonoBehaviour {
 	float horizontalStringLength;
 	string horizontalSpace = "";
 	float verticalStep = 1f;
+    int variation = 0;
 	// Use this for initialization
 	void Start (){
 		changeVerticalPosition (0);
 		BuildString (horizontalScale);
 		horizontalStringLength = horizontalSpace.Length;
-	}
+    }
 
 	void BuildString(int length){
 		horizontalSpace = "";
@@ -25,6 +26,43 @@ public class LabelIndicators : MonoBehaviour {
 		}
 	}
 
+    public void resetZero()
+    {
+        if (variation < 0)
+        {
+            for (int i = 0; i < Mathf.Abs(variation); i++)
+            {
+                lowerVerticalPosition();
+            }
+        }
+        if (variation > 0)
+        {
+            for (int i = 0; i < variation; i++)
+            {
+                upperVerticalPosition();
+            }
+        }
+    }
+
+    public void adjustZero(int adjust)
+    {
+        variation = adjust;
+        //changeVerticalPosition(-variation);
+        if(adjust < 0)
+        {
+            for(int i = 0; i < Mathf.Abs(adjust); i++)
+            {
+                upperVerticalPosition();
+            }
+        }
+        if(adjust > 0)
+        {
+            for (int i = 0; i < adjust; i++)
+            {
+                lowerVerticalPosition();
+            }
+        }
+    }
 
 	public void lowerVerticalPosition(){
 		changeVerticalPosition (-1);
@@ -94,7 +132,8 @@ public class LabelIndicators : MonoBehaviour {
 
 		verticalLabel.text = "";
 		for(int i = 0; i <= 17; i++){
-			verticalLabel.text += "" + (Mathf.Round((verticalPosition - i) * (verticalScale/verticalStep))).ToString() + "\n\n"; 
+            if (verticalPosition - i == 0) verticalLabel.text += "[333333]CM/SEC[-]          ";
+            verticalLabel.text += "" + (Mathf.Round((verticalPosition - i) * (verticalScale/verticalStep))).ToString() + "\n\n"; 
 		}
 
 		horizontalLabel.text = "";

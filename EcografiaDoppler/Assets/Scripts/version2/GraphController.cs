@@ -31,6 +31,7 @@ public class GraphController : MonoBehaviour {
     public CursorController cursorController;
     public FocusController focusController;
     float deltaTime;
+    public LabelIndicators labelIndicators;
     // Use this for initialization
     void Start () {
         texture = new Texture2D(sizeHorizontal, sizeVertical);
@@ -132,7 +133,7 @@ public class GraphController : MonoBehaviour {
                 horizontalFactor = 3.5f;
                 //Funcion!!
                 //currentValue = Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f - 19f) * 30f + 50;
-                currentValue = Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / 4 % 65 < 8) ? 15f : 45f)) * ((indexScan * heartRate / 4 % 65 > 65 || indexScan * heartRate / 4 % 65 < 10) ? 0f : 50f - pathology * 0.75f) + ((indexScan * heartRate / 4 % 65 > 65 || indexScan * heartRate / 4 % 65 < 10) ? -50f + pathology * 0.75f : 0f) + 65 + pathology * 0.75f;
+                currentValue = Mathf.Cos((indexScan * (heartRate) / (4 * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 8) ? 15f : 45f)) * ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 10) ? 0f : 50f - pathology * 0.75f) + ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 10) ? -50f + pathology * 0.75f : 0f) + 65 + pathology * 0.75f;
                 //currentValue = Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / 4 % 65 < 8) ? 15f : 45f)) * 50 + 65;
                 //print(indexScan * heartRate / 4 % 65);
             }
@@ -200,10 +201,10 @@ public class GraphController : MonoBehaviour {
             GameObject g = Instantiate(horizontalNumberPrefab);
             g.transform.parent = transform.parent;
             g.transform.localScale = new Vector3(1f, 1f, 1f);
-            g.transform.localPosition = new Vector2(g.transform.localPosition.x + i * 20f - 190f - 85f, -140f);
+            g.transform.localPosition = new Vector2(g.transform.localPosition.x + i * 20f - 65f, -140f);
             horizontalNumbers.Add(g);
             //g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f) / 100f;
-            g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * (sliderheart.value + 0.5f)) / 100f;
+            g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * (sliderheart.value + 0.5f) * (incrIndexScan / 7f)) / 100f;
         }
     }
 
@@ -273,13 +274,25 @@ public class GraphController : MonoBehaviour {
         print(Time.fixedDeltaTime);
     }
 
+    public void zeroAdjust()
+    {
+        labelIndicators.resetZero();
+        labelIndicators.adjustZero(Mathf.RoundToInt((sliderZero.value - 0.5f) * 10));
+    }
+
     // Update is called once per frame
     void FixedUpdate() {
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Time.timeScale = 1f;
+            SceneManager.LoadScene("Login");
+        }
         if (sleep) return;
         //slider speed
         incrIndexScan = (int)((sliderSpeed.value / 0.5f * 2.5f) + 1) * 2;
         //slider scale
-        verticalScale = (sliderScale.value / 0.5f);
+        verticalScale = (Mathf.Pow(sliderScale.value, 1.5f) / (0.35355339059f));
         //slider zero
         zero = Mathf.CeilToInt((sliderZero.value - 0.5f) * 140) + sizeVertical / 2;
         //slider gain
@@ -351,14 +364,10 @@ public class GraphController : MonoBehaviour {
 
         drawFunction();
         drawNumbersHorizontal();
-        indexScan += (int)(incrIndexScan);
+        indexScan += 2; // (int)(incrIndexScan);
         //reinicia el contador para reiniciar la funcion desde cero
         if (indexScan >= sizeHorizontal)
             indexScan = 0;
 
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            SceneManager.LoadScene("Login");
-        }
     }
 }
