@@ -5,6 +5,8 @@ using UnityEngine;
 public class FocusController : MonoBehaviour {
     public Texture2D[] texturesRedBlue;
     public Texture2D[] texturesRedBlue_;
+    public Texture2D[] texturesRedBlueInv;
+    public Texture2D[] texturesRedBlueInv_;
     public Texture2D[] texturesAngle;
     public int index = 0;
     int cont = 0;
@@ -14,10 +16,25 @@ public class FocusController : MonoBehaviour {
     public UITexture textureAngle;
     public Transform xMarker;
     public CursorController cursorController;
-
+    public bool invertido = false;
+    public GraphController graphController;
     // Use this for initialization
     void Start () {
 	}
+
+    public void changeImages()
+    {
+        /*string angle = "0";
+        switch (index)
+        {
+            case 0: angle = "0"; break;
+            case 1: angle = "45"; break;
+            case 2: angle = "90"; break;
+            case 3: angle = "-45"; break;
+            case 4: angle = "-90"; break;
+        }
+        changeImages(angle);*/
+    }
 
     public void changeImages(string i)
     {
@@ -29,11 +46,23 @@ public class FocusController : MonoBehaviour {
             case "-45": index = 3; break;
             case "-90": index = 4; break;
         }
-        textureRedBlue.mainTexture = texturesRedBlue[index];
-        textureAngle.mainTexture = texturesAngle[index];
-        cursorController.durezasTexture = (Texture2D)textureAngle.mainTexture;
-        cursorController.GetPixelColor();
-        xMarker.position = transform.FindChild(i).transform.position;
+        if (invertido)
+        {
+            textureRedBlue.mainTexture = texturesRedBlueInv[index];
+            textureAngle.mainTexture = texturesAngle[index];
+            cursorController.durezasTexture = (Texture2D)textureAngle.mainTexture;
+            cursorController.GetPixelColor();
+            xMarker.position = transform.FindChild(i).transform.position;
+        }
+        else
+        {
+            textureRedBlue.mainTexture = texturesRedBlue[index];
+            textureAngle.mainTexture = texturesAngle[index];
+            cursorController.durezasTexture = (Texture2D)textureAngle.mainTexture;
+            cursorController.GetPixelColor();
+            xMarker.position = transform.FindChild(i).transform.position;
+        }
+        
         //textureRedBlue.mainTexture.Apply();
         //textureAngle.mainTexture.Apply();
     }
@@ -46,6 +75,7 @@ public class FocusController : MonoBehaviour {
 
     // Update is called once per frame
     void Update () {
+        if (graphController.sleep) return;
         if (contadorTiempo < Time.time)
         {
             cont++;
@@ -53,11 +83,25 @@ public class FocusController : MonoBehaviour {
         }
         if (cont % 2 == 0)
         {
-            textureRedBlue.mainTexture = texturesRedBlue[index];
+            if (invertido)
+            {
+                textureRedBlue.mainTexture = texturesRedBlueInv[index];
+            }
+            else
+            {
+                textureRedBlue.mainTexture = texturesRedBlue[index];
+            }
         }
         else
         {
-            textureRedBlue.mainTexture = texturesRedBlue_[index];
+            if (invertido)
+            {
+                textureRedBlue.mainTexture = texturesRedBlueInv_[index];
+            }
+            else
+            {
+                textureRedBlue.mainTexture = texturesRedBlue_[index];
+            }
         }
     }
 }

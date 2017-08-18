@@ -16,8 +16,9 @@ public class GraphController : MonoBehaviour {
     [HideInInspector]
     public float heartRate = 1;
     bool inverseFunction = false;
-    bool sleep = false;
-    int pathology = 0;
+    bool inverseGraph = false;
+    public bool sleep = false;
+    public int pathology = 0;
     public UISlider sliderSpeed;
     public UISlider sliderScale;
     public UISlider sliderZero;
@@ -77,11 +78,23 @@ public class GraphController : MonoBehaviour {
     public void functionInverseNormal()
     {
         inverseFunction = false;
+        //focusController.invertido = true;
+        //focusController.changeImages();
     }
 
     public void functionInverse()
     {
         inverseFunction = true;
+        //focusController.invertido = false;
+        //focusController.changeImages();
+    }
+
+    public void functionInverseGraph()
+    {
+        inverseGraph = !inverseGraph;
+        focusController.invertido = inverseGraph;
+        focusController.changeImages();
+
     }
 
     public void makeSleep()
@@ -110,7 +123,7 @@ public class GraphController : MonoBehaviour {
                 horizontalFactor = 3.5f;
                 //Funcion!!
                 //currentValue = Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f - 19f) * 30f + 50;
-                currentValue = Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / 4 % 65 < 8) ? 15f : 45f)) * ((indexScan * heartRate / 4 % 65 > 65 || indexScan * heartRate / 4 % 65 < 10) ? 0f : 30f) + ((indexScan * heartRate / 4 % 65 > 65 || indexScan * heartRate / 4 % 65 < 10) ? -25f : 0f) + 45;
+                currentValue = Mathf.Cos((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 8) ? 15f : 45f) + pathology / 30f) * ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 10) ? 10f - pathology * -2f : 30f + pathology * 0.5f) + ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 10) ? -25f : 0f) + 35f + pathology;
 
             }
             if (SceneManager.GetActiveScene().name == "EcografiaDuctus")
@@ -121,11 +134,11 @@ public class GraphController : MonoBehaviour {
                 if (cursorController.umbilicalDraw)
                 {
                     horizontalFactor = 3.5f;
-                    currentValue = Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / 4 % 65 < 8) ? 15f : 45f)) * ((indexScan * heartRate / 4 % 65 > 65 || indexScan * heartRate / 4 % 65 < 10) ? 0f : 30f) + ((indexScan * heartRate / 4 % 65 > 65 || indexScan * heartRate / 4 % 65 < 10) ? -25f : 0f) + 45;
+                    currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 8) ? 15f : 45f)) * ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? 0f : 30f) + ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? -25f : 0f) + 45;
                 }
                 else
                 {
-                    currentValue = (Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f * 8) * ((indexScan * heartRate / 4 % 65 < 0) ? 15f : 35f) * ((indexScan * heartRate / 4 % 65 > 25f && indexScan * heartRate / 4 % 65 < 40f) ? 0f : 1f)) + ((indexScan * heartRate / 4 % 65 > 25f && indexScan * heartRate / 4 % 65 < 40f) ? -35f : 0f) + ((indexScan * heartRate / 4 % 65 < 60) ? 5f : 50f) + 45;// + (Mathf.Sin((indexScan % 30) * Mathf.PI / 180f * 3f) * 60f) - (Mathf.Sin((indexScan % 60) * Mathf.PI / 180f * 3f) * 30f);
+                    currentValue = (Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f * 8) * ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 0) ? 15f : 35f) * ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 25f && indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 40f) ? 0f : 1f)) + ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 25f && indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 40f) ? -35f : 0f) + ((indexScan * heartRate / 4f % 65 < 60) ? 5f : 50f) + 45;// + (Mathf.Sin((indexScan % 30) * Mathf.PI / 180f * 3f) * 60f) - (Mathf.Sin((indexScan % 60) * Mathf.PI / 180f * 3f) * 30f);
                 }
             }
             if (SceneManager.GetActiveScene().name == "EcografiaCerebral")
@@ -139,9 +152,10 @@ public class GraphController : MonoBehaviour {
             }
             if (SceneManager.GetActiveScene().name == "EcografiaUtero")
             {
-                horizontalFactor = 7.0f;
+                horizontalFactor = 3.5f;
                 //Funcion!!
-                currentValue = Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f - 19f) * ((indexScan * heartRate / 4 % 65 > 25) ? 0f : 40f) + ((indexScan * heartRate / 4 % 65 > 25) ? Mathf.Cos((indexScan * heartRate / 4 % 65) * 8f * Mathf.PI / 180f - 55f) * (15f - pathology * 1.5f) : 40f) + 35f;
+                //currentValue = Mathf.Cos((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f - 19f) * ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 > 25) ? 0f : 40f) + ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 > 25) ? Mathf.Cos((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65) * 8f * Mathf.PI / 180f - 55f) * (15f - pathology * 1.5f) : 40f) + 35f;
+                currentValue = Mathf.Cos((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 8) ? 15f : 45f) + pathology / 30f) * ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 10) ? 10f - pathology * -2f : 30f + pathology * 0.5f) + ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 10) ? -25f : 0f) + 55f + pathology;
 
                 //horizontalFactor = 17.0f - heartRate * 2f;;
                 // - heartRate * 2f;//currentValue = Mathf.Cos((indexScan * heartRate / 5f % 150) * horizontalFactor * Mathf.PI / 180f - 0f) * ((indexScan * heartRate / 5 % 50 > 30) ? 0f : 40f) + 55f; // ((indexScan * heartRate / 4 % 65 > 25) ? Mathf.Cos((indexScan * heartRate / 4 % 65) * 8f * Mathf.PI / 180f - 55f) * 10f : 40f) + 55f;
@@ -155,7 +169,8 @@ public class GraphController : MonoBehaviour {
             if (SceneManager.GetActiveScene().name != "EcografiaCerebral")
                 currentValue -= pathology * 1f;
 
-            currentValue *= inverseFunction ? -1 : 1;
+            currentValue *= (inverseFunction) ? -1 : 1;
+            currentValue *= ((inverseGraph)) ? -1 : 1;
             //revisa si la funcion esta arriba o abajo del cero
             positiveFunction = currentValue > 0;
             if (i != 0)
@@ -204,7 +219,56 @@ public class GraphController : MonoBehaviour {
             g.transform.localPosition = new Vector2(g.transform.localPosition.x + i * 20f - 65f, -140f);
             horizontalNumbers.Add(g);
             //g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f) / 100f;
-            g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * (sliderheart.value + 0.5f) * (incrIndexScan / 7f)) / 100f;
+            if (SceneManager.GetActiveScene().name == "EcografiaUtero")
+            {
+                if (sliderheart.value <= 0.5f)
+                    g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 0.45f) / ((incrIndexScan + 0.5f) / 3.1f)) / 100f;
+                else
+                    g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 1.7f) / ((incrIndexScan + 0.5f) / 8.2f)) / 100f;
+            }
+            else
+            {
+                if (SceneManager.GetActiveScene().name == "EcografiaUmbilical")
+                {
+                    if (sliderheart.value <= 0.5f)
+                        if (sliderheart.value == 0.125f)
+                        {
+                            g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 1.8f) / ((incrIndexScan + 0.5f) / 9f)) / 100f;
+                        }
+                        else
+                            g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 1.1f) / ((incrIndexScan + 0.5f) / 8.2f)) / 100f;
+                    else
+                        g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 1.2f) / ((incrIndexScan + 0.5f) / 8.2f)) / 100f;
+                }
+                else
+                {
+                    if (SceneManager.GetActiveScene().name == "EcografiaCerebral")
+                    {
+                        if (sliderheart.value <= 0.5f)
+                            if (sliderheart.value == 0.125f)
+                            {
+                                g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 1.8f) / ((incrIndexScan + 0.5f) / 9f)) / 100f;
+                            }
+                            else
+                                g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 1.2f) / ((incrIndexScan + 0.5f) / 8.2f)) / 100f;
+                        else
+                            g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 1.3f) / ((incrIndexScan + 0.5f) / 8.2f)) / 100f;
+                    }
+                    else
+                    {
+                        if (sliderheart.value <= 0.5f)
+                            if (sliderheart.value == 0.125f)
+                            {
+                                g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 1.8f) / ((incrIndexScan + 0.5f) / 9f)) / 100f;
+                            }
+                            else
+                                g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 1.2f) / ((incrIndexScan + 0.5f) / 9f)) / 100f;
+                        
+                        else
+                            g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 1.5f) / ((incrIndexScan + 0.5f) / 7.7f)) / 100f;
+                    }
+                }
+            }
         }
     }
 
@@ -267,7 +331,11 @@ public class GraphController : MonoBehaviour {
                     if (sliderheart.value >= 0.25f)
                     value = 0.018f;
                 else
+                    if (sliderheart.value >= 0.125f)
+                    value = 0.003f;
+                else
                     value = 0.0485f;
+                
             }
         }
         Time.fixedDeltaTime = 0.8f * deltaTime - Time.timeScale * value;
@@ -327,6 +395,9 @@ public class GraphController : MonoBehaviour {
             else
                 if (sliderheart.value >= 0.25f)
                 Time.timeScale = sliderheart.value * 1.2f + 0.2f;
+            else
+                if (sliderheart.value >= 0.125f)
+                Time.timeScale = sliderheart.value * 8f + 0.2f;
             else
                 Time.timeScale = 0.25f;
         }

@@ -13,10 +13,13 @@ public class CursorController : MonoBehaviour {
     public bool inVein = false;
     public bool positive = false;
     public bool umbilicalDraw = false;
+    public Transform linterna;
+    public Vector3 posicionInicialLinterna;
     // Use this for initialization
     void Start () {
         durezasTexture = (Texture2D)durezasUITexture.mainTexture;
         GetPixelColor();
+        posicionInicialLinterna = linterna.position;
     }
 
     void OnDragEnd()
@@ -27,7 +30,8 @@ public class CursorController : MonoBehaviour {
     public void GetPixelColor()
     {
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, Vector3.forward, out hit))
+        int layerMask = 1 << 8;
+        if (Physics.Raycast(transform.position, Vector3.forward, out hit, 100f, ~layerMask))
         {
             hitTexture = hit.transform.gameObject.GetComponentInChildren<UITexture>().mainTexture as Texture2D;
         }
@@ -83,6 +87,13 @@ public class CursorController : MonoBehaviour {
     // Update is called once per frame
     void LateUpdate()
     {
+        /*linterna.LookAt(puntoFoco);
+        linterna.Rotate(0f, -90f, 0f);
+        if (Mathf.Abs(linterna.rotation.y + 0.5f) < 0.01f)
+        {
+            print("aqui");
+            linterna.rotation = new Quaternion(linterna.rotation.x, 180f, linterna.rotation.z, linterna.rotation.w);
+        }*/
         transform.LookAt(puntoFoco);
         transform.Rotate(0f, -90f, 0f);
         if (Mathf.Abs(transform.rotation.y + 0.5f) < 0.01f)
@@ -91,5 +102,9 @@ public class CursorController : MonoBehaviour {
             transform.rotation = new Quaternion(transform.rotation.x, 180f, transform.rotation.z, transform.rotation.w);
         }
         lineaPunteada.height = (int)(Vector3.Distance(transform.position, puntoFoco.position) * 320f);
+
+        linterna.position = posicionInicialLinterna - 0f * transform.right;
+        linterna.rotation = transform.rotation;
+        linterna.Rotate(0f, 0f, -90f);
     }
 }
