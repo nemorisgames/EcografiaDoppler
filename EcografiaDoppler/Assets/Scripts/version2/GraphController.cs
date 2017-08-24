@@ -34,6 +34,7 @@ public class GraphController : MonoBehaviour {
     float deltaTime;
     public LabelIndicators labelIndicators;
     public Transform speedBar;
+	int ciclo = 0;
     // Use this for initialization
     void Start () {
         texture = new Texture2D(sizeHorizontal, sizeVertical);
@@ -210,6 +211,7 @@ public class GraphController : MonoBehaviour {
                 texture.SetPixel(indexScan % sizeHorizontal, (int)((currentValue * verticalScale * cursorController.durezasAngle + zero)), Color.white);
         }
         texture.Apply();
+
     }
 
     void drawNumbersHorizontal()
@@ -442,8 +444,14 @@ public class GraphController : MonoBehaviour {
         //slider pathology
         pathology = (int)(sliderPathology.value * 30);
 
-        drawFunction();
-        drawNumbersHorizontal();
+		ciclo++;
+		if (ciclo % 2 == 0) {
+			drawFunction ();
+		}
+
+		if (ciclo % 200 == 0) {
+			drawNumbersHorizontal ();
+		}
         if (sliderScale.value >= 0.5f)
             if(sliderScale.value >= 1f)
                 labelIndicators.verticalScale = 1 + (21f - sliderScale.value * 20f) * 0.9f;

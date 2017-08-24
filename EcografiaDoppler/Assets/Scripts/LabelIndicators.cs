@@ -12,6 +12,7 @@ public class LabelIndicators : MonoBehaviour {
 	string horizontalSpace = "";
 	float verticalStep = 1f;
     int variation = 0;
+	int ciclo = 0;
 	// Use this for initialization
 	void Start (){
 		changeVerticalPosition (0);
@@ -116,6 +117,9 @@ public class LabelIndicators : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		ciclo++;
+		if (ciclo % 20 > 0)
+			return;
 		/*if (Input.GetKeyDown (KeyCode.W)) {
 			changeVerticalPosition (1);
 		}
