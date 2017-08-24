@@ -10,7 +10,7 @@ public class GraphController : MonoBehaviour {
     int zero = 0;
     int indexScan = 0;
     int incrIndexScan = 1;
-    float verticalScale = 1f;
+    public float verticalScale = 1f;
     int gain = 0;
     int power = 0;
     [HideInInspector]
@@ -33,6 +33,7 @@ public class GraphController : MonoBehaviour {
     public FocusController focusController;
     float deltaTime;
     public LabelIndicators labelIndicators;
+    public Transform speedBar;
     // Use this for initialization
     void Start () {
         texture = new Texture2D(sizeHorizontal, sizeVertical);
@@ -94,6 +95,7 @@ public class GraphController : MonoBehaviour {
         inverseGraph = !inverseGraph;
         focusController.invertido = inverseGraph;
         focusController.changeImages();
+        speedBar.localScale = new Vector3(1f, -1f * speedBar.localScale.y, 1f);
 
     }
 
@@ -123,7 +125,7 @@ public class GraphController : MonoBehaviour {
                 horizontalFactor = 3.5f;
                 //Funcion!!
                 //currentValue = Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f - 19f) * 30f + 50;
-                currentValue = Mathf.Cos((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 8) ? 15f : 45f) + pathology / 30f) * ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 10) ? 10f - pathology * -2f : 30f + pathology * 0.5f) + ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 10) ? -25f : 0f) + 35f + pathology;
+                currentValue = Mathf.Cos((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 8) ? 15f : 45f) + pathology / 30f) * ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 10) ? 10f - pathology * -2f : 30f + pathology * 0.5f) + ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 10) ? -25f : 0f) + 35f + pathology * -0.5f;
 
             }
             if (SceneManager.GetActiveScene().name == "EcografiaDuctus")
@@ -134,11 +136,18 @@ public class GraphController : MonoBehaviour {
                 if (cursorController.umbilicalDraw)
                 {
                     horizontalFactor = 3.5f;
-                    currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 8) ? 15f : 45f)) * ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? 0f : 30f) + ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? -25f : 0f) + 45;
+                    /*
+                    currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 8) ? 15f : 45f));
+                    currentValue *= ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? 0f : 30f);
+                    currentValue += ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? -25f : 0f) + 45;*/
+                    currentValue = Mathf.Cos((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 8) ? 15f : 45f) + pathology / 30f) * ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 10) ? 10f - pathology * -2f : 30f + pathology * 0.5f) + ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 10) ? -25f : 0f) + 35f + pathology * -0.5f;
+
                 }
                 else
                 {
-                    currentValue = (Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f * 8) * ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 0) ? 15f : 35f) * ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 25f && indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 40f) ? 0f : 1f)) + ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 25f && indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 40f) ? -35f : 0f) + ((indexScan * heartRate / 4f % 65 < 60) ? 5f : 50f) + 45;// + (Mathf.Sin((indexScan % 30) * Mathf.PI / 180f * 3f) * 60f) - (Mathf.Sin((indexScan % 60) * Mathf.PI / 180f * 3f) * 30f);
+                    currentValue = (Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f * 8) * ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 0) ? 15f : 35f) * ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 25f && indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 40f) ? 0f : 1f));
+                    currentValue += ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 25f && indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 40f) ? -35f : 0f);
+                    currentValue += ((indexScan * heartRate / 4f % 65 < 60) ? 5f : 10f) + 45;// + (Mathf.Sin((indexScan % 30) * Mathf.PI / 180f * 3f) * 60f) - (Mathf.Sin((indexScan % 60) * Mathf.PI / 180f * 3f) * 30f);
                 }
             }
             if (SceneManager.GetActiveScene().name == "EcografiaCerebral")
@@ -435,6 +444,17 @@ public class GraphController : MonoBehaviour {
 
         drawFunction();
         drawNumbersHorizontal();
+        if (sliderScale.value >= 0.5f)
+            if(sliderScale.value >= 1f)
+                labelIndicators.verticalScale = 1 + (21f - sliderScale.value * 20f) * 0.9f;
+            else
+                labelIndicators.verticalScale = 1 + (20f - sliderScale.value * 20f) * 0.9f;
+        else
+        {
+            labelIndicators.verticalScale = 0 + (0f + (2f - sliderScale.value) * (2f - sliderScale.value) * (2f - sliderScale.value) * (1.3f - sliderScale.value)) * 1f;
+            labelIndicators.verticalScale *= labelIndicators.verticalScale;
+        }
+        //print(labelIndicators.verticalScale);
         indexScan += 2; // (int)(incrIndexScan);
         //reinicia el contador para reiniciar la funcion desde cero
         if (indexScan >= sizeHorizontal)

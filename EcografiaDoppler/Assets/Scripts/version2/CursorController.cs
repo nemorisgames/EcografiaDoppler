@@ -14,6 +14,7 @@ public class CursorController : MonoBehaviour {
     public bool positive = false;
     public bool umbilicalDraw = false;
     public Transform linterna;
+    public Transform transductor;
     public Vector3 posicionInicialLinterna;
     // Use this for initialization
     void Start () {
@@ -69,7 +70,7 @@ public class CursorController : MonoBehaviour {
         }
         else
         {
-            if ((Mathf.Abs(cDurezas.b - cDurezas.r) <= 1f / 255f && Mathf.Abs(cDurezas.g - cDurezas.r) <= 1f / 255f && Mathf.Abs(cDurezas.g - cDurezas.b) <= 1f / 255f))
+            if (((int)(Mathf.Abs(cDurezas.b - cDurezas.r) * 100) <= (int)(100f / 255f) && (int)(Mathf.Abs(cDurezas.g - cDurezas.r) * 100) <= (int)(100f / 255f) && (int)(Mathf.Abs(cDurezas.g - cDurezas.b) * 100) <= (int)(100f / 255f)))
             {
                 umbilicalDraw = true;
                 durezasAngle = cDurezas.g;
@@ -106,5 +107,6 @@ public class CursorController : MonoBehaviour {
         linterna.position = posicionInicialLinterna - 0f * transform.right;
         linterna.rotation = transform.rotation;
         linterna.Rotate(0f, 0f, -90f);
+        transductor.rotation = linterna.rotation;
     }
 }
