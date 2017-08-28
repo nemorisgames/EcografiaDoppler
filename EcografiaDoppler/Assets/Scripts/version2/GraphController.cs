@@ -9,7 +9,7 @@ public class GraphController : MonoBehaviour {
     Texture2D texture;
     int zero = 0;
     int indexScan = 0;
-    int incrIndexScan = 1;
+    float incrIndexScan = 1;
     public float verticalScale = 1f;
     int gain = 0;
     int power = 0;
@@ -35,6 +35,9 @@ public class GraphController : MonoBehaviour {
     public LabelIndicators labelIndicators;
     public Transform speedBar;
 	int ciclo = 0;
+	int cicloDots = 0;
+	ArrayList positionDots = new ArrayList();
+
     // Use this for initialization
     void Start () {
         texture = new Texture2D(sizeHorizontal, sizeVertical);
@@ -43,7 +46,9 @@ public class GraphController : MonoBehaviour {
         zero = sizeVertical / 2;
         PaintItBlack();
         deltaTime = Time.deltaTime;
-		Time.fixedDeltaTime = 0.8f * deltaTime - Time.timeScale * 0.00025f;
+		Time.fixedDeltaTime = Time.timeScale * (0.0155f - (sliderSpeed.value - 0.5f) * 0.01f);
+		//positionDots = new Vector3[sizeHorizontal * (5 + (int)((gain + power) / 2))];
+		print (sizeHorizontal * (5 + (int)((gain + power) / 2)));
     }
 
     public void PaintItBlack()
@@ -74,6 +79,7 @@ public class GraphController : MonoBehaviour {
         //pinta linea blanca del zero
         for(int i = 0; i < incrIndexScan; i++)
             texture.SetPixel(indexHorizontal + i, zero, Color.white);
+		//positionDots [indexHorizontal]
         texture.Apply();
     }
 
@@ -109,13 +115,13 @@ public class GraphController : MonoBehaviour {
     {
         float currentValue = 0f;
         bool positiveFunction;
-        for (int i = 0; i < 5 + (int)((gain + power) / 2); i++)
+		if(indexScan % sizeHorizontal == 2)
+		{
+			focusController.resetCont();
+		}
+        for (int i = 0; i < 1 + (int)((gain + power) * 2); i++)
         {
-            paintLineVerticalBlack(indexScan % sizeHorizontal + incrIndexScan);
-            if(indexScan % sizeHorizontal == 0)
-            {
-                focusController.resetCont();
-            }
+			
             //factor independiente para cada funcion que hace que calce con la medicion de latidos por segundos
             float horizontalFactor = 4.5f;//1.6f;//
             if (SceneManager.GetActiveScene().name == "EcografiaUmbilical")
@@ -126,7 +132,11 @@ public class GraphController : MonoBehaviour {
                 horizontalFactor = 3.5f;
                 //Funcion!!
                 //currentValue = Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f - 19f) * 30f + 50;
-                currentValue = Mathf.Cos((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 8) ? 15f : 45f) + pathology / 30f) * ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 10) ? 10f - pathology * -2f : 30f + pathology * 0.5f) + ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 10) ? -25f : 0f) + 35f + pathology * -0.5f;
+				//print(incrIndexScan);
+				currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 8) ? 15f : 45f) + pathology / 30f);
+				currentValue *= ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? 10f - pathology * -2f : 30f + pathology * 0.5f);
+				currentValue += ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? -25f : 0f);
+				currentValue += 35f + pathology * -0.5f;
 
             }
             if (SceneManager.GetActiveScene().name == "EcografiaDuctus")
@@ -199,17 +209,26 @@ public class GraphController : MonoBehaviour {
                 currentValue = 0;
             if (positiveFunction && currentValue < 0)
                 currentValue = 0;
-            if (cursorController.inVein)
-            {
-                if(cursorController.positive)
-                    currentValue = Random.Range(0, 30f);
-                else
-                    currentValue = Random.Range(-30, 0f);
-                texture.SetPixel(indexScan % sizeHorizontal, (int)((currentValue * verticalScale + zero)), Color.white);
-            }
-            else
-                texture.SetPixel(indexScan % sizeHorizontal, (int)((currentValue * verticalScale * cursorController.durezasAngle + zero)), Color.white);
-        }
+			if (cursorController.inVein) {
+				if (cursorController.positive)
+					currentValue = Random.Range (0, 30f);
+				else
+					currentValue = Random.Range (-30, 0f);
+				texture.SetPixel (indexScan % sizeHorizontal, (int)((currentValue * verticalScale + zero)), Color.white);
+				//positionDots.Add(new Vector2(indexScan % sizeHorizontal + incrIndexScan, (int)((currentValue * verticalScale + zero))));
+				//positionDots [cicloDots] = new Vector3(indexScan % sizeHorizontal, i, (int)((currentValue * verticalScale + zero)));
+			} else {
+				texture.SetPixel (indexScan % sizeHorizontal, (int)((currentValue * verticalScale * cursorController.durezasAngle + zero)), Color.white);
+				//texture.SetPixel ((indexScan + 1) % sizeHorizontal, (int)((currentValue * verticalScale * cursorController.durezasAngle + zero)), Color.white);
+				//texture.SetPixel ((indexScan + 2) % sizeHorizontal, (int)((currentValue * verticalScale * cursorController.durezasAngle + zero)), Color.white);
+				//print (cicloDots + ": " + indexScan % sizeHorizontal + ", " + i);
+				//positionDots.Add(new Vector2(indexScan % sizeHorizontal + incrIndexScan, (int)((currentValue * verticalScale * cursorController.durezasAngle + zero))));
+				//positionDots [cicloDots] = new Vector3(indexScan % sizeHorizontal, i, (int)((currentValue * verticalScale * cursorController.durezasAngle + zero)));
+			}
+			cicloDots++;
+			if (cicloDots == sizeHorizontal * (5 + (int)((gain + power) / 2)))
+				cicloDots = 0;
+		}
         texture.Apply();
 
     }
@@ -290,7 +309,7 @@ public class GraphController : MonoBehaviour {
     IEnumerator adjustTimeFixedScaleCoroutine() {
         yield return new WaitForFixedUpdate();
         float value = 0f;
-        if (SceneManager.GetActiveScene().name == "EcografiaUtero")
+        /*if (SceneManager.GetActiveScene().name == "EcografiaUtero")
         {
             if (sliderheart.value >= 0.5f)
             {
@@ -307,7 +326,7 @@ public class GraphController : MonoBehaviour {
                             if (sliderheart.value >= 1f)
                             {
                                 value = 0.009f;
-                                print(sliderheart.value);
+                                //print(sliderheart.value);
                             }
                         }
                     }
@@ -329,11 +348,12 @@ public class GraphController : MonoBehaviour {
             }
         }
         else
-        {
-            if (sliderheart.value >= 0.5f)
-            {
-                value = 0.00025f;
-            }
+        {*/
+            //if (sliderheart.value >= 0.5f)
+            //{
+			//value = 0.00025f;
+			value = 0.0025f;
+            /*}
             else
             {
                 if (sliderheart.value >= 0.375f)
@@ -347,10 +367,11 @@ public class GraphController : MonoBehaviour {
                 else
                     value = 0.0485f;
                 
-            }
-        }
-        Time.fixedDeltaTime = 0.8f * deltaTime - Time.timeScale * value;
-        print(Time.fixedDeltaTime);
+            }*/
+        //}
+		//Time.fixedDeltaTime = 0.8f * deltaTime - Time.timeScale * value * 100f * deltaTime;
+		Time.fixedDeltaTime = Time.timeScale * (0.0155f - (sliderSpeed.value - 0.5f) * ((1.25f - sliderSpeed.value) * 0.06f)); //0.075f 0.015f 
+		//print(Time.fixedDeltaTime + " " + (0.8f * deltaTime - Time.timeScale * value * 1000f * deltaTime));// * 100f * deltaTime);
     }
 
     public void zeroAdjust()
@@ -369,7 +390,7 @@ public class GraphController : MonoBehaviour {
         }
         if (sleep) return;
         //slider speed
-        incrIndexScan = (int)((sliderSpeed.value / 0.5f * 2.5f) + 1) * 2;
+        incrIndexScan = ((sliderSpeed.value / 0.5f * 2.5f) + 1) * 2;
         //slider scale
         verticalScale = (Mathf.Pow(sliderScale.value, 1.5f) / (0.35355339059f));
         //slider zero
@@ -379,26 +400,23 @@ public class GraphController : MonoBehaviour {
         //slider power
         power = (int)(sliderPower.value * 10);
         //slider heartrate
-        heartRate = (int)((sliderheart.value + 0.5f) * 6f - 2f);
+        heartRate = ((sliderheart.value + 0.5f) * 6f - 2f);
         beatsPerMinute.text = "" + (((sliderheart.value) * 100) + 70);
-        /*if (sliderheart.value >= 0.5f)
-        {
-            Time.timeScale = sliderheart.value * 1.5f + 0.25f;
-        }
-        else
-        {
-            if(sliderheart.value >= 0.375f)
-                Time.timeScale = sliderheart.value * 1.4f + 0.2f;
-            else
-                if (sliderheart.value >= 0.25f)
-                    Time.timeScale = sliderheart.value * 1.2f + 0.2f;
-                else
-                    Time.timeScale = 0.25f;
-        }*/
-        if (sliderheart.value >= 0.5f)
-        {
-            Time.timeScale = sliderheart.value * 1.5f + 0.25f;
-        }
+		//print (Time.timeScale + " " + Time.fixedDeltaTime + " " + Time.deltaTime);
+        //if (sliderheart.value >= 0.5f)
+        //{
+		if (SceneManager.GetActiveScene ().name == "EcografiaUtero") {
+			heartRate = (sliderheart.value * 1.3f - 1.6f) * 1.3f + 3f;
+			beatsPerMinute.text = "" + (((sliderheart.value) * 10) + 60);
+			Time.timeScale = ((sliderheart.value + 0.5f) * (sliderheart.value * 0.3f + 0.2f) + 0.15f); //* 0.2f, * 0.35f, * 0.5f
+		}
+		else{
+			//Time.timeScale = ((sliderheart.value + 0.5f) * (1f - (1f - (sliderheart.value + 0.5f)) * 0.7f) + 0.25f - (1f - (sliderheart.value + 0.5f)) * 0.15f); //0.25f
+			Time.timeScale = (sliderheart.value + 0.5f) * (1f - ((sliderheart.value * - 2f + 1f)) * 0.7f);
+			Time.timeScale += 0.25f - 0.15f;//(((sliderheart.value - 1f)) * -0.5f); //[0.13f] 0.15f 0f
+			//print(((sliderheart.value + 0.5f) * (1f - ((sliderheart.value * - 2f + 1f)) * 0.7f) + 0.25f - (1f - (sliderheart.value * 2f)) * 0.15f) + " " + (((sliderheart.value + 0.5f) * (0.3f)) + 0.1f));
+		}
+			/*}
         else
         {
             if (sliderheart.value >= 0.375f)
@@ -411,10 +429,10 @@ public class GraphController : MonoBehaviour {
                 Time.timeScale = sliderheart.value * 8f + 0.2f;
             else
                 Time.timeScale = 0.25f;
-        }
+        }*/
         //print(0.8f * Time.deltaTime - Time.timeScale * 0.001f);
         //Time.fixedDeltaTime = 0.8f * Time.deltaTime;
-        if (SceneManager.GetActiveScene().name == "EcografiaUtero")
+        /*if (SceneManager.GetActiveScene().name == "EcografiaUtero")
         {
             //heartRate = (int)((sliderheart.value * 2f + 1f) * 1f - 0f);
             //heartRate = (sliderheart.value * 1.3f - 1.6f) * 1.3f + 3f;
@@ -437,7 +455,7 @@ public class GraphController : MonoBehaviour {
                     else
                         Time.timeScale = 0.18f;
             }
-        }
+        }*/
         
         //Time.timeScale = sliderheart.value * 1.5f + 0.3f;
         //incrIndexScan *= heartRate;
@@ -446,6 +464,8 @@ public class GraphController : MonoBehaviour {
 
 		ciclo++;
 		if (ciclo % 2 == 0) {
+			//paintLineVerticalBlack(indexScan % sizeHorizontal + incrIndexScan);
+			paintLineVerticalBlack(indexScan % sizeHorizontal);
 			drawFunction ();
 		}
 
