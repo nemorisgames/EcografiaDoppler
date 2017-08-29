@@ -126,17 +126,19 @@ public class GraphController : MonoBehaviour {
             float horizontalFactor = 4.5f;//1.6f;//
             if (SceneManager.GetActiveScene().name == "EcografiaUmbilical")
             {
-                //Funcion!!
-                //currentValue = Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f - 19f) * 20f + 40;
-                //currentValue = Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f - 45f) * 20f + 40;
                 horizontalFactor = 3.5f;
                 //Funcion!!
-                //currentValue = Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f - 19f) * 30f + 50;
-				//print(incrIndexScan);
-				currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 8) ? 15f : 45f) + pathology / 30f);
+                /*currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 8) ? 15f : 45f) + pathology / 30f);
 				currentValue *= ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? 10f - pathology * -2f : 30f + pathology * 0.5f);
 				currentValue += ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? -25f : 0f);
-				currentValue += 35f + pathology * -0.5f;
+				currentValue += 35f + pathology * -0.5f;*/
+
+                currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 8) ? 15f : 45f));// + pathology / 30f);
+                //lo parada de la grafica
+                currentValue *= ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 45 || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? 5f - pathology * -0.1f : 40f + pathology * 0.1f);
+                //elevado del ultimo tramo
+                currentValue += ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 45 || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? 10f : 10f);
+                currentValue += 25f + pathology * -0.1f;
 
             }
             if (SceneManager.GetActiveScene().name == "EcografiaDuctus")
@@ -147,17 +149,22 @@ public class GraphController : MonoBehaviour {
                 if (cursorController.umbilicalDraw)
                 {
                     horizontalFactor = 3.5f;
-                    /*
-                    currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 8) ? 15f : 45f));
-                    currentValue *= ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? 0f : 30f);
-                    currentValue += ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? -25f : 0f) + 45;*/
-                    currentValue = Mathf.Cos((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 8) ? 15f : 45f) + pathology / 30f) * ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 10) ? 10f - pathology * -2f : 30f + pathology * 0.5f) + ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 10) ? -25f : 0f) + 35f + pathology * -0.5f;
+                    /*currentValue = Mathf.Cos((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 8) ? 15f : 45f) + pathology / 30f);
+                    currentValue *= ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 10) ? 10f - pathology * -2f : 30f + pathology * 0.5f);
+                    currentValue += ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 10) ? -25f : 0f);
+                    currentValue += 35f + pathology * -0.5f;*/
+                    currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 8) ? 15f : 45f));// + pathology / 30f);
+                    //lo parada de la grafica
+                    currentValue *= ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 45 || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? 5f - pathology * -0.1f : 40f + pathology * 0.1f);
+                    //elevado del ultimo tramo
+                    currentValue += ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 45 || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? 10f : 10f);
+                    currentValue += 25f + pathology * -0.1f;
 
                 }
                 else
                 {
-                    currentValue = (Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f * 8) * ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 0) ? 15f : 35f) * ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 25f && indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 40f) ? 0f : 1f));
-                    currentValue += ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 25f && indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 40f) ? -35f : 0f);
+                    currentValue = (Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f * 8) * ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 0) ? 5f : 15f) * ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 25f && indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 40f) ? 0f : 1f));
+                    currentValue += ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 25f && indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 40f) ? -15f : 0f);
                     currentValue += ((indexScan * heartRate / 4f % 65 < 60) ? 5f : 10f) + 45;// + (Mathf.Sin((indexScan % 30) * Mathf.PI / 180f * 3f) * 60f) - (Mathf.Sin((indexScan % 60) * Mathf.PI / 180f * 3f) * 30f);
                 }
             }
@@ -405,17 +412,19 @@ public class GraphController : MonoBehaviour {
 		//print (Time.timeScale + " " + Time.fixedDeltaTime + " " + Time.deltaTime);
         //if (sliderheart.value >= 0.5f)
         //{
-		if (SceneManager.GetActiveScene ().name == "EcografiaUtero") {
+		/*if (SceneManager.GetActiveScene ().name == "EcografiaUtero") {
 			heartRate = (sliderheart.value * 1.3f - 1.6f) * 1.3f + 3f;
 			beatsPerMinute.text = "" + (((sliderheart.value) * 10) + 60);
 			Time.timeScale = ((sliderheart.value + 0.5f) * (sliderheart.value * 0.3f + 0.2f) + 0.15f); //* 0.2f, * 0.35f, * 0.5f
 		}
-		else{
+		else{*/
 			//Time.timeScale = ((sliderheart.value + 0.5f) * (1f - (1f - (sliderheart.value + 0.5f)) * 0.7f) + 0.25f - (1f - (sliderheart.value + 0.5f)) * 0.15f); //0.25f
 			Time.timeScale = (sliderheart.value + 0.5f) * (1f - ((sliderheart.value * - 2f + 1f)) * 0.7f);
-			Time.timeScale += 0.25f - 0.15f;//(((sliderheart.value - 1f)) * -0.5f); //[0.13f] 0.15f 0f
+            
+			Time.timeScale += 0.25f - getFactorTimeScale(sliderSpeed.value, sliderheart.value);//(((sliderheart.value - 1f)) * -0.5f); //[0.13f] 0.15f 0f
+            //print(getFactorTimeScale(sliderSpeed.value, sliderheart.value));
 			//print(((sliderheart.value + 0.5f) * (1f - ((sliderheart.value * - 2f + 1f)) * 0.7f) + 0.25f - (1f - (sliderheart.value * 2f)) * 0.15f) + " " + (((sliderheart.value + 0.5f) * (0.3f)) + 0.1f));
-		}
+		//}
 			/*}
         else
         {
@@ -463,13 +472,13 @@ public class GraphController : MonoBehaviour {
         pathology = (int)(sliderPathology.value * 30);
 
 		ciclo++;
-		if (ciclo % 2 == 0) {
+		//if (ciclo % 2 == 0) {
 			//paintLineVerticalBlack(indexScan % sizeHorizontal + incrIndexScan);
 			paintLineVerticalBlack(indexScan % sizeHorizontal);
 			drawFunction ();
-		}
+		//}
 
-		if (ciclo % 200 == 0) {
+		if (ciclo % 100 == 0) {
 			drawNumbersHorizontal ();
 		}
         if (sliderScale.value >= 0.5f)
@@ -488,5 +497,142 @@ public class GraphController : MonoBehaviour {
         if (indexScan >= sizeHorizontal)
             indexScan = 0;
 
+    }
+
+    float getFactorTimeScale(float speed, float heart)
+    {
+        if(speed == 0f)
+        {
+            if (heart == 0f) return 0.15f;
+            if (heart == 0.125f) return 0.1f;
+            if (heart == 0.25f) return 0.1f;
+            if (heart == 0.375f) return 0.1f;
+            if (heart == 0.5f) return 0.1f;
+            if (heart == 0.625f) return 0f;
+            if (heart == 0.75f) return 0f;
+            if (heart == 0.875f) return 0f;
+            if (heart == 1f) return 0f;
+        }
+        if (speed == 0.1f)
+        {
+            if (heart == 0f) return 0.2f;
+            if (heart == 0.125f) return 0.2f;
+            if (heart == 0.25f) return 0.2f;
+            if (heart == 0.375f) return 0.3f;
+            if (heart == 0.5f) return 0.4f;
+            if (heart == 0.625f) return 0.5f;
+            if (heart == 0.75f) return 0.6f;
+            if (heart == 0.875f) return 0.4f;
+            if (heart == 1f) return 0.7f;
+        }
+        if (speed == 0.2f)
+        {
+            if (heart == 0f) return 0.22f;
+            if (heart == 0.125f) return 0.21f;
+            if (heart == 0.25f) return 0.5f;
+            if (heart == 0.375f) return 0.35f;
+            if (heart == 0.5f) return 0.45f;
+            if (heart == 0.625f) return 0.6f;
+            if (heart == 0.75f) return 0.8f;
+            if (heart == 0.875f) return 0.8f;
+            if (heart == 1f) return 0.5f;
+        }
+        if (speed == 0.3f)
+        {
+            if (heart == 0f) return 0.21f;
+            if (heart == 0.125f) return 0.2f;
+            if (heart == 0.25f) return 0.2f;
+            if (heart == 0.375f) return 0.3f;
+            if (heart == 0.5f) return 0.45f;
+            if (heart == 0.625f) return 0.6f;
+            if (heart == 0.75f) return 0.8f;
+            if (heart == 0.875f) return 0.9f;
+            if (heart == 1f) return 0.6f;
+        }
+        if (speed == 0.4f)
+        {
+            if (heart == 0f) return 0.2f;
+            if (heart == 0.125f) return 0.18f;
+            if (heart == 0.25f) return 0.2f;
+            if (heart == 0.375f) return 0.22f;
+            if (heart == 0.5f) return 0.25f;
+            if (heart == 0.625f) return 0.4f;
+            if (heart == 0.75f) return 0.6f;
+            if (heart == 0.875f) return 0.9f;
+            if (heart == 1f) return 0.9f;
+        }
+        if (speed == 0.5f)
+        {
+            if (heart == 0f) return 0.18f;
+            if (heart == 0.125f) return 0.13f;
+            if (heart == 0.25f) return 0.13f;
+            if (heart == 0.375f) return 0.15f;
+            if (heart == 0.5f) return 0.25f;
+            if (heart == 0.625f) return 0.34f;
+            if (heart == 0.75f) return 0.5f;
+            if (heart == 0.875f) return 0.8f;
+            if (heart == 1f) return 0.8f;
+        }
+        if (speed == 0.6f)
+        {
+            if (heart == 0f) return 0.15f;
+            if (heart == 0.125f) return 0.05f;
+            if (heart == 0.25f) return 0.05f;
+            if (heart == 0.375f) return 0.05f;
+            if (heart == 0.5f) return 0.05f;
+            if (heart == 0.625f) return 0.1f;
+            if (heart == 0.75f) return 0.3f;
+            if (heart == 0.875f) return 0f;
+            if (heart == 1f) return 0f;
+        }
+        if (speed == 0.7f)
+        {
+            if (heart == 0f) return 0.1f;
+            if (heart == 0.125f) return 0.05f;
+            if (heart == 0.25f) return -0.1f;
+            if (heart == 0.375f) return -0.1f;
+            if (heart == 0.5f) return -0.1f;
+            if (heart == 0.625f) return -0.2f;
+            if (heart == 0.75f) return -0.2f;
+            if (heart == 0.875f) return -0.2f;
+            if (heart == 1f) return -0.2f;
+        }
+        if (speed == 0.8f)
+        {
+            if (heart == 0f) return 0.05f;
+            if (heart == 0.125f) return 0f;
+            if (heart == 0.25f) return -0.05f;
+            if (heart == 0.375f) return -0.05f;
+            if (heart == 0.5f) return -0.05f;
+            if (heart == 0.625f) return -0.05f;
+            if (heart == 0.75f) return -0.05f;
+            if (heart == 0.875f) return -0.05f;
+            if (heart == 1f) return -0.05f;
+        }
+        if (speed == 0.9f)
+        {
+            if (heart == 0f) return 0.2f;
+            if (heart == 0.125f) return 0f;
+            if (heart == 0.25f) return -0.05f;
+            if (heart == 0.375f) return -0.05f;
+            if (heart == 0.5f) return -0.05f;
+            if (heart == 0.625f) return -0.05f;
+            if (heart == 0.75f) return -0.05f;
+            if (heart == 0.875f) return -0.05f;
+            if (heart == 1f) return -0.05f;
+        }
+        if (speed == 1f)
+        {
+            if (heart == 0f) return 0.1f;
+            if (heart == 0.125f) return 0.1f;
+            if (heart == 0.25f) return 0.1f;
+            if (heart == 0.375f) return 0.1f;
+            if (heart == 0.5f) return 0.1f;
+            if (heart == 0.625f) return 0.1f;
+            if (heart == 0.75f) return 0.1f;
+            if (heart == 0.875f) return 0.1f;
+            if (heart == 1f) return 0f;
+        }
+        return 0f;
     }
 }
