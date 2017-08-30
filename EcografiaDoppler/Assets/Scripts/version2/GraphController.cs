@@ -163,19 +163,22 @@ public class GraphController : MonoBehaviour {
                 }
                 else
                 {
-                    currentValue = (Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f * 8) * ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 0) ? 5f : 15f) * ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 25f && indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 40f) ? 0f : 1f));
-                    currentValue += ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 25f && indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 40f) ? -15f : 0f);
+					currentValue = (Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f * 8) * ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 0) ? 5f - pathology * 0.5f: 15f + pathology * 1f) * ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 25f && indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 40f) ? 0f : 1f));
+					currentValue += ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 25f && indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 40f) ? -15f - pathology * 1f: 0f + pathology * 1f);
                     currentValue += ((indexScan * heartRate / 4f % 65 < 60) ? 5f : 10f) + 45;// + (Mathf.Sin((indexScan % 30) * Mathf.PI / 180f * 3f) * 60f) - (Mathf.Sin((indexScan % 60) * Mathf.PI / 180f * 3f) * 30f);
                 }
             }
             if (SceneManager.GetActiveScene().name == "EcografiaCerebral")
             {
-                horizontalFactor = 3.5f;
+                horizontalFactor = 5.0f;
                 //Funcion!!
-                //currentValue = Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f - 19f) * 30f + 50;
-                currentValue = Mathf.Cos((indexScan * (heartRate) / (4 * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 8) ? 15f : 45f)) * ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 10) ? 0f : 50f - pathology * 0.75f) + ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 10) ? -50f + pathology * 0.75f : 0f) + 65 + pathology * 0.75f;
-                //currentValue = Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / 4 % 65 < 8) ? 15f : 45f)) * 50 + 65;
-                //print(indexScan * heartRate / 4 % 65);
+                //currentValue = Mathf.Cos((indexScan * (heartRate) / (4 * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 8) ? 15f : 45f)) * ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 10) ? 0f : 50f - pathology * 0.75f) + ((indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4 * incrIndexScan / 7f) % 65 < 10) ? -50f + pathology * 0.75f : 0f) + 65 + pathology * 0.75f;
+				currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 8) ? 15f : 45f));// + pathology / 30f);
+				//lo parada de la grafica
+				currentValue *= ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 45 - pathology * 0.6f || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? 5f - pathology * -0.1f : 40f + pathology * 0.1f);
+				//elevado del ultimo tramo
+				currentValue += ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 45 || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? -10f + pathology * 1.2f : 20f + pathology * 0f);
+				currentValue += 25f + pathology * -0.1f;
             }
             if (SceneManager.GetActiveScene().name == "EcografiaUtero")
             {
@@ -529,7 +532,7 @@ public class GraphController : MonoBehaviour {
         {
             if (heart == 0f) return 0.22f;
             if (heart == 0.125f) return 0.21f;
-            if (heart == 0.25f) return 0.5f;
+            if (heart == 0.25f) return 0.25f;
             if (heart == 0.375f) return 0.35f;
             if (heart == 0.5f) return 0.45f;
             if (heart == 0.625f) return 0.6f;
