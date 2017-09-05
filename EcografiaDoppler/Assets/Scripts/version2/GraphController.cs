@@ -71,10 +71,32 @@ public class GraphController : MonoBehaviour {
 
     void paintLineVerticalBlack(int indexHorizontal)
     {
-        for(int i = 0; i < sizeVertical; i++)
+        for (int i = 0; i < sizeVertical; i++)
         {
-            for (int j = 0; j < incrIndexScan; j++)
-                texture.SetPixel(indexHorizontal + j, i, Color.black);
+            for (int j = 0; j < incrIndexScan; j++) {
+                
+                if (sliderGain.value > 0.5f){
+                    if (inverseGraph)
+                    {
+                        if(zero > i)
+                            texture.SetPixel(indexHorizontal + j, i, new Color(sliderGain.value - 0.5f, sliderGain.value - 0.5f, sliderGain.value - 0.5f));
+                        else
+                            texture.SetPixel(indexHorizontal + j, i, Color.black);
+                    }
+                    else
+                    {
+                        if (zero < i)
+                            texture.SetPixel(indexHorizontal + j, i, new Color(sliderGain.value - 0.5f, sliderGain.value - 0.5f, sliderGain.value - 0.5f));
+                        else
+                            texture.SetPixel(indexHorizontal + j, i, Color.black);
+                    }
+                }
+                else
+                {
+                    texture.SetPixel(indexHorizontal + j, i, Color.black);
+                }
+                    
+            }
         }
         //pinta linea blanca del zero
         for(int i = 0; i < incrIndexScan; i++)
@@ -101,7 +123,7 @@ public class GraphController : MonoBehaviour {
     {
         inverseGraph = !inverseGraph;
         focusController.invertido = inverseGraph;
-        focusController.changeImages();
+        //focusController.changeImages();
         speedBar.localScale = new Vector3(1f, -1f * speedBar.localScale.y, 1f);
 
     }
@@ -109,6 +131,11 @@ public class GraphController : MonoBehaviour {
     public void makeSleep()
     {
         sleep = !sleep;
+    }
+
+    public void reset()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name); 
     }
 
     void drawFunction()
@@ -126,20 +153,24 @@ public class GraphController : MonoBehaviour {
             float horizontalFactor = 4.5f;//1.6f;//
             if (SceneManager.GetActiveScene().name == "EcografiaUmbilical")
             {
-                horizontalFactor = 3.5f;
-                //Funcion!!
-                /*currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 8) ? 15f : 45f) + pathology / 30f);
-				currentValue *= ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? 10f - pathology * -2f : 30f + pathology * 0.5f);
-				currentValue += ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 65 || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? -25f : 0f);
-				currentValue += 35f + pathology * -0.5f;*/
-
+                horizontalFactor = 5f;
+                /*//Funcion!!
                 currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 8) ? 15f : 45f));// + pathology / 30f);
                 //lo parada de la grafica
                 currentValue *= ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 45 || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? 5f - pathology * -0.1f : 40f + pathology * 0.1f);
                 //elevado del ultimo tramo
                 currentValue += ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 45 || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? 10f : 10f);
-                currentValue += 25f + pathology * -0.1f;
+                currentValue += 25f + pathology * -0.1f;*/
 
+                //Funcion!!
+                int repeticion = 25;
+
+                currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f);// - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 8) ? 15f : 45f));// + pathology / 30f);
+                //lo parada de la grafica
+                currentValue *= 40f + pathology * 0.1f;// ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 45 || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? 5f - pathology * -0.1f : 40f + pathology * 0.1f);
+                //elevado del ultimo tramo
+                //currentValue += ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 45 || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? 10f : 10f);
+                //currentValue += 25f + pathology * -0.1f;
             }
             if (SceneManager.GetActiveScene().name == "EcografiaDuctus")
             {
@@ -415,19 +446,22 @@ public class GraphController : MonoBehaviour {
 		//print (Time.timeScale + " " + Time.fixedDeltaTime + " " + Time.deltaTime);
         //if (sliderheart.value >= 0.5f)
         //{
-		/*if (SceneManager.GetActiveScene ().name == "EcografiaUtero") {
-			heartRate = (sliderheart.value * 1.3f - 1.6f) * 1.3f + 3f;
+		if (SceneManager.GetActiveScene ().name == "EcografiaUtero") {
+            heartRate = (sliderheart.value * 1.3f - 1.6f) * 1.3f + 3f;
 			beatsPerMinute.text = "" + (((sliderheart.value) * 10) + 60);
-			Time.timeScale = ((sliderheart.value + 0.5f) * (sliderheart.value * 0.3f + 0.2f) + 0.15f); //* 0.2f, * 0.35f, * 0.5f
-		}
-		else{*/
+            //Time.timeScale = ((sliderheart.value + 0.5f) * (sliderheart.value * 0.3f + 0.2f) + 0.15f); //* 0.2f, * 0.35f, * 0.5f
+            Time.timeScale = (sliderheart.value + 0.5f) * (1f - ((sliderheart.value * -2f + 1f)) * 0.7f);
+
+            Time.timeScale += 0.25f - getFactorTimeScale(sliderSpeed.value, sliderheart.value, true);
+        }
+		else{
 			//Time.timeScale = ((sliderheart.value + 0.5f) * (1f - (1f - (sliderheart.value + 0.5f)) * 0.7f) + 0.25f - (1f - (sliderheart.value + 0.5f)) * 0.15f); //0.25f
 			Time.timeScale = (sliderheart.value + 0.5f) * (1f - ((sliderheart.value * - 2f + 1f)) * 0.7f);
-            
-			Time.timeScale += 0.25f - getFactorTimeScale(sliderSpeed.value, sliderheart.value);//(((sliderheart.value - 1f)) * -0.5f); //[0.13f] 0.15f 0f
+
+            Time.timeScale += 0.25f - getFactorTimeScale(sliderSpeed.value, sliderheart.value, false);//(((sliderheart.value - 1f)) * -0.5f); //[0.13f] 0.15f 0f
             //print(getFactorTimeScale(sliderSpeed.value, sliderheart.value));
 			//print(((sliderheart.value + 0.5f) * (1f - ((sliderheart.value * - 2f + 1f)) * 0.7f) + 0.25f - (1f - (sliderheart.value * 2f)) * 0.15f) + " " + (((sliderheart.value + 0.5f) * (0.3f)) + 0.1f));
-		//}
+		}
 			/*}
         else
         {
@@ -502,139 +536,277 @@ public class GraphController : MonoBehaviour {
 
     }
 
-    float getFactorTimeScale(float speed, float heart)
+    float getFactorTimeScale(float speed, float heart, bool utero)
     {
-        if(speed == 0f)
+        if (utero)
         {
-            if (heart == 0f) return 0.15f;
-            if (heart == 0.125f) return 0.1f;
-            if (heart == 0.25f) return 0.1f;
-            if (heart == 0.375f) return 0.1f;
-            if (heart == 0.5f) return 0.1f;
-            if (heart == 0.625f) return 0f;
-            if (heart == 0.75f) return 0f;
-            if (heart == 0.875f) return 0f;
-            if (heart == 1f) return 0f;
+            if (speed == 0f)
+            {
+                if (heart == 0f) return 0.17f;
+                if (heart == 0.125f) return 0.26f;
+                if (heart == 0.25f) return 0.4f;
+                if (heart == 0.375f) return 0.57f;
+                if (heart == 0.5f) return 0.8f;
+                if (heart == 0.625f) return 1.05f;
+                if (heart == 0.75f) return 1.38f;
+                if (heart == 0.875f) return 1.73f;
+                if (heart == 1f) return 2.12f;
+            }
+            if (speed == 0.1f)
+            {
+                if (heart == 0f) return 0.22f;
+                if (heart == 0.125f) return 0.31f;
+                if (heart == 0.25f) return 0.46f;
+                if (heart == 0.375f) return 0.65f;
+                if (heart == 0.5f) return 0.88f;
+                if (heart == 0.625f) return 1.15f;
+                if (heart == 0.75f) return 1.48f;
+                if (heart == 0.875f) return 1.63f;
+                if (heart == 1f) return 2.25f;
+            }
+            if (speed == 0.2f)
+            {
+                if (heart == 0f) return 0.23f;
+                if (heart == 0.125f) return 0.33f;
+                if (heart == 0.25f) return 0.49f;
+                if (heart == 0.375f) return 0.68f;
+                if (heart == 0.5f) return 0.92f;
+                if (heart == 0.625f) return 1.19f;
+                if (heart == 0.75f) return 1.52f;
+                if (heart == 0.875f) return 1.87f;
+                if (heart == 1f) return 2.25f;
+            }
+            if (speed == 0.3f)
+            {
+                if (heart == 0f) return 0.24f;
+                if (heart == 0.125f) return 0.33f;
+                if (heart == 0.25f) return 0.48f;
+                if (heart == 0.375f) return 0.68f;
+                if (heart == 0.5f) return 0.91f;
+                if (heart == 0.625f) return 1.19f;
+                if (heart == 0.75f) return 1.5f;
+                if (heart == 0.875f) return 1.87f;
+                if (heart == 1f) return 2.28f;
+            }
+            if (speed == 0.4f)
+            {
+                if (heart == 0f) return 0.22f;
+                if (heart == 0.125f) return 0.31f;
+                if (heart == 0.25f) return 0.46f;
+                if (heart == 0.375f) return 0.64f;
+                if (heart == 0.5f) return 0.88f;
+                if (heart == 0.625f) return 1.16f;
+                if (heart == 0.75f) return 1.47f;
+                if (heart == 0.875f) return 1.85f;
+                if (heart == 1f) return 2.25f;
+            }
+            if (speed == 0.5f)
+            {
+                if (heart == 0f) return 0.19f;
+                if (heart == 0.125f) return 0.28f;
+                if (heart == 0.25f) return 0.44f;
+                if (heart == 0.375f) return 0.61f;
+                if (heart == 0.5f) return 0.84f;
+                if (heart == 0.625f) return 1.11f;
+                if (heart == 0.75f) return 1.42f;
+                if (heart == 0.875f) return 1.78f;
+                if (heart == 1f) return 2.17f;
+            }
+            if (speed == 0.6f)
+            {
+                if (heart == 0f) return 0.15f;
+                if (heart == 0.125f) return 0.24f;
+                if (heart == 0.25f) return 0.28f;
+                if (heart == 0.375f) return 0.56f;
+                if (heart == 0.5f) return 0.76f;
+                if (heart == 0.625f) return 1f;
+                if (heart == 0.75f) return 1.35f;
+                if (heart == 0.875f) return 1.68f;
+                if (heart == 1f) return 2.05f;
+            }
+            if (speed == 0.7f)
+            {
+                if (heart == 0f) return 0.11f;
+                if (heart == 0.125f) return 0.18f;
+                if (heart == 0.25f) return 0.3f;
+                if (heart == 0.375f) return 0.48f;
+                if (heart == 0.5f) return 0.65f;
+                if (heart == 0.625f) return 0.84f;
+                if (heart == 0.75f) return 1.2f;
+                if (heart == 0.875f) return 1.5f;
+                if (heart == 1f) return 1.9f;
+            }
+            if (speed == 0.8f)
+            {
+                if (heart == 0f) return 0.04f;
+                if (heart == 0.125f) return 0.1f;
+                if (heart == 0.25f) return 0.23f;
+                if (heart == 0.375f) return 0.4f;
+                if (heart == 0.5f) return 0.5f;
+                if (heart == 0.625f) return 0.78f;
+                if (heart == 0.75f) return 0.1f;
+                if (heart == 0.875f) return 1.5f;
+                if (heart == 1f) return 1.7f;
+            }
+            if (speed == 0.9f)
+            {
+                if (heart == 0f) return 0.02f;
+                if (heart == 0.125f) return 0.1f;
+                if (heart == 0.25f) return 0.23f;
+                if (heart == 0.375f) return 0.4f;
+                if (heart == 0.5f) return 0.7f;
+                if (heart == 0.625f) return 0.9f;
+                if (heart == 0.75f) return 1f;
+                if (heart == 0.875f) return 1.55f;
+                if (heart == 1f) return 1.8f;
+            }
+            if (speed == 1f)
+            {
+                if (heart == 0f) return 0.08f;
+                if (heart == 0.125f) return 0.2f;
+                if (heart == 0.25f) return 0.35f;
+                if (heart == 0.375f) return 0.5f;
+                if (heart == 0.5f) return 0.7f;
+                if (heart == 0.625f) return 1f;
+                if (heart == 0.75f) return 1.3f;
+                if (heart == 0.875f) return 1.7f;
+                if (heart == 1f) return 2f;
+            }
         }
-        if (speed == 0.1f)
+        else
         {
-            if (heart == 0f) return 0.2f;
-            if (heart == 0.125f) return 0.2f;
-            if (heart == 0.25f) return 0.2f;
-            if (heart == 0.375f) return 0.3f;
-            if (heart == 0.5f) return 0.4f;
-            if (heart == 0.625f) return 0.5f;
-            if (heart == 0.75f) return 0.6f;
-            if (heart == 0.875f) return 0.4f;
-            if (heart == 1f) return 0.7f;
-        }
-        if (speed == 0.2f)
-        {
-            if (heart == 0f) return 0.22f;
-            if (heart == 0.125f) return 0.21f;
-            if (heart == 0.25f) return 0.25f;
-            if (heart == 0.375f) return 0.35f;
-            if (heart == 0.5f) return 0.45f;
-            if (heart == 0.625f) return 0.6f;
-            if (heart == 0.75f) return 0.8f;
-            if (heart == 0.875f) return 0.8f;
-            if (heart == 1f) return 0.5f;
-        }
-        if (speed == 0.3f)
-        {
-            if (heart == 0f) return 0.21f;
-            if (heart == 0.125f) return 0.2f;
-            if (heart == 0.25f) return 0.2f;
-            if (heart == 0.375f) return 0.3f;
-            if (heart == 0.5f) return 0.45f;
-            if (heart == 0.625f) return 0.6f;
-            if (heart == 0.75f) return 0.8f;
-            if (heart == 0.875f) return 0.9f;
-            if (heart == 1f) return 0.6f;
-        }
-        if (speed == 0.4f)
-        {
-            if (heart == 0f) return 0.2f;
-            if (heart == 0.125f) return 0.18f;
-            if (heart == 0.25f) return 0.2f;
-            if (heart == 0.375f) return 0.22f;
-            if (heart == 0.5f) return 0.25f;
-            if (heart == 0.625f) return 0.4f;
-            if (heart == 0.75f) return 0.6f;
-            if (heart == 0.875f) return 0.9f;
-            if (heart == 1f) return 0.9f;
-        }
-        if (speed == 0.5f)
-        {
-            if (heart == 0f) return 0.18f;
-            if (heart == 0.125f) return 0.13f;
-            if (heart == 0.25f) return 0.13f;
-            if (heart == 0.375f) return 0.15f;
-            if (heart == 0.5f) return 0.25f;
-            if (heart == 0.625f) return 0.34f;
-            if (heart == 0.75f) return 0.5f;
-            if (heart == 0.875f) return 0.8f;
-            if (heart == 1f) return 0.8f;
-        }
-        if (speed == 0.6f)
-        {
-            if (heart == 0f) return 0.15f;
-            if (heart == 0.125f) return 0.05f;
-            if (heart == 0.25f) return 0.05f;
-            if (heart == 0.375f) return 0.05f;
-            if (heart == 0.5f) return 0.05f;
-            if (heart == 0.625f) return 0.1f;
-            if (heart == 0.75f) return 0.3f;
-            if (heart == 0.875f) return 0f;
-            if (heart == 1f) return 0f;
-        }
-        if (speed == 0.7f)
-        {
-            if (heart == 0f) return 0.1f;
-            if (heart == 0.125f) return 0.05f;
-            if (heart == 0.25f) return -0.1f;
-            if (heart == 0.375f) return -0.1f;
-            if (heart == 0.5f) return -0.1f;
-            if (heart == 0.625f) return -0.2f;
-            if (heart == 0.75f) return -0.2f;
-            if (heart == 0.875f) return -0.2f;
-            if (heart == 1f) return -0.2f;
-        }
-        if (speed == 0.8f)
-        {
-            if (heart == 0f) return 0.05f;
-            if (heart == 0.125f) return 0f;
-            if (heart == 0.25f) return -0.05f;
-            if (heart == 0.375f) return -0.05f;
-            if (heart == 0.5f) return -0.05f;
-            if (heart == 0.625f) return -0.05f;
-            if (heart == 0.75f) return -0.05f;
-            if (heart == 0.875f) return -0.05f;
-            if (heart == 1f) return -0.05f;
-        }
-        if (speed == 0.9f)
-        {
-            if (heart == 0f) return 0.2f;
-            if (heart == 0.125f) return 0f;
-            if (heart == 0.25f) return -0.05f;
-            if (heart == 0.375f) return -0.05f;
-            if (heart == 0.5f) return -0.05f;
-            if (heart == 0.625f) return -0.05f;
-            if (heart == 0.75f) return -0.05f;
-            if (heart == 0.875f) return -0.05f;
-            if (heart == 1f) return -0.05f;
-        }
-        if (speed == 1f)
-        {
-            if (heart == 0f) return 0.1f;
-            if (heart == 0.125f) return 0.1f;
-            if (heart == 0.25f) return 0.1f;
-            if (heart == 0.375f) return 0.1f;
-            if (heart == 0.5f) return 0.1f;
-            if (heart == 0.625f) return 0.1f;
-            if (heart == 0.75f) return 0.1f;
-            if (heart == 0.875f) return 0.1f;
-            if (heart == 1f) return 0f;
+            if (speed == 0f)
+            {
+                if (heart == 0f) return 0.15f;
+                if (heart == 0.125f) return 0.1f;
+                if (heart == 0.25f) return 0.1f;
+                if (heart == 0.375f) return 0.1f;
+                if (heart == 0.5f) return 0.1f;
+                if (heart == 0.625f) return 0f;
+                if (heart == 0.75f) return 0f;
+                if (heart == 0.875f) return 0f;
+                if (heart == 1f) return 0f;
+            }
+            if (speed == 0.1f)
+            {
+                if (heart == 0f) return 0.2f;
+                if (heart == 0.125f) return 0.2f;
+                if (heart == 0.25f) return 0.2f;
+                if (heart == 0.375f) return 0.3f;
+                if (heart == 0.5f) return 0.4f;
+                if (heart == 0.625f) return 0.5f;
+                if (heart == 0.75f) return 0.6f;
+                if (heart == 0.875f) return 0.4f;
+                if (heart == 1f) return 0.7f;
+            }
+            if (speed == 0.2f)
+            {
+                if (heart == 0f) return 0.22f;
+                if (heart == 0.125f) return 0.21f;
+                if (heart == 0.25f) return 0.25f;
+                if (heart == 0.375f) return 0.35f;
+                if (heart == 0.5f) return 0.45f;
+                if (heart == 0.625f) return 0.6f;
+                if (heart == 0.75f) return 0.8f;
+                if (heart == 0.875f) return 0.8f;
+                if (heart == 1f) return 0.5f;
+            }
+            if (speed == 0.3f)
+            {
+                if (heart == 0f) return 0.21f;
+                if (heart == 0.125f) return 0.2f;
+                if (heart == 0.25f) return 0.2f;
+                if (heart == 0.375f) return 0.3f;
+                if (heart == 0.5f) return 0.45f;
+                if (heart == 0.625f) return 0.6f;
+                if (heart == 0.75f) return 0.8f;
+                if (heart == 0.875f) return 0.9f;
+                if (heart == 1f) return 0.6f;
+            }
+            if (speed == 0.4f)
+            {
+                if (heart == 0f) return 0.2f;
+                if (heart == 0.125f) return 0.18f;
+                if (heart == 0.25f) return 0.2f;
+                if (heart == 0.375f) return 0.22f;
+                if (heart == 0.5f) return 0.25f;
+                if (heart == 0.625f) return 0.4f;
+                if (heart == 0.75f) return 0.6f;
+                if (heart == 0.875f) return 0.9f;
+                if (heart == 1f) return 0.9f;
+            }
+            if (speed == 0.5f)
+            {
+                if (heart == 0f) return 0.18f;
+                if (heart == 0.125f) return 0.13f;
+                if (heart == 0.25f) return 0.13f;
+                if (heart == 0.375f) return 0.15f;
+                if (heart == 0.5f) return 0.25f;
+                if (heart == 0.625f) return 0.34f;
+                if (heart == 0.75f) return 0.5f;
+                if (heart == 0.875f) return 0.8f;
+                if (heart == 1f) return 0.8f;
+            }
+            if (speed == 0.6f)
+            {
+                if (heart == 0f) return 0.15f;
+                if (heart == 0.125f) return 0.05f;
+                if (heart == 0.25f) return 0.05f;
+                if (heart == 0.375f) return 0.05f;
+                if (heart == 0.5f) return 0.05f;
+                if (heart == 0.625f) return 0.1f;
+                if (heart == 0.75f) return 0.3f;
+                if (heart == 0.875f) return 0f;
+                if (heart == 1f) return 0f;
+            }
+            if (speed == 0.7f)
+            {
+                if (heart == 0f) return 0.1f;
+                if (heart == 0.125f) return 0.05f;
+                if (heart == 0.25f) return -0.1f;
+                if (heart == 0.375f) return -0.1f;
+                if (heart == 0.5f) return -0.1f;
+                if (heart == 0.625f) return -0.2f;
+                if (heart == 0.75f) return -0.2f;
+                if (heart == 0.875f) return -0.2f;
+                if (heart == 1f) return -0.2f;
+            }
+            if (speed == 0.8f)
+            {
+                if (heart == 0f) return 0.05f;
+                if (heart == 0.125f) return 0f;
+                if (heart == 0.25f) return -0.05f;
+                if (heart == 0.375f) return -0.05f;
+                if (heart == 0.5f) return -0.05f;
+                if (heart == 0.625f) return -0.05f;
+                if (heart == 0.75f) return -0.05f;
+                if (heart == 0.875f) return -0.05f;
+                if (heart == 1f) return -0.05f;
+            }
+            if (speed == 0.9f)
+            {
+                if (heart == 0f) return 0.2f;
+                if (heart == 0.125f) return 0f;
+                if (heart == 0.25f) return -0.05f;
+                if (heart == 0.375f) return -0.05f;
+                if (heart == 0.5f) return -0.05f;
+                if (heart == 0.625f) return -0.05f;
+                if (heart == 0.75f) return -0.05f;
+                if (heart == 0.875f) return -0.05f;
+                if (heart == 1f) return -0.05f;
+            }
+            if (speed == 1f)
+            {
+                if (heart == 0f) return 0.1f;
+                if (heart == 0.125f) return 0.1f;
+                if (heart == 0.25f) return 0.1f;
+                if (heart == 0.375f) return 0.1f;
+                if (heart == 0.5f) return 0.1f;
+                if (heart == 0.625f) return 0.1f;
+                if (heart == 0.75f) return 0.1f;
+                if (heart == 0.875f) return 0.1f;
+                if (heart == 1f) return 0f;
+            }
         }
         return 0f;
     }

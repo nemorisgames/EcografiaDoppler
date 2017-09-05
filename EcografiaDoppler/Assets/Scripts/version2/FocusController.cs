@@ -18,12 +18,14 @@ public class FocusController : MonoBehaviour {
     public CursorController cursorController;
     public bool invertido = false;
     public GraphController graphController;
+    public GameObject[] buttonsAngle;
     // Use this for initialization
     void Start () {
+        buttonsAngle[0].SetActive(false);
 	}
 
-    public void changeImages()
-    {
+    //public void changeImages()
+    //{
         /*string angle = "0";
         switch (index)
         {
@@ -34,7 +36,7 @@ public class FocusController : MonoBehaviour {
             case 4: angle = "-90"; break;
         }
         changeImages(angle);*/
-    }
+    //}
 
     public void changeImages(string i)
     {
@@ -46,6 +48,8 @@ public class FocusController : MonoBehaviour {
             case "-45": index = 3; break;
             case "-90": index = 4; break;
         }
+        for(int j = 0; j < 5; j++)
+            buttonsAngle[j].SetActive(j != index);
         if (invertido)
         {
             textureRedBlue.mainTexture = texturesRedBlueInv[index];

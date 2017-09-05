@@ -20,7 +20,7 @@ public class CursorController : MonoBehaviour {
     void Start () {
         durezasTexture = (Texture2D)durezasUITexture.mainTexture;
         GetPixelColor();
-        posicionInicialLinterna = linterna.position;
+        
     }
 
     void OnDragEnd()
@@ -88,25 +88,45 @@ public class CursorController : MonoBehaviour {
     // Update is called once per frame
     void LateUpdate()
     {
-        /*linterna.LookAt(puntoFoco);
-        linterna.Rotate(0f, -90f, 0f);
-        if (Mathf.Abs(linterna.rotation.y + 0.5f) < 0.01f)
-        {
-            print("aqui");
-            linterna.rotation = new Quaternion(linterna.rotation.x, 180f, linterna.rotation.z, linterna.rotation.w);
-        }*/
         transform.LookAt(puntoFoco);
         transform.Rotate(0f, -90f, 0f);
-        if (Mathf.Abs(transform.rotation.y + 0.5f) < 0.01f)
+        /*
+        //find the vector pointing from our position to the target
+        Vector3 _direction = (puntoFoco.position - transform.position).normalized;
+
+        //create the rotation we need to be in to look at the target
+        Quaternion _lookRotation = Quaternion.LookRotation(_direction);
+
+        transform.rotation = _lookRotation;
+        transform.Rotate(0f, -90f, 0f);
+        */
+        if (Mathf.Abs(transform.rotation.y + 0.5f) < 0.1f)
+        {
+            //print("aqui");
+            //transform.rotation = new Quaternion(transform.rotation.x, -180f, transform.rotation.z, transform.rotation.w);
+        }
+        //if(transform.rotation.y > 90f)
+        //    transform.rotation = new Quaternion(transform.rotation.x, 180f, transform.rotation.z, transform.rotation.w);
+        print(transform.eulerAngles);
+        if ((transform.eulerAngles.y >= -180f && transform.eulerAngles.y <= -0f) || (transform.eulerAngles.y <= 360f && transform.eulerAngles.y > 200f))
+        //if(transform.eulerAngles.y == 270f || transform.eulerAngles.y == -90f)
         {
             print("aqui");
-            transform.rotation = new Quaternion(transform.rotation.x, 180f, transform.rotation.z, transform.rotation.w);
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, 0f, transform.eulerAngles.z);
         }
-        lineaPunteada.height = (int)(Vector3.Distance(transform.position, puntoFoco.position) * 320f);
+        else
+        {
+            print("aqui2");
+            //transform.eulerAngles = new Vector3(transform.eulerAngles.x, 180f, transform.eulerAngles.z);
+        }
 
-        linterna.position = posicionInicialLinterna - 0f * transform.right;
+        lineaPunteada.height = (int)(Vector3.Distance(transform.position, puntoFoco.position) * 320f);
+        posicionInicialLinterna = transductor.position;// + transform.parent.up * 0.35f - transform.parent.right * 0.02f;
+        linterna.position = posicionInicialLinterna;
         linterna.rotation = transform.rotation;
         linterna.Rotate(0f, 0f, -90f);
+        //Vector3 angulo = new Vector3(0f, 0f, linterna.rotation.eulerAngles.z);
+        //linterna.rotation = new Quaternion(0f, (linterna.rotation.y <= 90f || linterna.rotation.y >= -90f) ? 0f: 180f, linterna.rotation.z, linterna.rotation.w);
         transductor.rotation = linterna.rotation;
     }
 }
