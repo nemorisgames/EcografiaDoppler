@@ -153,7 +153,7 @@ public class GraphController : MonoBehaviour {
             float horizontalFactor = 4.5f;//1.6f;//
             if (SceneManager.GetActiveScene().name == "EcografiaUmbilical")
             {
-                horizontalFactor = 5f;
+                //horizontalFactor = 3.5f;
                 /*//Funcion!!
                 currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 8) ? 15f : 45f));// + pathology / 30f);
                 //lo parada de la grafica
@@ -163,14 +163,15 @@ public class GraphController : MonoBehaviour {
                 currentValue += 25f + pathology * -0.1f;*/
 
                 //Funcion!!
-                int repeticion = 25;
+				horizontalFactor = 4.0f;
+                int repeticion = 65;
 
-                currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f);// - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 8) ? 15f : 45f));// + pathology / 30f);
+				currentValue = Mathf.Cos ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion < 8) ? 15f : 45f));// + pathology / 30f);
                 //lo parada de la grafica
-                currentValue *= 40f + pathology * 0.1f;// ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 45 || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? 5f - pathology * -0.1f : 40f + pathology * 0.1f);
+				currentValue *= ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion > 35 || indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion < 10) ? 5f - pathology * -0.1f : 40f + pathology * 0.1f);
                 //elevado del ultimo tramo
-                //currentValue += ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 45 || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? 10f : 10f);
-                //currentValue += 25f + pathology * -0.1f;
+				//currentValue += ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion > 45 || indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion < 10) ? 10f : 10f);
+                currentValue += 35f + pathology * -0.1f;
             }
             if (SceneManager.GetActiveScene().name == "EcografiaDuctus")
             {
