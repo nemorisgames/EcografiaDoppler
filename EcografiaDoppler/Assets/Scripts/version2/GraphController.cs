@@ -15,8 +15,8 @@ public class GraphController : MonoBehaviour {
     int power = 0;
     [HideInInspector]
     public float heartRate = 1;
-    bool inverseFunction = false;
-    bool inverseGraph = false;
+    public bool inverseFunction = false;
+    public bool inverseGraph = false;
     public bool sleep = false;
     public int pathology = 0;
     public UISlider sliderSpeed;
@@ -75,14 +75,14 @@ public class GraphController : MonoBehaviour {
         {
             for (int j = 0; j < incrIndexScan; j++) {
                 
-                if (sliderGain.value > 0.5f){
-                    if (inverseGraph)
-                    {
-                        if(zero > i)
+                //if (sliderGain.value > 0.5f){
+                //    if (inverseFunction)
+                //    {
+                        //if(zero > i)
                             texture.SetPixel(indexHorizontal + j, i, new Color(sliderGain.value - 0.5f, sliderGain.value - 0.5f, sliderGain.value - 0.5f));
-                        else
-                            texture.SetPixel(indexHorizontal + j, i, Color.black);
-                    }
+                        //else
+                        //    texture.SetPixel(indexHorizontal + j, i, Color.black);
+                /*    }
                     else
                     {
                         if (zero < i)
@@ -95,7 +95,7 @@ public class GraphController : MonoBehaviour {
                 {
                     texture.SetPixel(indexHorizontal + j, i, Color.black);
                 }
-                    
+                    */
             }
         }
         //pinta linea blanca del zero
@@ -123,9 +123,15 @@ public class GraphController : MonoBehaviour {
     {
         inverseGraph = !inverseGraph;
         focusController.invertido = inverseGraph;
-        //focusController.changeImages();
+        focusController.changeImagesNoAngle();
         speedBar.localScale = new Vector3(1f, -1f * speedBar.localScale.y, 1f);
+        StartCoroutine(inverseGraphCoroutine());
+    }
 
+    IEnumerator inverseGraphCoroutine()
+    {
+        yield return new WaitForSeconds(0.3f); 
+        cursorController.GetPixelColor();
     }
 
     public void makeSleep()
@@ -146,22 +152,13 @@ public class GraphController : MonoBehaviour {
 		{
 			focusController.resetCont();
 		}
-        for (int i = 0; i < 1 + (int)((gain + power) * 2); i++)
+        for (int i = 0; i < 6 + Mathf.Pow(2f, (int)((gain + power)/2f)) + (sliderScale.value - 0.5f) * 25; i++)
         {
 			
             //factor independiente para cada funcion que hace que calce con la medicion de latidos por segundos
             float horizontalFactor = 4.5f;//1.6f;//
             if (SceneManager.GetActiveScene().name == "EcografiaUmbilical")
             {
-                //horizontalFactor = 3.5f;
-                /*//Funcion!!
-                currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 8) ? 15f : 45f));// + pathology / 30f);
-                //lo parada de la grafica
-                currentValue *= ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 45 || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? 5f - pathology * -0.1f : 40f + pathology * 0.1f);
-                //elevado del ultimo tramo
-                currentValue += ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 > 45 || indexScan * heartRate / (4f * incrIndexScan / 7f) % 65 < 10) ? 10f : 10f);
-                currentValue += 25f + pathology * -0.1f;*/
-
                 //Funcion!!
 				//horizontalFactor = 5f;
                 int repeticion = 65;
@@ -169,8 +166,8 @@ public class GraphController : MonoBehaviour {
                 {
                     horizontalFactor = 20f;
                     currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f + ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion < 8) ? 35f : 45f));// + pathology / 30f);
-                    currentValue *= 1.1f;
-                    currentValue += 0.45f;
+                    currentValue *= 1.1f * (3.5f / (heartRate + 1f));
+                    currentValue += 0.45f + (heartRate - 4f) * 0.3f;
                 }
                 else
                 {
@@ -186,7 +183,8 @@ public class GraphController : MonoBehaviour {
                         if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) <= 65f)
                         {
                             currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - 56.5f);// + pathology / 30f);
-                            currentValue += 0.4f;
+                            currentValue += 0.4f + (heartRate - 4f) * 0.1f;
+                            currentValue *= 1f * (5f / (heartRate + 1f));
                         }
                     }
                 }
@@ -209,8 +207,8 @@ public class GraphController : MonoBehaviour {
                     {
                         horizontalFactor = 20f;
                         currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f + ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion < 8) ? 35f : 45f));// + pathology / 30f);
-                        currentValue *= 1.1f;
-                        currentValue += 0.45f;
+                        currentValue *= 1.1f * (3.5f / (heartRate + 1f));
+                        currentValue += 0.45f + (heartRate - 4f) * 0.3f;
                     }
                     else
                     {
@@ -226,7 +224,8 @@ public class GraphController : MonoBehaviour {
                             if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) <= 65f)
                             {
                                 currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - 56.5f);// + pathology / 30f);
-                                currentValue += 0.4f;
+                                currentValue += 0.4f + (heartRate - 4f) * 0.1f;
+                                currentValue *= 1f * (5f / (heartRate + 1f));
                             }
                         }
                     }
@@ -343,12 +342,27 @@ public class GraphController : MonoBehaviour {
                         }
                         else
                         {
-                            horizontalFactor = 3f - pathology / 1.87f;
+                            float var1 = 0f;
+                            float var2 = 0f;
+                            float var3 = 0f;
+                            switch (pathology)
+                            {
+                                case 0: var1 = 0f; var2 = 0f; var3 = 0f; break;
+                                case 3: var1 = -5f; var2 = 32f; var3 = 20f; break;
+                                case 7: var1 = -15f; var2 = 29f; var3 = 18f; break;
+                                case 11: var1 = -15f; var2 = 30f; var3 = 18f; break;
+                                case 15: var1 = -15f; var2 = 30f; var3 = 18f; break;
+                                case 18: var1 = -15f; var2 = 30f; var3 = 18f; break;
+                                case 22: var1 = -16f; var2 = 30f; var3 = 18f; break;
+                                case 26: var1 = -18f; var2 = 30f; var3 = 18f; break;
+                                case 30: var1 = -20f; var2 = 31f; var3 = 26f; break;
+                            }
+                            horizontalFactor = 3f - var1 / 1.87f;
                             if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) <= 65f)
                             {
                                 currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - 56.5f);// + pathology / 30f);
-                                currentValue *= 1f - pathology / 27f;
-                                currentValue += 0.4f - pathology / 50f;
+                                currentValue *= 1f - var2 / 27f;
+                                currentValue += 0.4f - var3 / 50f;
 
                             }
                         }
@@ -372,7 +386,7 @@ public class GraphController : MonoBehaviour {
                     else
                     {
                         horizontalFactor = 6f + 30f / 7.5f;
-                        if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) < 27f - 30f / 4f)
+                        if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) < 28f - 30f / 4f)
                         {
                             currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 45f));// + pathology / 30f);
                             currentValue += 0.65f;
@@ -383,8 +397,8 @@ public class GraphController : MonoBehaviour {
                             if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) <= 65f)
                             {
                                 currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - 56.5f);// + pathology / 30f);
-                                currentValue *= 1f - 30f / 18f;
-                                currentValue += 0.4f - 30f / 30f;
+                                currentValue *= 1f - 30f / 24f;
+                                currentValue += 0.4f - 30f / 42f;
 
                             }
                         }
@@ -411,9 +425,8 @@ public class GraphController : MonoBehaviour {
                     //print("fsafasf");
                 }
             }
-
             currentValue *= (inverseFunction) ? -1 : 1;
-            currentValue *= ((inverseGraph)) ? -1 : 1;
+            //currentValue *= ((inverseGraph)) ? -1 : 1;
             //revisa si la funcion esta arriba o abajo del cero
             positiveFunction = currentValue > 0;
             if (i != 0)
@@ -433,7 +446,7 @@ public class GraphController : MonoBehaviour {
             if (positiveFunction && currentValue < 0)
                 currentValue = 0;
 			if (cursorController.inVein) {
-				if (cursorController.positive)
+				if (positiveFunction)
 					currentValue = Random.Range (0, 30f);
 				else
 					currentValue = Random.Range (-30, 0f);
@@ -615,7 +628,7 @@ public class GraphController : MonoBehaviour {
         //slider speed
         incrIndexScan = ((sliderSpeed.value / 0.5f * 2.5f) + 1) * 2;
         //slider scale
-        verticalScale = (Mathf.Pow(sliderScale.value, 1.5f) / (0.35355339059f));
+        verticalScale = (Mathf.Pow(sliderScale.value + ((sliderScale.value < 0.5f)?(0.2f * (1f - sliderScale.value * 2f)):0f), 1.5f) / (0.35355339059f));
         //slider zero
         zero = Mathf.CeilToInt((sliderZero.value - 0.5f) * 140) + sizeVertical / 2;
         //slider gain
@@ -624,13 +637,13 @@ public class GraphController : MonoBehaviour {
         power = (int)(sliderPower.value * 10);
         //slider heartrate
         heartRate = ((sliderheart.value + 0.5f) * 6f - 2f);
-        beatsPerMinute.text = "" + (((sliderheart.value) * 100) + 70);
+        beatsPerMinute.text = "" + (((sliderheart.value) * 100) + 70) + " bpm";
 		//print (Time.timeScale + " " + Time.fixedDeltaTime + " " + Time.deltaTime);
         //if (sliderheart.value >= 0.5f)
         //{
 		if (SceneManager.GetActiveScene ().name == "EcografiaUtero") {
             heartRate = (sliderheart.value * 1.3f - 1.6f) * 1.3f + 3f;
-			beatsPerMinute.text = "" + (((sliderheart.value) * 10) + 60);
+			beatsPerMinute.text = "" + (((sliderheart.value) * 10) + 60) + " bpm";
             //Time.timeScale = ((sliderheart.value + 0.5f) * (sliderheart.value * 0.3f + 0.2f) + 0.15f); //* 0.2f, * 0.35f, * 0.5f
             Time.timeScale = (sliderheart.value + 0.5f) * (1f - ((sliderheart.value * -2f + 1f)) * 0.7f);
 

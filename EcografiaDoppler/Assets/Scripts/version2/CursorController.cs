@@ -59,29 +59,44 @@ public class CursorController : MonoBehaviour {
         {
             //Debug.Log("N/A");
         }
-
+        print(c);
+        print(cDurezas);
         if ((cDurezas.r > 0.5f && cDurezas.b < 0.5f) || (cDurezas.b > 0.5f && cDurezas.r < 0.5f) && !(cDurezas.b == cDurezas.r && cDurezas.g == cDurezas.r))
         {
             //Venas
             durezasAngle = 0f;
             print("en vena");
             inVein = true;
+            umbilicalDraw = false;
             positive = (cDurezas.r > 0.5f);
         }
         else
         {
-            if (((int)(Mathf.Abs(cDurezas.b - cDurezas.r) * 100) <= (int)(100f / 255f) && (int)(Mathf.Abs(cDurezas.g - cDurezas.r) * 100) <= (int)(100f / 255f) && (int)(Mathf.Abs(cDurezas.g - cDurezas.b) * 100) <= (int)(100f / 255f)))
+            if (cDurezas != Color.black && ((int)(Mathf.Abs(cDurezas.b - cDurezas.r) * 100) <= (int)(100f / 255f) && (int)(Mathf.Abs(cDurezas.g - cDurezas.r) * 100) <= (int)(100f / 255f) && (int)(Mathf.Abs(cDurezas.g - cDurezas.b) * 100) <= (int)(100f / 255f)))
             {
+                inVein = false;
                 umbilicalDraw = true;
-                durezasAngle = cDurezas.g;
+                durezasAngle = 1f;// cDurezas.g;
                 print("en dibujo umbilical");
+                positive = (cDurezas.r > 0.5f);
             }
             else
             {
-                durezasAngle = cDurezas.g;
-                umbilicalDraw = false;
-                inVein = false;
-                print(durezasAngle);
+                if (!(cDurezas.b == cDurezas.r && cDurezas.g == cDurezas.r))
+                {
+
+                    print("no en dibujo umbilical");
+                    durezasAngle = 1f;// cDurezas.g;
+                    umbilicalDraw = false;
+                    inVein = false;
+                    print(durezasAngle);
+                    positive = (cDurezas.r > 0.5f);
+                }
+                else
+                {
+
+                    durezasAngle = 0f;// cDurezas.g;
+                }
             }
         }
     }
@@ -100,33 +115,97 @@ public class CursorController : MonoBehaviour {
         transform.rotation = _lookRotation;
         transform.Rotate(0f, -90f, 0f);
         */
-        if (Mathf.Abs(transform.rotation.y + 0.5f) < 0.1f)
-        {
+        //if (Mathf.Abs(transform.rotation.y + 0.5f) < 0.1f)
+        //{
             //print("aqui");
             //transform.rotation = new Quaternion(transform.rotation.x, -180f, transform.rotation.z, transform.rotation.w);
-        }
+        //}
         //if(transform.rotation.y > 90f)
         //    transform.rotation = new Quaternion(transform.rotation.x, 180f, transform.rotation.z, transform.rotation.w);
-        print(transform.eulerAngles);
-        if ((transform.eulerAngles.y >= -180f && transform.eulerAngles.y <= -0f) || (transform.eulerAngles.y <= 360f && transform.eulerAngles.y > 200f))
-        //if(transform.eulerAngles.y == 270f || transform.eulerAngles.y == -90f)
+        //print(transform.eulerAngles);
+        /*if(transform.eulerAngles.y < 360f && transform.eulerAngles.y > 180f)
         {
-            print("aqui");
-            transform.eulerAngles = new Vector3(transform.eulerAngles.x, 0f, transform.eulerAngles.z);
+            if(transform.eulerAngles.y >= 270f)
+                transform.eulerAngles = new Vector3(transform.eulerAngles.x, 0f, transform.eulerAngles.z * 90f / 81f);
+            if (transform.eulerAngles.y < 270f && transform.eulerAngles.y > 180f)
+                transform.eulerAngles = new Vector3(transform.eulerAngles.x, 180f, transform.eulerAngles.z * 90f / 81f);
+            if (transform.eulerAngles.z < 90f && transform.eulerAngles.z > 0f)
+                transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, transform.eulerAngles.z);
+            else
+                transform.eulerAngles = new Vector3(transform.eulerAngles.x, 0f, 90f);
+        }*/
+        /* if ((transform.eulerAngles.y >= 0f && transform.eulerAngles.y <= 90f) || (transform.eulerAngles.y >= 270f && transform.eulerAngles.y <= 360f))
+         {
+             //print("aqui1");
+             transform.eulerAngles = new Vector3(transform.eulerAngles.x, 0f, transform.eulerAngles.z);
+         }
+         else
+         {
+             //print("aqui2");
+             transform.eulerAngles = new Vector3(transform.eulerAngles.x, 180f, transform.eulerAngles.z);
+         }*/
+        //print(transform.eulerAngles);
+        //if ((transform.eulerAngles.y > -180f && transform.eulerAngles.y <= -0f) || (transform.eulerAngles.y <= 360f && transform.eulerAngles.y > 180f))
+        /*if((transform.eulerAngles.y >= 270f && transform.eulerAngles.y <= 90f) || (transform.eulerAngles.y >= -90f && transform.eulerAngles.y <= -270f))
+        {
+            if((transform.eulerAngles.y >= 175f && transform.eulerAngles.y <= -175f) || (transform.eulerAngles.y >= -5f && transform.eulerAngles.y <= 5f))
+            {
+                print("aqui");
+                transform.eulerAngles = new Vector3(transform.eulerAngles.x, 0, transform.eulerAngles.z);
+            }
+            else
+            {
+
+                print("aqui1");
+                transform.eulerAngles = new Vector3(transform.eulerAngles.x, 0f, 180f - transform.eulerAngles.z);
+            }
         }
         else
         {
-            print("aqui2");
-            //transform.eulerAngles = new Vector3(transform.eulerAngles.x, 180f, transform.eulerAngles.z);
-        }
+
+            if ((transform.eulerAngles.y >= 130f && transform.eulerAngles.y <= 180f) || (transform.eulerAngles.y <= -130f && transform.eulerAngles.y >= -180f))
+            {
+                print("aqui2");
+                transform.eulerAngles = new Vector3(transform.eulerAngles.x, 0, transform.eulerAngles.z);
+            }
+            else
+            {*/
+                if (transform.position.x >= transductor.position.x)
+                {
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, 0f, 180f - transform.eulerAngles.z);// * ((transform.eulerAngles.z > 85 && transform.eulerAngles.z < 95f)?0.9f:1f));
+                    //print("aqui3");
+                }
+                else
+                {
+            transform.eulerAngles = new Vector3(transform.eulerAngles.x, 0f, transform.eulerAngles.z);// * ((transform.eulerAngles.z > 85 && transform.eulerAngles.z < 95f) ? 0.9f : 1f));
+                    //print("aqui4");
+                }
+        //transform.eulerAngles = new Vector3(transform.eulerAngles.x, 0f, -transform.eulerAngles.z);
+        //if(transform.eulerAngles.y != 0f || transform.eulerAngles.y != 180f)
+        //    transform.eulerAngles = new Vector3(transform.eulerAngles.x, 180f, transform.eulerAngles.z);
+        //}
 
         lineaPunteada.height = (int)(Vector3.Distance(transform.position, puntoFoco.position) * 320f);
-        posicionInicialLinterna = transductor.position;// + transform.parent.up * 0.35f - transform.parent.right * 0.02f;
+        posicionInicialLinterna = transductor.position;
         linterna.position = posicionInicialLinterna;
         linterna.rotation = transform.rotation;
         linterna.Rotate(0f, 0f, -90f);
-        //Vector3 angulo = new Vector3(0f, 0f, linterna.rotation.eulerAngles.z);
-        //linterna.rotation = new Quaternion(0f, (linterna.rotation.y <= 90f || linterna.rotation.y >= -90f) ? 0f: 180f, linterna.rotation.z, linterna.rotation.w);
         transductor.rotation = linterna.rotation;
+        //print(transform.eulerAngles);
+        //transform.Rotate(0f, 0f, 180f);
+        /*
+        print(transform.eulerAngles);
+        //transform.Rotate(0f, 0f, 90f);
+        if (transform.eulerAngles.y >= 269f && transform.eulerAngles.y <= 271f)
+        {
+            transform.eulerAngles = new Vector3(0f, 0f, transform.eulerAngles.x);
+            print("aqui");
+        }
+        else
+        {
+            //if (transform.eulerAngles.z >= 0f && transform.eulerAngles.z <= 90f)
+            transform.eulerAngles = new Vector3(0f, 0f, 180f - transform.eulerAngles.x);
+            print("aqui2");
+        }*/
     }
 }
