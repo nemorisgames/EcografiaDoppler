@@ -37,6 +37,7 @@ public class GraphController : MonoBehaviour {
 	int ciclo = 0;
 	int cicloDots = 0;
 	ArrayList positionDots = new ArrayList();
+    float function = 256;
 
     // Use this for initialization
     void Start () {
@@ -144,13 +145,19 @@ public class GraphController : MonoBehaviour {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name); 
     }
 
+    float currentValue = 0f;
+    float tiempoBarrido = 0f;
+
     void drawFunction()
     {
-        float currentValue = 0f;
+        currentValue = 0f;
         bool positiveFunction;
 		if(indexScan % sizeHorizontal == 2)
 		{
+            float aux = Time.time - tiempoBarrido;
+            //Debug.Log("speed: "+sliderSpeed.value+" - "+aux/Time.timeScale+" s, heart: "+sliderheart.value);
 			focusController.resetCont();
+            tiempoBarrido = Time.time;
 		}
         for (int i = 0; i < 6 + Mathf.Pow(2f, (int)((gain + power)/2f)) + (sliderScale.value - 0.5f) * 25; i++)
         {
@@ -477,25 +484,39 @@ public class GraphController : MonoBehaviour {
         }
         horizontalNumbers.Clear();
 
-        for (int i = 0; i < 20; i++)
+        int aux = Mathf.FloorToInt(sizeHorizontal / (pixelsPerSecond()/2));
+
+        int count = 0;
+        for (int i = 0; i < aux; i++)
         {
             GameObject g = Instantiate(horizontalNumberPrefab);
             g.transform.parent = transform.parent;
             g.transform.localScale = new Vector3(1f, 1f, 1f);
-            g.transform.localPosition = new Vector2(g.transform.localPosition.x + i * 20f - 65f, -140f);
+            //g.transform.localPosition = new Vector2(g.transform.localPosition.x + i * 20f - 65f, -140f);
+            g.transform.localPosition = new Vector2(g.transform.localPosition.x + (i+1)*(pixelsPerSecond()/2) - 65f, -140f);
+            if(i % 2 == 0){
+                g.GetComponent<UILabel>().text = "'";
+            }
+            else{
+                count++;
+                g.GetComponent<UILabel>().text = count.ToString();
+            }
+            g.transform.parent = transform.Find("Horizontal");
             horizontalNumbers.Add(g);
             //g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f) / 100f;
             if (SceneManager.GetActiveScene().name == "EcografiaUtero")
             {
-                if (sliderheart.value <= 0.5f)
+                /*if (sliderheart.value <= 0.5f)
                     g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 0.45f) / ((incrIndexScan + 0.5f) / 3.1f)) / 100f;
                 else
                     g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 1.7f) / ((incrIndexScan + 0.5f) / 8.2f)) / 100f;
+                */
             }
             else
             {
                 if (SceneManager.GetActiveScene().name == "EcografiaUmbilical")
                 {
+                    /*
                     if (sliderheart.value <= 0.5f)
                         if (sliderheart.value == 0.125f)
                         {
@@ -505,12 +526,13 @@ public class GraphController : MonoBehaviour {
                             g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 1.1f) / ((incrIndexScan + 0.5f) / 8.2f)) / 100f;
                     else
                         g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 1.2f) / ((incrIndexScan + 0.5f) / 8.2f)) / 100f;
+                    */
                 }
                 else
                 {
                     if (SceneManager.GetActiveScene().name == "EcografiaCerebral")
                     {
-                        if (sliderheart.value <= 0.5f)
+                        /*if (sliderheart.value <= 0.5f)
                             if (sliderheart.value == 0.125f)
                             {
                                 g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 1.8f) / ((incrIndexScan + 0.5f) / 9f)) / 100f;
@@ -519,9 +541,11 @@ public class GraphController : MonoBehaviour {
                                 g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 1.2f) / ((incrIndexScan + 0.5f) / 8.2f)) / 100f;
                         else
                             g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 1.3f) / ((incrIndexScan + 0.5f) / 8.2f)) / 100f;
+                        */
                     }
                     else
                     {
+                        /* 
                         if (sliderheart.value <= 0.5f)
                             if (sliderheart.value == 0.125f)
                             {
@@ -532,10 +556,88 @@ public class GraphController : MonoBehaviour {
                         
                         else
                             g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 1.5f) / ((incrIndexScan + 0.5f) / 7.7f)) / 100f;
+                        */
                     }
                 }
             }
         }
+    }
+
+
+    ArrayList verticalNumbers = new ArrayList(); 
+    void drawNumbersVertical(){
+        for (int i = 0; i < verticalNumbers.Count; i++)
+        {
+            Destroy((GameObject)verticalNumbers[i]);
+        }
+        verticalNumbers.Clear();
+
+        float height = GetWaveHeight(sliderScale.value);
+
+        int step = Mathf.RoundToInt(height/2 / 5);
+        int reps = Mathf.RoundToInt(sizeVertical/step);
+        int weight = 20;
+
+        if(step < 12){
+            step = Mathf.RoundToInt(height/2 / 2);
+            reps = Mathf.RoundToInt(sizeVertical/step);
+            weight = 50;
+
+            if(step < 12){
+                step = Mathf.RoundToInt(height/2);
+                reps = Mathf.RoundToInt(sizeVertical/step);
+                weight = 100;
+            }
+        }
+
+        for(int i = 0; i < reps;i++){
+            if((i*step + zero - sizeVertical/2 - 6f) > sizeVertical/2 - 5)
+                return;
+
+            GameObject g = Instantiate(horizontalNumberPrefab);
+            g.transform.parent = transform.parent;
+            g.transform.localScale = new Vector3(1f, 1f, 1f);
+            g.transform.localPosition = new Vector2(g.transform.localPosition.x - 80f, i*step + zero - sizeVertical/2 - 6f);
+            g.GetComponent<UILabel>().text = (weight * i).ToString();
+            g.transform.parent = transform.Find("Vertical");
+            verticalNumbers.Add(g);
+            if(i != 0){
+                g = Instantiate(horizontalNumberPrefab);
+                g.transform.parent = transform.parent;
+                g.transform.localScale = new Vector3(1f, 1f, 1f);
+                g.transform.localPosition = new Vector2(g.transform.localPosition.x - 80f, -i*step + zero - sizeVertical/2 - 6f);
+                g.GetComponent<UILabel>().text = (weight * i).ToString();
+                g.transform.parent = transform.Find("Vertical");
+                verticalNumbers.Add(g);
+            }
+        }
+    }
+
+    float GetWaveHeight(float vScale){
+        float comp = (SceneManager.GetActiveScene().name == "EcografiaUtero" ? 1.43f : 1f);
+        if(vScale == 0f)
+            return 141.4992f * 0.26f * comp;
+        if(vScale == 0.1f)
+            return 146.431f * 0.38f * comp;
+        if(vScale == 0.2f)
+            return 151.852f * 0.48f * comp;
+        if(vScale == 0.3f)
+            return 157.7186f * 0.6f * comp;
+        if(vScale == 0.4f)
+            return 164.0001f * 0.72f * comp;
+        if(vScale == 0.5f)
+            return 197.7435f * 0.7f * comp;
+        if(vScale == 0.6f)
+            return 219.6802f * 0.8f * comp;
+        if(vScale == 0.7f)
+            return 243.5302f * 0.97f * comp;
+        if(vScale == 0.8f)
+            return 269.1509f * comp;
+        if(vScale == 0.9f)
+            return 296.4272f * 1.05f * comp;
+        if(vScale == 1f)
+            return 325.2643f * 1.1f * comp;
+        return 0f;
     }
 
     public void adjustTimeFixedScale()
@@ -616,6 +718,79 @@ public class GraphController : MonoBehaviour {
         labelIndicators.adjustZero(Mathf.RoundToInt((sliderZero.value - 0.5f) * 10));
     }
 
+    float velocidadBarrido(float timeScale){
+        return (166.97f*Mathf.Pow(timeScale,2) - 367.068f*timeScale + 203.0671f);
+    }
+
+    int pixelsPerBeat(){
+        string [] s = beatsPerMinute.text.Split(' ');
+        float spb = 1f / (float.Parse(s[0]) / 60f);
+        //Debug.Log(sizeHorizontal+"*"+spb+"/"+velocidadBarrido(Time.timeScale)+";"+Time.timeScale);
+        return (int)(sizeHorizontal*spb/velocidadBarrido(Time.timeScale));
+    }
+
+    int pixelsPerSecond(){
+        //Debug.Log(velocidadBarrido(Time.timeScale));
+        float comp = 1f;
+        if(sliderheart.value == 0f){
+            if(SceneManager.GetActiveScene ().name == "EcografiaUtero")
+                comp = 2.05f;
+            else
+                comp = 2.05f;
+
+        }
+        if(sliderheart.value == 0.125f){
+            if(SceneManager.GetActiveScene ().name == "EcografiaUtero")
+                comp = 1.72f;
+            else
+                comp = 1.25f;
+        } 
+        if(sliderheart.value == 0.250f){
+            if(SceneManager.GetActiveScene ().name == "EcografiaUtero")
+                comp = 1.52f;
+            else
+                comp = 1.32f;
+        }
+        if(sliderheart.value == 0.375f){
+            if(SceneManager.GetActiveScene ().name == "EcografiaUtero")
+                comp = 1.32f;
+            else
+                comp = 1.12f;
+        }
+        if(sliderheart.value == 0.5f){
+            if(SceneManager.GetActiveScene ().name == "EcografiaUtero")
+                comp = 1.22f;
+            else
+                comp = 1f;
+        }      
+        if(sliderheart.value == 0.625f){
+            if(SceneManager.GetActiveScene ().name == "EcografiaUtero")
+                comp = 1.08f;
+            else
+                comp = 0.95f;
+        }
+        if(sliderheart.value == 0.750f){
+            if(SceneManager.GetActiveScene ().name == "EcografiaUtero")
+                comp = 1f;
+            else
+                comp = 0.85f;
+        }
+        if(sliderheart.value == 0.875f){
+            if(SceneManager.GetActiveScene ().name == "EcografiaUtero")
+                comp = 0.95f;
+            else
+                comp = 0.9f;
+        }
+        if(sliderheart.value == 1f){
+            if(SceneManager.GetActiveScene ().name == "EcografiaUtero")
+                comp = 0.9f;
+            else
+                comp = 0.82f;
+        }
+
+        return (int)(sizeHorizontal*comp/getVelocidadBarrido(sliderSpeed.value));
+    }
+
     // Update is called once per frame
     void FixedUpdate() {
 
@@ -625,10 +800,14 @@ public class GraphController : MonoBehaviour {
             SceneManager.LoadScene("Login");
         }
         if (sleep) return;
+
+        //Debug.Log(Time.timeScale);
+
         //slider speed
         incrIndexScan = ((sliderSpeed.value / 0.5f * 2.5f) + 1) * 2;
         //slider scale
         verticalScale = (Mathf.Pow(sliderScale.value + ((sliderScale.value < 0.5f)?(0.2f * (1f - sliderScale.value * 2f)):0f), 1.5f) / (0.35355339059f));
+        labelIndicators.adjustVerticalSize(sliderScale.value);
         //slider zero
         zero = Mathf.CeilToInt((sliderZero.value - 0.5f) * 140) + sizeVertical / 2;
         //slider gain
@@ -712,7 +891,9 @@ public class GraphController : MonoBehaviour {
 
 		if (ciclo % 100 == 0) {
 			drawNumbersHorizontal ();
+            drawNumbersVertical();
 		}
+
         if (sliderScale.value >= 0.5f)
             if(sliderScale.value >= 1f)
                 labelIndicators.verticalScale = 1 + (21f - sliderScale.value * 20f) * 0.9f;
@@ -1003,6 +1184,32 @@ public class GraphController : MonoBehaviour {
                 if (heart == 1f) return 0f;
             }
         }
+        return 0f;
+    }
+
+    float getVelocidadBarrido(float speed){
+        if(speed == 0f)
+            return 10.176f;
+        if(speed == 0.1f)
+            return 8.275f * 0.8f;
+        if(speed == 0.2f)
+            return 6.6048f * 0.8f;
+        if(speed == 0.3f)
+            return 5.1647f * 0.8f;
+        if(speed == 0.4f)
+            return 3.955f * 0.9f;
+        if(speed == 0.5f)
+            return 2.79f;
+        if(speed == 0.6f)
+            return 2.227f * 1.1f;
+        if(speed == 0.7f)
+            return 1.708f * 1.3f;
+        if(speed == 0.8f)
+            return 1.4208f * 1.45f;
+        if(speed == 0.9f)
+            return 1.363f * 1.35f;
+        if(speed == 1f)
+            return 1.536f * 1.1f;
         return 0f;
     }
 }

@@ -13,6 +13,8 @@ public class LabelIndicators : MonoBehaviour {
 	float verticalStep = 1f;
     int variation = 0;
 	int ciclo = 0;
+
+	public int size = 17;
 	// Use this for initialization
 	void Start (){
 		changeVerticalPosition (0);
@@ -79,11 +81,11 @@ public class LabelIndicators : MonoBehaviour {
 
 	public void scaleUpVertical(){
 		//changeVerticalScale (10);
-		verticalStep*=1.25f;
+		verticalStep*=2f;
 	}
 	public void scaleDownVertical(){
 		//changeVerticalScale (-10);
-		verticalStep/=1.25f;
+		verticalStep/=2f;
 	}
 	public void changeVerticalScale(int i){
 		verticalScale += i;
@@ -135,9 +137,10 @@ public class LabelIndicators : MonoBehaviour {
 
 
 		verticalLabel.text = "";
-		for(int i = 0; i <= 17; i++){
+		for(int i = 0; i <= size; i++){
             if (verticalPosition - i == 0) verticalLabel.text += "[333333]CM/SEC[-]          ";
-            verticalLabel.text += "" + (Mathf.Round((verticalPosition - i) * (verticalScale/verticalStep))).ToString() + "\n\n"; 
+            //verticalLabel.text += "" + (Mathf.Round((verticalPosition - i)*2 * (verticalScale/verticalStep))).ToString() + "\n\n";
+			verticalLabel.text += ""+ (Mathf.Round(verticalPosition - i)*20).ToString()+"\n\n";
 		}
 
 		horizontalLabel.text = "";
@@ -145,5 +148,23 @@ public class LabelIndicators : MonoBehaviour {
 			horizontalLabel.text += (i/2).ToString() + horizontalSpace;
 		}
 		//horizontalLabel.text = "0" + horizontalSpace + "1" + horizontalSpace + "2" + horizontalSpace + "3" + horizontalSpace + "4" + horizontalSpace + "5" + horizontalSpace + "6";
+	}
+
+	public int offset = 0;
+	public void adjustVerticalSize(float vScale){
+		//offset = (int)Mathf.RoundToInt((10f*(Mathf.Abs(0.5f - vScale))));
+		if(vScale == 0.5f) offset = 0;
+		if(vScale == 0.6f) offset = 2;
+		if(vScale == 0.7f) offset = 3;
+		if(vScale == 0.8f) offset = 4;
+		if(vScale == 0.9f) offset = 4;
+		if(vScale == 1f) offset = 5;
+
+
+
+		//size = 17 - Mathf.Min(offset,3);
+		//verticalLabel.spacingY = 1 + (int)offset;
+		//verticalPosition = 9 - Mathf.Min(offset,3);
+		
 	}
 }

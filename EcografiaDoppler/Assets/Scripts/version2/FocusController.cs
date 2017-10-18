@@ -12,7 +12,7 @@ public class FocusController : MonoBehaviour {
     public Texture2D[] texturesDireccionInv;
     public int index = 0;
     int cont = 0;
-    float contadorTiempo = 0f;
+    public float contadorTiempo = 0f;
     public float contadorTiempoIncremento = 0.25f;
     public UITexture textureRedBlue;
     public UITexture textureAngle;
