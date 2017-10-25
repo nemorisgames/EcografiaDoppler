@@ -503,63 +503,6 @@ public class GraphController : MonoBehaviour {
             }
             g.transform.parent = transform.Find("Horizontal");
             horizontalNumbers.Add(g);
-            //g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f) / 100f;
-            if (SceneManager.GetActiveScene().name == "EcografiaUtero")
-            {
-                /*if (sliderheart.value <= 0.5f)
-                    g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 0.45f) / ((incrIndexScan + 0.5f) / 3.1f)) / 100f;
-                else
-                    g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 1.7f) / ((incrIndexScan + 0.5f) / 8.2f)) / 100f;
-                */
-            }
-            else
-            {
-                if (SceneManager.GetActiveScene().name == "EcografiaUmbilical")
-                {
-                    /*
-                    if (sliderheart.value <= 0.5f)
-                        if (sliderheart.value == 0.125f)
-                        {
-                            g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 1.8f) / ((incrIndexScan + 0.5f) / 9f)) / 100f;
-                        }
-                        else
-                            g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 1.1f) / ((incrIndexScan + 0.5f) / 8.2f)) / 100f;
-                    else
-                        g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 1.2f) / ((incrIndexScan + 0.5f) / 8.2f)) / 100f;
-                    */
-                }
-                else
-                {
-                    if (SceneManager.GetActiveScene().name == "EcografiaCerebral")
-                    {
-                        /*if (sliderheart.value <= 0.5f)
-                            if (sliderheart.value == 0.125f)
-                            {
-                                g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 1.8f) / ((incrIndexScan + 0.5f) / 9f)) / 100f;
-                            }
-                            else
-                                g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 1.2f) / ((incrIndexScan + 0.5f) / 8.2f)) / 100f;
-                        else
-                            g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 1.3f) / ((incrIndexScan + 0.5f) / 8.2f)) / 100f;
-                        */
-                    }
-                    else
-                    {
-                        /* 
-                        if (sliderheart.value <= 0.5f)
-                            if (sliderheart.value == 0.125f)
-                            {
-                                g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 1.8f) / ((incrIndexScan + 0.5f) / 9f)) / 100f;
-                            }
-                            else
-                                g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 1.2f) / ((incrIndexScan + 0.5f) / 9f)) / 100f;
-                        
-                        else
-                            g.GetComponent<UILabel>().text = "" + (int)(i * 10f * 1.5f * ((sliderheart.value + 0.5f) / 1.5f) / ((incrIndexScan + 0.5f) / 7.7f)) / 100f;
-                        */
-                    }
-                }
-            }
         }
     }
 
@@ -578,12 +521,14 @@ public class GraphController : MonoBehaviour {
         int reps = Mathf.RoundToInt(sizeVertical/step);
         int weight = 20;
 
-        if(step < 12){
+        //Debug.Log(step);
+
+        if(step < 20){
             step = Mathf.RoundToInt(height/2 / 2);
             reps = Mathf.RoundToInt(sizeVertical/step);
             weight = 50;
 
-            if(step < 12){
+            if(step < 20){
                 step = Mathf.RoundToInt(height/2);
                 reps = Mathf.RoundToInt(sizeVertical/step);
                 weight = 100;
@@ -614,7 +559,31 @@ public class GraphController : MonoBehaviour {
     }
 
     float GetWaveHeight(float vScale){
-        float comp = (SceneManager.GetActiveScene().name == "EcografiaUtero" ? 1.43f : 1f);
+        //float comp = (SceneManager.GetActiveScene().name == "EcografiaUtero" ? 1.43f : 1f);
+        float comp = 1f;
+        string sceneName = SceneManager.GetActiveScene().name;
+        switch(sceneName){
+            case "EcografiaUtero":
+            comp = 1.43f *2;
+            break;
+            case "EcografiaCerebral":
+            comp = 2f;
+            break;
+            case "EcografiaUmbilical":
+            comp = 1.9f;
+            break;
+            case "EcografiaDuctus":
+            if(cursorController.umbilicalDraw)
+                comp = 2.2f;
+            else
+                comp = 2.8f;
+            break;
+            default:
+            comp = 1;
+            break;
+        }
+
+
         if(vScale == 0f)
             return 141.4992f * 0.26f * comp;
         if(vScale == 0.1f)
