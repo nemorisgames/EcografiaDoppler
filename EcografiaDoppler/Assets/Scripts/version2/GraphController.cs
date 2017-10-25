@@ -168,17 +168,27 @@ public class GraphController : MonoBehaviour {
             {
                 //Funcion!!
 				//horizontalFactor = 5f;
-                int repeticion = 65;
+                int repeticion = (65);
+                //original
+                /*int repeticion = 65;
                 if((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) < 9f)
                 {
                     horizontalFactor = 20f;
                     currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f + ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion < 8) ? 35f : 45f));// + pathology / 30f);
                     currentValue *= 1.1f * (3.5f / (heartRate + 1f));
                     currentValue += 0.45f + (heartRate - 4f) * 0.3f;
-                }
-                else
-                {
-                    horizontalFactor = 6f;
+                }*/
+                //if ((indexScan * heartRate / (4f * 7f / 7f) % repeticion) < 2.25f * heartRate)
+                //{
+                repeticion = 1000;
+                    horizontalFactor = 20f ;
+                    currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * 20f * 4f / heartRate * Mathf.PI / 180f + 35f);// + pathology / 30f);
+                    currentValue *= 1.1f * (3.5f / (4f + 1f));
+                    currentValue += 0.45f + (4f - 4f) * 0.3f;
+                //}
+                //else
+                //{
+                    /*horizontalFactor = 6f;
                     if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) < 27f)
                     {
                         currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 45f));// + pathology / 30f);
@@ -193,8 +203,8 @@ public class GraphController : MonoBehaviour {
                             currentValue += 0.4f + (heartRate - 4f) * 0.1f;
                             currentValue *= 1f * (5f / (heartRate + 1f));
                         }
-                    }
-                }
+                    }*/
+                //}
                 currentValue *= 0.5f;
                 //currentValue = Mathf.Cos ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 45f));// + pathology / 30f);
                 //lo parada de la grafica
