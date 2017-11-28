@@ -56,12 +56,16 @@ public class GraphController : MonoBehaviour {
 
     public void WFMAdd()
     {
-        Mathf.Clamp(WFMLevel++, 0f, 10f);
+        WFMLevel++;
+		if (WFMLevel > 10)
+			WFMLevel = 10;
     }
 
     public void WFMLess()
-    {
-        Mathf.Clamp(WFMLevel--, 0f, 10f);
+	{
+		WFMLevel--;
+		if (WFMLevel < 0)
+			WFMLevel = 0;
     }
 
     public void PaintItBlack()
@@ -374,7 +378,6 @@ public class GraphController : MonoBehaviour {
                     if (cursorController.umbilicalDraw)
                     {
                         int repeticion = 65;
-
                         if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) < heartRate * 7f / 3f - 1f / 3f)
                         {
                             horizontalFactor = 20f;//20f ;
@@ -416,7 +419,7 @@ public class GraphController : MonoBehaviour {
 
                     }
                     else
-                    {
+					{
                         int repeticion = 65;
                         if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) < heartRate * 7f / 3f - 1f / 3f)
                         {
@@ -800,8 +803,7 @@ public class GraphController : MonoBehaviour {
                 currentValue = 0;
             if (positiveFunction && currentValue < 0)
                 currentValue = 0;
-
-            if (currentValue < WFMLevel * 10f) currentValue = 0f;
+			if (Mathf.Abs(currentValue) < WFMLevel * 10f) currentValue = 0f;
 
 			if (cursorController.inVein) {
 				if (positiveFunction)

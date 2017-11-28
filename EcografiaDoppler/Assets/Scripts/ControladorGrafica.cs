@@ -85,8 +85,8 @@ public class ControladorGrafica : MonoBehaviour {
 		//obtiene tamaño de la pantalla del tamaño del transform
 		sizeScreen = (int)transform.localScale.x;
 		sizeVertical = (int)transform.localScale.y;
-		horizontalScale = transform.FindChild ("Horizontal").gameObject;
-		verticalScale = transform.FindChild ("Vertical").gameObject;
+		horizontalScale = transform.Find ("Horizontal").gameObject;
+		verticalScale = transform.Find ("Vertical").gameObject;
 		//texture = new Texture2D(sizeScreen, sizeScreen);
 		texture = new Texture2D(sizeScreen, sizeVertical);
 

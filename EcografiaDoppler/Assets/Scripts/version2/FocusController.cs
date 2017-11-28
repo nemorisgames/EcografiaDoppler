@@ -60,7 +60,7 @@ public class FocusController : MonoBehaviour {
             cursorController.durezasTexture = (Texture2D)textureAngle.mainTexture;
             textureDireccion.mainTexture = texturesDireccionInv[index];
             cursorController.GetPixelColor();
-            xMarker.position = transform.FindChild(i).transform.position;
+            xMarker.position = transform.Find(i).transform.position;
         }
         else
         {
@@ -69,7 +69,7 @@ public class FocusController : MonoBehaviour {
             cursorController.durezasTexture = (Texture2D)textureAngle.mainTexture;
             textureDireccion.mainTexture = texturesDireccion[index];
             cursorController.GetPixelColor();
-            xMarker.position = transform.FindChild(i).transform.position;
+            xMarker.position = transform.Find(i).transform.position;
         }
         
         //textureRedBlue.mainTexture.Apply();
