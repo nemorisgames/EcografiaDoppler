@@ -40,6 +40,7 @@ public class GraphController : MonoBehaviour {
     float function = 256;
 
     float WFMLevel = 0f;
+    public UISlider testSlider;
 
     // Use this for initialization
     void Start () {
@@ -444,23 +445,27 @@ public class GraphController : MonoBehaviour {
                             else
                             {
                                 
-                                if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) <= 50f)
+                                if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) <= 12.3333f * heartRate + 0.666f)
                                 {
-                                    horizontalFactor = 0.9833f * Mathf.Pow((heartRate / 0.75f - 1f/3f), 4f) - 12.45f * Mathf.Pow((heartRate / 0.75f - 1f / 3f), 3f) + 54.02f * Mathf.Pow((heartRate / 0.75f - 1f / 3f), 2f) - 90.05f * (heartRate / 0.75f - 1f / 3f) + 55.5f;
+                                    print(heartRate);
+                                    /*horizontalFactor = 0.9833f * Mathf.Pow((heartRate / 0.75f - 1f/3f), 4f) - 12.45f * Mathf.Pow((heartRate / 0.75f - 1f / 3f), 3f) + 54.02f * Mathf.Pow((heartRate / 0.75f - 1f / 3f), 2f) - 90.05f * (heartRate / 0.75f - 1f / 3f) + 55.5f;
                                     horizontalFactor += 0f * pathology * 0.18f;
-                                    //print(heartRate + " " + horizontalFactor);
-                                    //repeticion = (int)(1.542f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 4) - 23.42f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 3) + 136f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 2) + -379.1f * (heartRate * 4f / 3f - 1 / 3f) + 525f);
                                     currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 50f) + (2f) - (0f + pathology / 30f));// + 0.16666f * (4f - heartRate));// + pathology / 30f);
                                     currentValue *= 0.6f;// - pathology / 20f;
                                     currentValue += -0.25f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 4) + 3.017f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 3) + -12.45f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 2) + 20.38f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 1) - 10.7f;
+                                */
+                                    horizontalFactor = 17f;
+                                    currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 50f));// + pathology / 30f);
+                                    currentValue *= 0.6f - pathology / 60f;
+                                    currentValue -= 0.1f;
                                 }
                                 else
                                 {
-                                    horizontalFactor = 17f;
+                                    horizontalFactor = 1.25f * heartRate * heartRate - 4f * heartRate + 5.75f;
                                     //ORIGINAL
                                     if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) <= 65f)
                                     {
-                                        currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - 58f);// + pathology / 30f);
+                                        currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - (-0.2083f * Mathf.Pow((heartRate / 0.75f - 1f / 3f), 4) + 2.167f * Mathf.Pow((heartRate / 0.75f - 1f / 3f), 3) - 7.542f * Mathf.Pow((heartRate / 0.75f - 1f / 3f), 2) + 11.08f * (heartRate / 0.75f - 1f / 3f) + 50.5f));// + pathology / 30f);
                                         currentValue *= 0.5f + pathology / 15f;
                                         currentValue -= 1.0f + pathology / 10f;
                                     }
@@ -805,12 +810,15 @@ public class GraphController : MonoBehaviour {
                 currentValue = 0;
 			if (Mathf.Abs(currentValue) < WFMLevel * 10f) currentValue = 0f;
 
-			if (cursorController.inVein) {
-				if (positiveFunction)
+			if (cursorController.inVein)
+            {
+                if (!inverseFunction)
 					currentValue = Random.Range (0, 30f);
 				else
 					currentValue = Random.Range (-30, 0f);
-				texture.SetPixel (indexScan % sizeHorizontal, (int)((currentValue * verticalScale + zero)), Color.white);
+                //print(positiveFunction);
+
+                texture.SetPixel (indexScan % sizeHorizontal, (int)((currentValue * verticalScale + zero)), Color.white);
 				//positionDots.Add(new Vector2(indexScan % sizeHorizontal + incrIndexScan, (int)((currentValue * verticalScale + zero))));
 				//positionDots [cicloDots] = new Vector3(indexScan % sizeHorizontal, i, (int)((currentValue * verticalScale + zero)));
 			} else {
