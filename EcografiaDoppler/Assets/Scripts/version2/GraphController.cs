@@ -647,17 +647,15 @@ public class GraphController : MonoBehaviour {
                         }
                         else
                         {
-
                             //ORIGINAL
                             //repeticion = 65 - (int)(10f * testSlider.value) * 2;
                             //print(sliderheart.value);
                             repeticion = 130 + (int)(60f * (0.025f * (sliderheart.value * 8f - 4f) * (sliderheart.value * 8f - 4f) + 0.045f * (sliderheart.value * 8f - 4f) - 0.075f)) + (int)((4f * pathology) / 30f) - (int)(200f * (0.1f * (sliderheart.value * 8f - 4f) - 0.1f));//146;// (int)(1.542f * Mathf.Pow(heartRate / 1.765f * 4f * 4f / 3f - 1 / 3f, 4) - 23.42f * Mathf.Pow(heartRate / 1.765f * 4f * 4f / 3f - 1 / 3f, 3) + 136f * Mathf.Pow(heartRate / 1.765f * 4f * 4f / 3f - 1 / 3f, 2) + -379.1f * (heartRate / 1.765f * 4f * 4f / 3f - 1 / 3f) + 525f);
 
-                            horizontalFactor = 6f - (3f * (0f + 2f * 0.5f));// + pathology / 7.5f - 3.5f * (0.1333f * (heartRate / 0.75f - 1f / 3f) - 0.1333f) - 0.6f * 10f;
+                            horizontalFactor = 6f - (3f * (0f + 2f * 0.5f)) + 2f;// + pathology / 7.5f - 3.5f * (0.1333f * (heartRate / 0.75f - 1f / 3f) - 0.1333f) - 0.6f * 10f;
 
-                            if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65) < 27f + (10f)) // + 10f - pathology / 80f)
+                            if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % 65) < 27f - 4f)
                             {
-                                //currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 45f));// + pathology / 30f);
                                 currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 45f));// + pathology / 30f);
                                 currentValue += 0.65f;
                             }
@@ -679,10 +677,10 @@ public class GraphController : MonoBehaviour {
                                     case 18: var1 = -15f; var2 = 30f; var3 = 18f; var4 = 0.4f; var5 = 0.1f; break;
                                     case 22: var1 = -16f; var2 = 30f; var3 = 18f; var4 = 0.4f; var5 = 0.1f; break;
                                     case 26: var1 = -18f; var2 = 30f; var3 = 18f; var4 = 0.4f; var5 = 0.1f; break;
-                                    case 30: var1 = -20f; var2 = 31f; var3 = 26f; var4 = 0.4f; var5 = 0.2f;  break;
+                                    case 30: var1 = -20f; var2 = 31f; var3 = 26f; var4 = 0.4f; var5 = 0.1f;  break;
                                 }
                                 horizontalFactor = 3f - var1 / 1.87f - pathology * 0.1f - 0.3f;
-                                repeticion = 130 - (int)(80f + 15f + 5f * 0.4f);
+                                repeticion = 130 - (int)(80f + 15f + 5f * 0.4f - testSlider.value * 10f);
                                 //ORIGINAL
                                 //if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) <= 65f)
                                 //{
