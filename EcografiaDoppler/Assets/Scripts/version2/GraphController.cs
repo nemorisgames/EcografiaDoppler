@@ -7,7 +7,7 @@ public class GraphController : MonoBehaviour {
     int sizeHorizontal = 384;
     int sizeVertical = 256;
     Texture2D texture;
-    int zero = 0;
+    public int zero = 0;
     int indexScan = 0;
     float incrIndexScan = 1;
     public float verticalScale = 1f;
@@ -41,8 +41,8 @@ public class GraphController : MonoBehaviour {
 
     float WFMLevel = 0f;
     public UISlider testSlider;
-
     AudioSource audioSource;
+    public bool useLineRenderer = false;
     // Use this for initialization
     void Start () {
         audioSource = gameObject.AddComponent<AudioSource>() as AudioSource;
@@ -58,6 +58,10 @@ public class GraphController : MonoBehaviour {
 		Time.fixedDeltaTime = Time.timeScale * (0.0155f - (sliderSpeed.value - 0.5f) * 0.01f);
 		//positionDots = new Vector3[sizeHorizontal * (5 + (int)((gain + power) / 2))];
 		print (sizeHorizontal * (5 + (int)((gain + power) / 2)));
+    }
+
+    void Awake(){
+        lrPoints = new List<Vector3>();
     }
 
     public void WFMAdd()
@@ -90,6 +94,8 @@ public class GraphController : MonoBehaviour {
             texture.SetPixel(i, zero, Color.white);
         }
         texture.Apply();
+        if(lineRenderer != null && useLineRenderer) lineRenderer.positionCount = 0;
+        lrPoints.Clear();
     }
 
     void paintLineVerticalBlack(int indexHorizontal)
@@ -160,6 +166,7 @@ public class GraphController : MonoBehaviour {
     public void makeSleep()
     {
         sleep = !sleep;
+        DrawLine.Instance.ActivarPanelLineas(sleep);
     }
 
     public void reset()
@@ -180,6 +187,12 @@ public class GraphController : MonoBehaviour {
             //Debug.Log("speed: "+sliderSpeed.value+" - "+aux/Time.timeScale+" s, heart: "+sliderheart.value);
 			focusController.resetCont();
             tiempoBarrido = Time.time;
+            if(lineRenderer != null && useLineRenderer){
+                lineRenderer.positionCount = 0;
+                lineRenderer.positionCount = lrPoints.Count;
+                lineRenderer.SetPositions(lrPoints.ToArray());
+                lrPoints.Clear();
+            }
 		}
         for (int i = 0; i < 6 + Mathf.Pow(2f, (int)((gain + power)/2f)) + (sliderScale.value - 0.5f) * 25; i++)
         {
@@ -926,10 +939,12 @@ public class GraphController : MonoBehaviour {
                 //print(positiveFunction);
 
                 texture.SetPixel (indexScan % sizeHorizontal, (int)((currentValue * verticalScale + zero)), Color.white);
+                if(lineRenderer != null && useLineRenderer) DrawBorder(indexScan % sizeHorizontal, (int)((currentValue * verticalScale + zero)));
 				//positionDots.Add(new Vector2(indexScan % sizeHorizontal + incrIndexScan, (int)((currentValue * verticalScale + zero))));
 				//positionDots [cicloDots] = new Vector3(indexScan % sizeHorizontal, i, (int)((currentValue * verticalScale + zero)));
 			} else {
 				texture.SetPixel (indexScan % sizeHorizontal, (int)((currentValue * verticalScale * cursorController.durezasAngle + zero)), Color.white);
+                if(lineRenderer != null && useLineRenderer) DrawBorder(indexScan % sizeHorizontal, (int)((currentValue * verticalScale * cursorController.durezasAngle + zero)));
 				//texture.SetPixel ((indexScan + 1) % sizeHorizontal, (int)((currentValue * verticalScale * cursorController.durezasAngle + zero)), Color.white);
 				//texture.SetPixel ((indexScan + 2) % sizeHorizontal, (int)((currentValue * verticalScale * cursorController.durezasAngle + zero)), Color.white);
 				//print (cicloDots + ": " + indexScan % sizeHorizontal + ", " + i);
@@ -940,10 +955,43 @@ public class GraphController : MonoBehaviour {
 			if (cicloDots == sizeHorizontal * (5 + (int)((gain + power) / 2)))
 				cicloDots = 0;
 
-            if(i == 0) audioSource.pitch = currentValue / 50f;
+            if(i == 0)audioSource.pitch = currentValue / 50f;
+            quadPoint.x = i;
+            quadPoint.y = currentValue;
 		}
         texture.Apply();
+    }
 
+    public Vector2 quadPoint;
+
+    float nextDrawTime = 0f;
+    public float nextSampleTime = 0.1f;
+    public GameObject lrAux;
+    public LineRenderer lineRenderer;
+    private List<Vector3> lrPoints;
+
+    void DrawBorder(float x, float y){
+        if(Time.time > nextDrawTime){
+            nextDrawTime = Time.time + nextSampleTime;
+            lrAux.transform.localPosition = new Vector2(-159 + x, -131 + y);
+            lrAux.transform.position = new Vector3(lrAux.transform.position.x, lrAux.transform.position.y, -9);
+            lrPoints.Add(lrAux.transform.position);
+        }
+    }
+
+    public Vector2 WorldSpaceToQuadSpace(Vector3 point){
+        GameObject go = (GameObject)Instantiate(lrAux,point,Quaternion.identity);
+        go.transform.position = point;
+        go.transform.parent = transform.parent;
+        Vector2 aux = go.transform.localPosition;
+        Destroy(go);
+        return new Vector2(aux.x + 159, (aux.y * (0.8f))/verticalScale + 5f - (zero - 128f));
+    }
+
+    public Vector3 QuadSpaceToWorldSpace(Vector2 point){
+        GameObject go = (GameObject)Instantiate(new GameObject(),point,Quaternion.identity);
+        Vector2 aux = go.transform.localPosition;
+        return new Vector2(aux.x, aux.y);
     }
 
     void drawNumbersHorizontal()
