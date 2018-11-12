@@ -161,17 +161,22 @@ public class DrawLine : MonoBehaviour {
 		switch(mode){
 			case Mode.DV:
 			DVLineObject = currentLine.gameObject;
-			DVLabel.text = Max(DVLine).ToString();
+			DVLabel.text = Round(Max(DVLine)) + " mts/sec";
 			break;
 			case Mode.PS:
 			PSLineObject = currentLine.gameObject;
-			PSLabel.text = Max(PSLine).ToString();
+			PSLabel.text = Round(Max(PSLine)) + " mts/sec";
 			break;
 			case Mode.Vm:
 			VmLineObject = currentLine.gameObject;
-			VMLabel.text = Avg(VmLine).ToString();
+			VMLabel.text = Round(Avg(VmLine)) + " mts/sec";
 			break;
 		}
+	}
+
+	string Round(float num, int decimals = 3){
+		float aux = (Mathf.Round(num * Mathf.Pow(10,decimals)))/Mathf.Pow(10,decimals);
+		return aux.ToString();
 	}
 
 	void EraseAllLines(){
@@ -195,21 +200,16 @@ public class DrawLine : MonoBehaviour {
 		}
 	}
 
-	public void ModeButton(string s){
-		s = s.Trim();
-		switch(s){
-			case "DV":
-			mode = Mode.DV;
-			break;
-			case "PS":
-			mode = Mode.PS;
-			break;
-			case "Vm":
-			mode = Mode.Vm;
-			break;
-			default:
-			break;
-		}
+	public void PSClickBtn(){
+		mode = Mode.PS;
+	}
+
+	public void DVClickBtn(){
+		mode = Mode.DV;
+	}
+
+	public void VmClickBtn(){
+		mode = Mode.Vm;
 	}
 
 	public void Calculate(){
@@ -228,18 +228,21 @@ public class DrawLine : MonoBehaviour {
 		if(PSLine.Count != 0 && DVLine.Count != 0){
 			SD = PS/DV;
 			RI = (PS-DV)/PS;
-			SDLabel.text = SD.ToString();
-			RILabel.text = RI.ToString();
+			SDLabel.text = Round(SD) + " mts/sec";
+			RILabel.text = Round(RI) + " mts/sec";
 
 			if(VmLine.Count != 0){
 				PI = (PS-DV)/Vm;
-				PILabel.text = PI.ToString();;
+				PILabel.text = Round(PI) + " mts/sec";
 			}
 		}
 	}
 
 	public float Max(List<Vector2> list){
-		return Mathf.Max(list[0].y,list[list.Count-1].y);
+		if(GraphController.Instance.inverseFunction)
+			return Mathf.Min(list[0].y,list[list.Count-1].y);
+		else
+			return Mathf.Max(list[0].y,list[list.Count-1].y);
 	}
 
 	public float Avg(List<Vector2> list){

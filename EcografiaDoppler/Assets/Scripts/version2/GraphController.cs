@@ -43,6 +43,7 @@ public class GraphController : MonoBehaviour {
     public UISlider testSlider;
     AudioSource audioSource;
     public bool useLineRenderer = false;
+
     // Use this for initialization
     void Start () {
         audioSource = gameObject.AddComponent<AudioSource>() as AudioSource;
@@ -59,9 +60,15 @@ public class GraphController : MonoBehaviour {
 		//positionDots = new Vector3[sizeHorizontal * (5 + (int)((gain + power) / 2))];
 		print (sizeHorizontal * (5 + (int)((gain + power) / 2)));
     }
+    private static GraphController _instance;
+
+    public static GraphController Instance { get { return _instance;}}
 
     void Awake(){
+        if(_instance == null)
+            _instance = this;
         lrPoints = new List<Vector3>();
+
     }
 
     public void WFMAdd()
@@ -1109,12 +1116,6 @@ public class GraphController : MonoBehaviour {
         Vector2 aux = go.transform.localPosition;
         Destroy(go);
         return new Vector2(aux.x + 159, (aux.y * (0.8f))/verticalScale + 5f - (zero - 128f));
-    }
-
-    public Vector3 QuadSpaceToWorldSpace(Vector2 point){
-        GameObject go = (GameObject)Instantiate(new GameObject(),point,Quaternion.identity);
-        Vector2 aux = go.transform.localPosition;
-        return new Vector2(aux.x, aux.y);
     }
 
     void drawNumbersHorizontal()
