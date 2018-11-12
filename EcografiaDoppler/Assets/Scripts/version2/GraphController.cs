@@ -304,7 +304,7 @@ public class GraphController : MonoBehaviour {
                 //currentValue = (Mathf.Cos((indexScan * heartRate / 4 % 65) * horizontalFactor * Mathf.PI / 180f * 8) * ((indexScan * heartRate / 4 % 65 < 30)?15f:30f)) + 60f;// + (Mathf.Sin((indexScan % 30) * Mathf.PI / 180f * 3f) * 60f) - (Mathf.Sin((indexScan % 60) * Mathf.PI / 180f * 3f) * 30f);
                 if (sliderheart.value > 0.5f)
                 {
-                    if (cursorController.umbilicalDraw)
+                    if (cursorController.ductusExtraDraw)
                     {
                         int repeticion = 65;
                         //ORIGINAL
@@ -313,54 +313,8 @@ public class GraphController : MonoBehaviour {
                             horizontalFactor = 20f;
                             float B7 = sliderheart.value * 8f - 4f;
                             repeticion = Mathf.RoundToInt(0.75f * B7 * B7 - 9.65f * B7 + 63.75f);
-                            currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f + ((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion < 8) ? 35f : 45f));// + pathology / 30f);
-                            currentValue *= 1.1f * (3.5f / (heartRate + 1f));
-                            currentValue += 0.45f + (heartRate - 4f) * 0.3f;
-                        }
-                        else
-                        {
-                            horizontalFactor = 6f;
-                            //ORIGINAL
-                            if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) < heartRate * 4.5f + 9f - (9f - heartRate * 7f / 3f - 1f / 3f))
-                            {
-                                float B7 = sliderheart.value * 8f - 4f;
-                                repeticion = Mathf.RoundToInt(0.75f * B7 * B7 - 9.65f * B7 + 63.75f);
-                                currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 45f));// + pathology / 30f);
-                                currentValue += 0.65f;
-                            }
-                            else
-                            {
-                                horizontalFactor = 3f;
-                                //ORIGINAL
-
-                                if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) <= 65f)
-                                {
-                                    float B7 = sliderheart.value * 8f - 4f;
-                                    repeticion = Mathf.RoundToInt(0.75f * B7 * B7 - 9.65f * B7 + 63.75f);
-                                    currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - 56.5f);// + pathology / 30f);
-                                    currentValue += 0.4f + (heartRate - 4f) * 0.1f;
-                                    currentValue *= 1f * (5f / (heartRate + 1f));
-                                }
-                            }
-                        }
-                        currentValue *= 0.5f;
-                        //currentValue = Mathf.Cos ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 45f));// + pathology / 30f);
-                        //lo parada de la grafica
-                        currentValue *= 30f + pathology * 1.6f;
-                        //elevado del ultimo tramo
-                        currentValue += 45f + pathology * -1.5f;
-                    }
-                    else
-                    {
-                        int repeticion = 65;
-                        //ORIGINAL
-                        if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) < heartRate * 7f / 3f - 1f / 3f)
-                        {
-                            horizontalFactor = 20f;
-                            float B7 = sliderheart.value * 8f - 4f;
-                            repeticion = Mathf.RoundToInt(0.75f * B7 * B7 - 9.65f * B7 + 63.75f);// (int)(-3.667f * B7 * B7 * B7 + 24.5f * B7 * B7 - 45.8f * B7 + 91);
-                            currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f + ((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion < 8) ? 35f : 45f));// + pathology / 30f);
-                            currentValue *= 1.1f - pathology * 0.02f;
+                            currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f + ((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion < 8) ? 35f : 45f));
+                            currentValue *= 1.1f;// - pathology * 0.02f;
                             currentValue += 0.45f;
                         }
                         else
@@ -368,28 +322,28 @@ public class GraphController : MonoBehaviour {
                             horizontalFactor = 9f;
                             //ORIGINAL
                             float valor = sliderheart.value * 8f - 4f;
-                            if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) <  1.833f * valor * valor * valor - 16.5f * valor * valor + 42.67f * valor + 8)//heartRate * 6.5f + 9f - (9f - heartRate * 7f / 3f - 1f / 3f))
+                            if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) < 1.833f * valor * valor * valor - 16.5f * valor * valor + 42.67f * valor + 8)
                             {
                                 float B7 = sliderheart.value * 8f - 4f;
-                                repeticion = Mathf.RoundToInt(-10.83f * valor * valor * valor + 74f * valor * valor - 127.2f * valor + 92f);// (int)(-3.667f * B7 * B7 * B7 + 24.5f * B7 * B7 - 45.8f * B7 + 91);
-                                currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 46f));// + pathology / 30f);
-                                //currentValue *= 1f - pathology / 60f;
-                                //currentValue += 0.65f;
-                                currentValue *= 1f - pathology / 60f + sliderPathology.value * 1.8f;
-                                currentValue += 0.65f - sliderPathology.value * 0.7f;
+                                repeticion = Mathf.RoundToInt(-10.83f * valor * valor * valor + 74f * valor * valor - 127.2f * valor + 92f);
+                                currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 46f));
+                                                                                                                                                                                                                                     
+                                                                                                                                                                                                                                      
+                                currentValue *= 1f;//  - pathology / 60f + sliderPathology.value * 1.8f;
+                                currentValue += 0.65f;//  - sliderPathology.value * 0.7f;
                             }
                             else
                             {
                                 //ORIGINAL
                                 valor = sliderheart.value * 8f - 4f;
-                                if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) < 0.6667f * valor * valor * valor - 7f * valor * valor + 14.33f * valor + 42f)// 12.3333f * heartRate + 0.666f)
+                                if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) < 0.6667f * valor * valor * valor - 7f * valor * valor + 14.33f * valor + 42f)
                                 {
                                     horizontalFactor = 17f;
                                     float B7 = sliderheart.value * 8f - 4f;
-                                    repeticion = Mathf.RoundToInt(0.75f * B7 * B7 - 9.65f * B7 + 63.75f);// (int)(-3.667f * B7 * B7 * B7 + 24.5f * B7 * B7 - 45.8f * B7 + 91);
+                                    repeticion = Mathf.RoundToInt(0.75f * B7 * B7 - 9.65f * B7 + 63.75f);
 
-                                    currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 50f));// + pathology / 30f);
-                                    currentValue *= 0.6f - pathology / 60f;
+                                    currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 50f));
+                                    currentValue *= 0.6f;//  - pathology / 60f;
                                     currentValue -= 0.1f;
                                 }
                                 else
@@ -401,11 +355,12 @@ public class GraphController : MonoBehaviour {
                                         horizontalFactor = 17f;
                                         float B7 = sliderheart.value * 8f - 4f;
                                         repeticion = Mathf.RoundToInt(-5.333f * B7 * B7 * B7 + 29f * B7 * B7 - 32.67f * B7 + 64f);
-                                        currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - (-0.9167f * valor * valor * valor + 7.5f * valor * valor - 20.58f * valor + 77));// + pathology / 30f);
-                                        //TO DO
-                                        currentValue *= 0.25f * valor * valor * valor - 1.75f * valor * valor + 4.5f * valor - 2f + pathology / 50f;
-                                        valor = pathology / 30f;
-                                        currentValue -= 0.1667f * valor * valor * valor - 1.25f * valor * valor + 3.583f * valor - 2f -0.5f * valor * valor * valor + 3.5f * valor * valor - 8f * valor + 8f;//1.0f + pathology / 10f;
+                                        currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - (-0.9167f * valor * valor * valor + 7.5f * valor * valor - 20.58f * valor + 77));
+                                                                                                                                                                                                                                                   //TO DO
+                                        currentValue *= 0.25f * valor * valor * valor - 1.75f * valor * valor + 4.5f * valor - 2f;
+                                        valor = 0f;//  pathology / 30f;
+                                        currentValue -= 0.1667f * valor * valor * valor - 1.25f * valor * valor + 3.583f * valor - 2f - 0.5f * valor * valor * valor + 3.5f * valor * valor - 8f * valor + 8f;
+                                        currentValue += 4f;
                                     }
                                 }
                             }
@@ -414,14 +369,132 @@ public class GraphController : MonoBehaviour {
                         currentValue *= 0.5f;
                         //currentValue = Mathf.Cos ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 45f));// + pathology / 30f);
                         //lo parada de la grafica
-                        currentValue *= 30f;
+                        currentValue *= 40f;
                         //elevado del ultimo tramo
-                        currentValue += 65f + pathology * -0.3f;
+                        currentValue += 10f + pathology * -0.5f;
+                    }
+                    else
+                    {
+                        if (cursorController.umbilicalDraw)
+                        {
+                            int repeticion = 65;
+                            //ORIGINAL
+                            if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) < heartRate * 7f / 3f - 1f / 3f)
+                            {
+                                horizontalFactor = 20f;
+                                float B7 = sliderheart.value * 8f - 4f;
+                                repeticion = Mathf.RoundToInt(0.75f * B7 * B7 - 9.65f * B7 + 63.75f);
+                                currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f + ((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion < 8) ? 35f : 45f));// + pathology / 30f);
+                                currentValue *= 1.1f * (3.5f / (heartRate + 1f));
+                                currentValue += 0.45f + (heartRate - 4f) * 0.3f;
+                            }
+                            else
+                            {
+                                horizontalFactor = 6f;
+                                //ORIGINAL
+                                if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) < heartRate * 4.5f + 9f - (9f - heartRate * 7f / 3f - 1f / 3f))
+                                {
+                                    float B7 = sliderheart.value * 8f - 4f;
+                                    repeticion = Mathf.RoundToInt(0.75f * B7 * B7 - 9.65f * B7 + 63.75f);
+                                    currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 45f));// + pathology / 30f);
+                                    currentValue += 0.65f;
+                                }
+                                else
+                                {
+                                    horizontalFactor = 3f;
+                                    //ORIGINAL
+
+                                    if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) <= 65f)
+                                    {
+                                        float B7 = sliderheart.value * 8f - 4f;
+                                        repeticion = Mathf.RoundToInt(0.75f * B7 * B7 - 9.65f * B7 + 63.75f);
+                                        currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - 56.5f);// + pathology / 30f);
+                                        currentValue += 0.4f + (heartRate - 4f) * 0.1f;
+                                        currentValue *= 1f * (5f / (heartRate + 1f));
+                                    }
+                                }
+                            }
+                            currentValue *= 0.5f;
+                            //currentValue = Mathf.Cos ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 45f));// + pathology / 30f);
+                            //lo parada de la grafica
+                            currentValue *= 30f + pathology * 1.6f;
+                            //elevado del ultimo tramo
+                            currentValue += 45f + pathology * -1.5f;
+                        }
+
+                        else
+                        {
+                            int repeticion = 65;
+                            //ORIGINAL
+                            if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) < heartRate * 7f / 3f - 1f / 3f)
+                            {
+                                horizontalFactor = 20f;
+                                float B7 = sliderheart.value * 8f - 4f;
+                                repeticion = Mathf.RoundToInt(0.75f * B7 * B7 - 9.65f * B7 + 63.75f);// (int)(-3.667f * B7 * B7 * B7 + 24.5f * B7 * B7 - 45.8f * B7 + 91);
+                                currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f + ((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion < 8) ? 35f : 45f));// + pathology / 30f);
+                                currentValue *= 1.1f - pathology * 0.02f;
+                                currentValue += 0.45f;
+                            }
+                            else
+                            {
+                                horizontalFactor = 9f;
+                                //ORIGINAL
+                                float valor = sliderheart.value * 8f - 4f;
+                                if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) < 1.833f * valor * valor * valor - 16.5f * valor * valor + 42.67f * valor + 8)//heartRate * 6.5f + 9f - (9f - heartRate * 7f / 3f - 1f / 3f))
+                                {
+                                    float B7 = sliderheart.value * 8f - 4f;
+                                    repeticion = Mathf.RoundToInt(-10.83f * valor * valor * valor + 74f * valor * valor - 127.2f * valor + 92f);// (int)(-3.667f * B7 * B7 * B7 + 24.5f * B7 * B7 - 45.8f * B7 + 91);
+                                    currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 46f));// + pathology / 30f);
+                                                                                                                                                                                                                                          //currentValue *= 1f - pathology / 60f;
+                                                                                                                                                                                                                                          //currentValue += 0.65f;
+                                    currentValue *= 1f - pathology / 60f + sliderPathology.value * 1.8f;
+                                    currentValue += 0.65f - sliderPathology.value * 0.7f;
+                                }
+                                else
+                                {
+                                    //ORIGINAL
+                                    valor = sliderheart.value * 8f - 4f;
+                                    if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) < 0.6667f * valor * valor * valor - 7f * valor * valor + 14.33f * valor + 42f)// 12.3333f * heartRate + 0.666f)
+                                    {
+                                        horizontalFactor = 17f;
+                                        float B7 = sliderheart.value * 8f - 4f;
+                                        repeticion = Mathf.RoundToInt(0.75f * B7 * B7 - 9.65f * B7 + 63.75f);// (int)(-3.667f * B7 * B7 * B7 + 24.5f * B7 * B7 - 45.8f * B7 + 91);
+
+                                        currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 50f));// + pathology / 30f);
+                                        currentValue *= 0.6f - pathology / 60f;
+                                        currentValue -= 0.1f;
+                                    }
+                                    else
+                                    {
+                                        horizontalFactor = 17f;
+                                        //ORIGINAL
+                                        if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) <= 65f)
+                                        {
+                                            horizontalFactor = 17f;
+                                            float B7 = sliderheart.value * 8f - 4f;
+                                            repeticion = Mathf.RoundToInt(-5.333f * B7 * B7 * B7 + 29f * B7 * B7 - 32.67f * B7 + 64f);
+                                            currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - (-0.9167f * valor * valor * valor + 7.5f * valor * valor - 20.58f * valor + 77));// + pathology / 30f);
+                                                                                                                                                                                                                                                       //TO DO
+                                            currentValue *= 0.25f * valor * valor * valor - 1.75f * valor * valor + 4.5f * valor - 2f + pathology / 50f;
+                                            valor = pathology / 30f;
+                                            currentValue -= 0.1667f * valor * valor * valor - 1.25f * valor * valor + 3.583f * valor - 2f - 0.5f * valor * valor * valor + 3.5f * valor * valor - 8f * valor + 8f;//1.0f + pathology / 10f;
+                                        }
+                                    }
+                                }
+                            }
+
+                            currentValue *= 0.5f;
+                            //currentValue = Mathf.Cos ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 45f));// + pathology / 30f);
+                            //lo parada de la grafica
+                            currentValue *= 30f;
+                            //elevado del ultimo tramo
+                            currentValue += 65f + pathology * -0.3f;
+                        }
                     }
                 }
                 else
                 {
-                    if (cursorController.umbilicalDraw)
+                    if (cursorController.ductusExtraDraw)
                     {
                         int repeticion = 65;
                         if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) < heartRate * 7f / 3f - 1f / 3f)
@@ -429,50 +502,7 @@ public class GraphController : MonoBehaviour {
                             horizontalFactor = 20f;//20f ;
                             repeticion = (int)(1.542f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 4) - 23.42f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 3) + 136f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 2) + -379.1f * (heartRate * 4f / 3f - 1 / 3f) + 525f);
                             currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f + ((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion < 8) ? 35f : 45f));// + pathology / 30f);
-                            currentValue *= 1.1f * (3.5f / (4f + 1f));
-                            currentValue += 0.45f + (4f - 4f) * 0.3f;
-                        }
-                        else
-                        {
-                            horizontalFactor = 6f;
-                            if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) < heartRate * 4.5f + 9f - (9f - heartRate * 7f / 3f - 1f / 3f))
-                            {
-                                repeticion = (int)(1.542f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 4) - 23.42f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 3) + 136f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 2) + -379.1f * (heartRate * 4f / 3f - 1 / 3f) + 525f);
-                                //print(heartRate + " " + repeticion);
-                                horizontalFactor = 5.5f;//heartRate * -1.6666f + 12.6666f;
-                                currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 45f));// + pathology / 30f);
-                                currentValue += 0.65f;
-                            }
-                            else
-                            {
-                                horizontalFactor = 3f;
-                                if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) <= 65f)
-                                {
-                                    horizontalFactor = 2.5f;
-                                    repeticion = 65;// (int)(1.542f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 4) - 23.42f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 3) + 136f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 2) + -379.1f * (heartRate * 4f / 3f - 1 / 3f) + 525f);
-                                    currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - 56.5f + 0.16666f * (4f - heartRate));// + pathology / 30f);
-                                    currentValue += 0.2f + (heartRate - 4f) * 0.1f;//0.4f + (heartRate - 4f) * 0.1f;
-                                    currentValue *= 1f * (5f / (4f + 1f));
-                                }
-                            }
-                        }
-                        currentValue *= 0.5f;
-                        //currentValue = Mathf.Cos ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 45f));// + pathology / 30f);
-                        //lo parada de la grafica
-                        currentValue *= 30f + pathology * 1.6f;
-                        //elevado del ultimo tramo
-                        currentValue += 45f + pathology * -1.5f;
-
-                    }
-                    else
-					{
-                        int repeticion = 65;
-                        if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) < heartRate * 7f / 3f - 1f / 3f)
-                        {
-                            horizontalFactor = 20f;//20f ;
-                            repeticion = (int)(1.542f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 4) - 23.42f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 3) + 136f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 2) + -379.1f * (heartRate * 4f / 3f - 1 / 3f) + 525f);
-                            currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f + ((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion < 8) ? 35f : 45f));// + pathology / 30f);
-                            currentValue *= 1.1f - pathology * 0.02f;
+                            currentValue *= 1.1f;// - pathology * 0.02f;
                             currentValue += 0.45f;
                         }
                         else
@@ -482,8 +512,8 @@ public class GraphController : MonoBehaviour {
                             {
                                 repeticion = (int)(1.542f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 4) - 23.42f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 3) + 136f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 2) + -379.1f * (heartRate * 4f / 3f - 1 / 3f) + 525f);
                                 currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 46f));// + pathology / 30f);
-                                currentValue *= 1f - pathology / 60f + sliderPathology.value * 1.8f;
-                                currentValue += 0.65f - sliderPathology.value * 0.7f;
+                                currentValue *= 1f;// - pathology / 60f + sliderPathology.value * 1.8f;
+                                currentValue += 0.65f;// - sliderPathology.value * 0.7f;
                             }
                             else
                             {
@@ -494,38 +524,131 @@ public class GraphController : MonoBehaviour {
                                     valor = heartRate / 0.75f - 1f / 3f;
                                     repeticion = (int)(-1.583f * valor * valor * valor * valor + 19.17f * valor * valor * valor - 73.42f * valor * valor + 59.83f * valor + 194f);
                                     currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 50f));// + pathology / 30f);
-                                    currentValue *= 0.6f - pathology / 60f;
+                                    currentValue *= 0.6f;// - pathology / 60f;
                                     currentValue -= 0.1f;
                                 }
                                 else
                                 {
                                     valor = heartRate / 0.75f - 1f / 3f;
                                     horizontalFactor = 0.0625f * valor * valor * valor * valor - 0.5417f * valor * valor * valor + 1.938f * valor * valor - 2.458f * valor + 2.5f;// 10f * (testSlider.value * 10f);//1.25f * (heartRate / 0.75f - 1f / 3f) * (heartRate / 0.75f - 1f / 3f) - 4f * (heartRate / 0.75f - 1f / 3f) + 5.75f;
-                                    //ORIGINAL
+                                                                                                                                                                                  //ORIGINAL
                                     if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) <= 65f)
                                     {
-                                        
+
                                         currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - (-0.2083f * Mathf.Pow((heartRate / 0.75f - 1f / 3f), 4) + 2.167f * Mathf.Pow((heartRate / 0.75f - 1f / 3f), 3) - 7.542f * Mathf.Pow((heartRate / 0.75f - 1f / 3f), 2) + 11.08f * (heartRate / 0.75f - 1f / 3f) + 50.5f));// + pathology / 30f);
-                                        currentValue *= 1.01f + 1.5f * pathology / 30f + valor * -0.5f + 2f;
-                                        currentValue -= 0.35f + pathology * 0.08f;// + testSlider.value;//1.0f + pathology / 10f;
+                                        currentValue *= 1.01f + 2f + valor * -0.5f;// + 1.5f * pathology / 30f;
+                                        currentValue -= 0.35f;// + pathology * 0.08f;
                                     }
-                                    /*if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) <= 65f)
-                                    {
-                                        //horizontalFactor = 20f;//20f ;
-                                        //repeticion = (int)(1.542f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 4) - 23.42f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 3) + 136f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 2) + -379.1f * (heartRate * 4f / 3f - 1 / 3f) + 525f);
-                                        currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - 58f);// + pathology / 30f);
-                                        currentValue *= 0.5f + pathology / 15f;
-                                        currentValue -= 1.0f + pathology / 10f;
-                                    }*/
                                 }
                             }
                         }
                         currentValue *= 0.5f;
                         //currentValue = Mathf.Cos ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 45f));// + pathology / 30f);
                         //lo parada de la grafica
-                        currentValue *= 30f;
+                        currentValue *= 40f;
                         //elevado del ultimo tramo
-                        currentValue += 65f + pathology * -0.3f;
+                        currentValue += 10f + pathology * -0.5f;
+                    }
+                    else
+                    {
+                        if (cursorController.umbilicalDraw)
+                        {
+                            int repeticion = 65;
+                            if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) < heartRate * 7f / 3f - 1f / 3f)
+                            {
+                                horizontalFactor = 20f;//20f ;
+                                repeticion = (int)(1.542f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 4) - 23.42f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 3) + 136f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 2) + -379.1f * (heartRate * 4f / 3f - 1 / 3f) + 525f);
+                                currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f + ((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion < 8) ? 35f : 45f));// + pathology / 30f);
+                                currentValue *= 1.1f * (3.5f / (4f + 1f));
+                                currentValue += 0.45f + (4f - 4f) * 0.3f;
+                            }
+                            else
+                            {
+                                horizontalFactor = 6f;
+                                if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) < heartRate * 4.5f + 9f - (9f - heartRate * 7f / 3f - 1f / 3f))
+                                {
+                                    repeticion = (int)(1.542f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 4) - 23.42f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 3) + 136f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 2) + -379.1f * (heartRate * 4f / 3f - 1 / 3f) + 525f);
+                                    //print(heartRate + " " + repeticion);
+                                    horizontalFactor = 5.5f;//heartRate * -1.6666f + 12.6666f;
+                                    currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 45f));// + pathology / 30f);
+                                    currentValue += 0.65f;
+                                }
+                                else
+                                {
+                                    horizontalFactor = 3f;
+                                    if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) <= 65f)
+                                    {
+                                        horizontalFactor = 2.5f;
+                                        repeticion = 65;// (int)(1.542f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 4) - 23.42f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 3) + 136f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 2) + -379.1f * (heartRate * 4f / 3f - 1 / 3f) + 525f);
+                                        currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - 56.5f + 0.16666f * (4f - heartRate));// + pathology / 30f);
+                                        currentValue += 0.2f + (heartRate - 4f) * 0.1f;//0.4f + (heartRate - 4f) * 0.1f;
+                                        currentValue *= 1f * (5f / (4f + 1f));
+                                    }
+                                }
+                            }
+                            currentValue *= 0.5f;
+                            //currentValue = Mathf.Cos ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 45f));// + pathology / 30f);
+                            //lo parada de la grafica
+                            currentValue *= 30f + pathology * 1.6f;
+                            //elevado del ultimo tramo
+                            currentValue += 45f + pathology * -1.5f;
+
+                        }
+                        else
+                        {
+                            int repeticion = 65;
+                            if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) < heartRate * 7f / 3f - 1f / 3f)
+                            {
+                                horizontalFactor = 20f;//20f ;
+                                repeticion = (int)(1.542f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 4) - 23.42f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 3) + 136f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 2) + -379.1f * (heartRate * 4f / 3f - 1 / 3f) + 525f);
+                                currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f + ((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion < 8) ? 35f : 45f));// + pathology / 30f);
+                                currentValue *= 1.1f - pathology * 0.02f;
+                                currentValue += 0.45f;
+                            }
+                            else
+                            {
+                                horizontalFactor = 8.5f;
+                                if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) < heartRate * 6.5f + 9f - (9f - heartRate * 7f / 3f - 1f / 3f))
+                                {
+                                    repeticion = (int)(1.542f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 4) - 23.42f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 3) + 136f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 2) + -379.1f * (heartRate * 4f / 3f - 1 / 3f) + 525f);
+                                    currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 46f));// + pathology / 30f);
+                                    currentValue *= 1f - pathology / 60f + sliderPathology.value * 1.8f;
+                                    currentValue += 0.65f - sliderPathology.value * 0.7f;
+                                }
+                                else
+                                {
+                                    float valor = heartRate / 0.75f - 1f / 3f;
+                                    if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) <= 10.48f * Mathf.Pow(valor, 0.8645f)) //12.3333f * heartRate + 0.666f)
+                                    {
+                                        horizontalFactor = 17f;
+                                        valor = heartRate / 0.75f - 1f / 3f;
+                                        repeticion = (int)(-1.583f * valor * valor * valor * valor + 19.17f * valor * valor * valor - 73.42f * valor * valor + 59.83f * valor + 194f);
+                                        currentValue = Mathf.Cos((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * 4f / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 50f));// + pathology / 30f);
+                                        currentValue *= 0.6f - pathology / 60f;
+                                        currentValue -= 0.1f;
+                                    }
+                                    else
+                                    {
+                                        valor = heartRate / 0.75f - 1f / 3f;
+                                        horizontalFactor = 0.0625f * valor * valor * valor * valor - 0.5417f * valor * valor * valor + 1.938f * valor * valor - 2.458f * valor + 2.5f;// 10f * (testSlider.value * 10f);//1.25f * (heartRate / 0.75f - 1f / 3f) * (heartRate / 0.75f - 1f / 3f) - 4f * (heartRate / 0.75f - 1f / 3f) + 5.75f;
+                                                                                                                                                                                      //ORIGINAL
+                                        if ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) <= 65f)
+                                        {
+
+                                            currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - (-0.2083f * Mathf.Pow((heartRate / 0.75f - 1f / 3f), 4) + 2.167f * Mathf.Pow((heartRate / 0.75f - 1f / 3f), 3) - 7.542f * Mathf.Pow((heartRate / 0.75f - 1f / 3f), 2) + 11.08f * (heartRate / 0.75f - 1f / 3f) + 50.5f));// + pathology / 30f);
+                                            currentValue *= 1.01f + 1.5f * pathology / 30f + valor * -0.5f + 2f;
+                                            currentValue -= 0.35f + pathology * 0.08f;// + testSlider.value;//1.0f + pathology / 10f;
+                                        }
+                                    }
+                                }
+                            }
+                            currentValue *= 0.5f;
+                            //currentValue = Mathf.Cos ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f - ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion < 8) ? 5f : 45f));// + pathology / 30f);
+                            //lo parada de la grafica
+                            currentValue *= 30f;
+                            //elevado del ultimo tramo
+                            currentValue += 65f + pathology * -0.3f;
+                        }
                     }
                 }
             }

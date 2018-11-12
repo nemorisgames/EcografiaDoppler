@@ -13,6 +13,7 @@ public class CursorController : MonoBehaviour {
     public bool inVein = false;
     public bool positive = false;
     public bool umbilicalDraw = false;
+    public bool ductusExtraDraw = false;
     public Transform linterna;
     public Transform transductor;
     public Vector3 posicionInicialLinterna;
@@ -61,41 +62,54 @@ public class CursorController : MonoBehaviour {
         }
         print(c);
         print(cDurezas);
-        if ((cDurezas.r > 0.5f && cDurezas.b < 0.5f) || (cDurezas.b > 0.5f && cDurezas.r < 0.5f) && !(cDurezas.b == cDurezas.r && cDurezas.g == cDurezas.r))
+        if ((cDurezas.r > 0.9f && cDurezas.g > 0.9f && cDurezas.b < 0.1f) && !(cDurezas.b == cDurezas.r && cDurezas.g == cDurezas.r))
         {
-            //Venas
-            durezasAngle = 0f;
-            print("en vena");
-            inVein = true;
+            print("en ductus extra");
+            ductusExtraDraw = true;
+            durezasAngle = 1f;// cDurezas.g;
             umbilicalDraw = false;
+            inVein = false;
             positive = (cDurezas.r > 0.5f);
         }
         else
         {
-            if (cDurezas != Color.black && ((int)(Mathf.Abs(cDurezas.b - cDurezas.r) * 100) <= (int)(100f / 255f) && (int)(Mathf.Abs(cDurezas.g - cDurezas.r) * 100) <= (int)(100f / 255f) && (int)(Mathf.Abs(cDurezas.g - cDurezas.b) * 100) <= (int)(100f / 255f)))
+            ductusExtraDraw = false;
+            if ((cDurezas.r > 0.5f && cDurezas.b < 0.5f) || (cDurezas.b > 0.5f && cDurezas.r < 0.5f) && !(cDurezas.b == cDurezas.r && cDurezas.g == cDurezas.r))
             {
-                inVein = false;
-                umbilicalDraw = true;
-                durezasAngle = 1f;// cDurezas.g;
-                print("en dibujo umbilical");
+                //Venas
+                durezasAngle = 0f;
+                print("en vena");
+                inVein = true;
+                umbilicalDraw = false;
                 positive = (cDurezas.r > 0.5f);
             }
             else
             {
-                if (!(cDurezas.b == cDurezas.r && cDurezas.g == cDurezas.r))
+                if (cDurezas != Color.black && ((int)(Mathf.Abs(cDurezas.b - cDurezas.r) * 100) <= (int)(100f / 255f) && (int)(Mathf.Abs(cDurezas.g - cDurezas.r) * 100) <= (int)(100f / 255f) && (int)(Mathf.Abs(cDurezas.g - cDurezas.b) * 100) <= (int)(100f / 255f)))
                 {
-
-                    print("no en dibujo umbilical");
-                    durezasAngle = 1f;// cDurezas.g;
-                    umbilicalDraw = false;
                     inVein = false;
-                    print(durezasAngle);
+                    umbilicalDraw = true;
+                    durezasAngle = 1f;// cDurezas.g;
+                    print("en dibujo umbilical");
                     positive = (cDurezas.r > 0.5f);
                 }
                 else
                 {
+                    if (!(cDurezas.b == cDurezas.r && cDurezas.g == cDurezas.r))
+                    {
 
-                    durezasAngle = 0f;// cDurezas.g;
+                        print("no en dibujo umbilical");
+                        durezasAngle = 1f;// cDurezas.g;
+                        umbilicalDraw = false;
+                        inVein = false;
+                        print(durezasAngle);
+                        positive = (cDurezas.r > 0.5f);
+                    }
+                    else
+                    {
+
+                        durezasAngle = 0f;// cDurezas.g;
+                    }
                 }
             }
         }
