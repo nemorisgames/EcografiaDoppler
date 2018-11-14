@@ -13,7 +13,7 @@ public class DrawLine : MonoBehaviour {
 
 	public Mode mode;
 	public UIPanel panel;
-	public float PS, DV, Vm, SD, RI, PI;
+	public float PS, PD, DV, Vm, SD, RI, PI;
 	public UILabel PSLabel, DVLabel, VMLabel, SDLabel,RILabel,PILabel;
 	public GameObject target;
 	private LineRenderer currentLine;
@@ -138,6 +138,9 @@ public class DrawLine : MonoBehaviour {
 		Vector3 point = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		point.z = -8;
 		if(IsTarget()){
+			if(mode != Mode.Vm && lrPoints.Count != 0){
+				point.x = lrPoints[0].x;
+			}
 			lrPoints.Add(point);
 			currentLine.positionCount = lrPoints.Count;
 			currentLine.SetPositions(lrPoints.ToArray());
@@ -161,20 +164,20 @@ public class DrawLine : MonoBehaviour {
 		switch(mode){
 			case Mode.DV:
 			DVLineObject = currentLine.gameObject;
-			DVLabel.text = Round(Max(DVLine)) + " mts/sec";
+			DVLabel.text = Round(Max(DVLine)) + " cm/sec";
 			break;
 			case Mode.PS:
 			PSLineObject = currentLine.gameObject;
-			PSLabel.text = Round(Max(PSLine)) + " mts/sec";
+			PSLabel.text = Round(Max(PSLine)) + " cm/sec";
 			break;
 			case Mode.Vm:
 			VmLineObject = currentLine.gameObject;
-			VMLabel.text = Round(Avg(VmLine)) + " mts/sec";
+			VMLabel.text = Round(Avg(VmLine)) + " cm/sec";
 			break;
 		}
 	}
 
-	string Round(float num, int decimals = 3){
+	string Round(float num, int decimals = 2){
 		float aux = (Mathf.Round(num * Mathf.Pow(10,decimals)))/Mathf.Pow(10,decimals);
 		return aux.ToString();
 	}
@@ -227,13 +230,13 @@ public class DrawLine : MonoBehaviour {
 
 		if(PSLine.Count != 0 && DVLine.Count != 0){
 			SD = PS/DV;
-			RI = (PS-DV)/PS;
-			SDLabel.text = Round(SD) + " mts/sec";
-			RILabel.text = Round(RI) + " mts/sec";
+			RI = (PS-PD)/PS;
+			SDLabel.text = Round(SD);
+			RILabel.text = Round(RI);
 
 			if(VmLine.Count != 0){
-				PI = (PS-DV)/Vm;
-				PILabel.text = Round(PI) + " mts/sec";
+				PI = (PS-PD)/Vm;
+				PILabel.text = Round(PI);
 			}
 		}
 	}
@@ -247,13 +250,25 @@ public class DrawLine : MonoBehaviour {
 
 	public float Avg(List<Vector2> list){
 		float sum = 0;
-		foreach(Vector2 v2 in list)
-			sum += v2.y;
+		foreach(Vector2 v in list)
+			sum += v.y;
+		/*for(int i = 0; i < list.Count; i++){
+			if(i + 1 < list.Count){
+				float velocity = (list[i + 1].y - list[i].y);
+				sum += velocity;
+				Debug.Log(velocity);
+			}
+		}
+		return sum;*/
 		return sum/list.Count;
 	}
 
 	public void ActivarPanelLineas(bool b){
 		EraseAllLines();
 		panel.alpha = b ? 1 : 0;
+	}
+
+	public void SetPD(float f){
+		PD = f;
 	}
 }

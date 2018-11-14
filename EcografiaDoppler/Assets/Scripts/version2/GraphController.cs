@@ -73,7 +73,7 @@ public class GraphController : MonoBehaviour {
         if(_instance == null)
             _instance = this;
         lrPoints = new List<Vector3>();
-
+        points = new List<Vector2>();
     }
 
     public void WFMAdd()
@@ -205,6 +205,7 @@ public class GraphController : MonoBehaviour {
                 lineRenderer.SetPositions(lrPoints.ToArray());
                 lrPoints.Clear();
             }
+            points.Clear();
 		}
         for (int i = 0; i < 6 + Mathf.Pow(2f, (int)((gain + power)/2f)) + (sliderScale.value - 0.5f) * 25; i++)
         {
@@ -228,7 +229,7 @@ public class GraphController : MonoBehaviour {
                             {
                                 capturingDystolic = false;
                             }
-                            print("peak " + peakDystolic);
+                            //print("peak " + peakDystolic);
                         }
                         horizontalFactor = 20f;
                         float B7 = sliderheart.value * 8f - 4f;
@@ -279,7 +280,7 @@ public class GraphController : MonoBehaviour {
                             {
                                 capturingDystolic = false;
                             }
-                            print("peak " + peakDystolic);
+                            //print("peak " + peakDystolic);
                         }
                         horizontalFactor = 20f;//20f ;
                         repeticion = (int)(1.542f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 4) - 23.42f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 3) + 136f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 2) + -379.1f * (heartRate * 4f / 3f - 1 / 3f) + 525f);
@@ -342,7 +343,7 @@ public class GraphController : MonoBehaviour {
                             {
                                 if (capturingDystolic)
                                     capturingDystolic = false;
-                                print("peak " + peakDystolic);
+                                //print("peak " + peakDystolic);
                             }
                             horizontalFactor = 20f;
                             float B7 = sliderheart.value * 8f - 4f;
@@ -424,7 +425,7 @@ public class GraphController : MonoBehaviour {
                                 {
                                     if (capturingDystolic)
                                         capturingDystolic = false;
-                                    print("peak " + peakDystolic);
+                                    //print("peak " + peakDystolic);
                                 }
                                 horizontalFactor = 20f;
                                 float B7 = sliderheart.value * 8f - 4f;
@@ -482,7 +483,7 @@ public class GraphController : MonoBehaviour {
                                 {
                                     if (capturingDystolic)
                                         capturingDystolic = false;
-                                    print("peak " + peakDystolic);
+                                    //print("peak " + peakDystolic);
                                 }
                                 horizontalFactor = 20f;
                                 float B7 = sliderheart.value * 8f - 4f;
@@ -564,7 +565,7 @@ public class GraphController : MonoBehaviour {
                             {
                                 if (capturingDystolic)
                                     capturingDystolic = false;
-                                print("peak " + peakDystolic);
+                                //print("peak " + peakDystolic);
                             }
                             horizontalFactor = 20f;//20f ;
                             repeticion = (int)(1.542f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 4) - 23.42f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 3) + 136f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 2) + -379.1f * (heartRate * 4f / 3f - 1 / 3f) + 525f);
@@ -632,7 +633,7 @@ public class GraphController : MonoBehaviour {
                                 {
                                     if (capturingDystolic)
                                         capturingDystolic = false;
-                                    print("peak " + peakDystolic);
+                                    //print("peak " + peakDystolic);
                                 }
                                 horizontalFactor = 20f;//20f ;
                                 repeticion = (int)(1.542f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 4) - 23.42f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 3) + 136f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 2) + -379.1f * (heartRate * 4f / 3f - 1 / 3f) + 525f);
@@ -685,7 +686,7 @@ public class GraphController : MonoBehaviour {
                                 {
                                     if (capturingDystolic)
                                         capturingDystolic = false;
-                                    print("peak " + peakDystolic);
+                                    //print("peak " + peakDystolic);
                                 }
                                 horizontalFactor = 20f;//20f ;
                                 repeticion = (int)(1.542f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 4) - 23.42f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 3) + 136f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 2) + -379.1f * (heartRate * 4f / 3f - 1 / 3f) + 525f);
@@ -755,7 +756,7 @@ public class GraphController : MonoBehaviour {
                         {
                             if (capturingDystolic)
                                 capturingDystolic = false;
-                            print("peak " + peakDystolic);
+                            //print("peak " + peakDystolic);
                         }
                         horizontalFactor = 20f;
                         float B7 = sliderheart.value * 8f - 4f;
@@ -803,7 +804,7 @@ public class GraphController : MonoBehaviour {
                         {
                             if (capturingDystolic)
                                 capturingDystolic = false;
-                            print("peak " + peakDystolic);
+                            //print("peak " + peakDystolic);
                         }
                         horizontalFactor = 20f;//20f ;
                         repeticion = (int)(1.542f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 4) - 23.42f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 3) + 136f * Mathf.Pow(heartRate * 4f / 3f - 1 / 3f, 2) + -379.1f * (heartRate * 4f / 3f - 1 / 3f) + 525f);
@@ -860,7 +861,7 @@ public class GraphController : MonoBehaviour {
                             {
                                 if (capturingDystolic)
                                     capturingDystolic = false;
-                                print("peak " + peakDystolic);
+                                //print("peak " + peakDystolic);
                             }
                             horizontalFactor = 20f + pathology / 9f;
                             currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f + ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion < 8) ? 35f : 45f));// + pathology / 30f);
@@ -944,7 +945,7 @@ public class GraphController : MonoBehaviour {
                             {
                                 if (capturingDystolic)
                                     capturingDystolic = false;
-                                print("peak " + peakDystolic);
+                                //print("peak " + peakDystolic);
                             }
                             horizontalFactor = 20f + 30f / 9f;
                             currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f + ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion < 8) ? 35f : 45f));// + pathology / 30f);
@@ -1005,7 +1006,7 @@ public class GraphController : MonoBehaviour {
                             {
                                 if (capturingDystolic)
                                     capturingDystolic = false;
-                                print("peak " + peakDystolic);
+                                //print("peak " + peakDystolic);
                             }
                             horizontalFactor = 22f + pathology / 4f - sliderPathology.value * 0.8f * 20f;
                             repeticion = (int)(1.542f * Mathf.Pow(heartRate / 1.765f * 4f * 4f / 3f - 1 / 3f, 4) - 23.42f * Mathf.Pow(heartRate / 1.765f * 4f * 4f / 3f - 1 / 3f, 3) + 136f * Mathf.Pow(heartRate / 1.765f * 4f * 4f / 3f - 1 / 3f, 2) + -379.1f * (heartRate / 1.765f * 4f * 4f / 3f - 1 / 3f) + 525f);
@@ -1086,7 +1087,7 @@ public class GraphController : MonoBehaviour {
                             {
                                 if (capturingDystolic)
                                     capturingDystolic = false;
-                                print("peak " + peakDystolic);
+                                //print("peak " + peakDystolic);
                             }
                             horizontalFactor = 20f + 30f / 9f;
                             currentValue = Mathf.Cos((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion) * horizontalFactor * Mathf.PI / 180f + ((indexScan * heartRate / (4f * incrIndexScan / 7f) % repeticion < 8) ? 35f : 45f));// + pathology / 30f);
@@ -1193,12 +1194,14 @@ public class GraphController : MonoBehaviour {
 				cicloDots = 0;
             if(i == 0) audioSource.pitch = currentValue / 50f;
 
+            if(i == 0) points.Add(new Vector2(indexScan % sizeHorizontal,(currentValue)));
+
             if (i == 0)
             {
                 if (capturingDystolic)
                 {
                     peakDystolicAux = currentValue;
-                    print("capturing " + currentValue);
+                    //print("capturing " + currentValue);
                     peakCaptured = false;
                 }
                 else
@@ -1216,7 +1219,18 @@ public class GraphController : MonoBehaviour {
                         peakDystolicAux = peakDystolic;
                         peakCaptured = true;
                     }
-                    print("peak " + peakDystolic);
+                    //print("peak " + peakDystolic);
+
+                    if(lastPD != 0){
+                        if(peakDystolic < 0)
+                            lastPD = Mathf.Max(lastPD,peakDystolic);
+                        else
+                            lastPD = Mathf.Min(lastPD,peakDystolic);
+                        DrawLine.Instance.SetPD(lastPD);
+                    }
+                    else{
+                        lastPD = peakDystolic;
+                    }
                 }
             }
 
@@ -1225,6 +1239,9 @@ public class GraphController : MonoBehaviour {
 		}
         texture.Apply();
     }
+    public List<Vector2> points;
+
+    float lastPD = 0;
 
     public Vector2 quadPoint;
 
@@ -1234,12 +1251,16 @@ public class GraphController : MonoBehaviour {
     public LineRenderer lineRenderer;
     private List<Vector3> lrPoints;
 
+    public void UpdatePatologiaSlider(){
+        StartCoroutine(ReloadLastPD());
+    }
+
     void DrawBorder(float x, float y){
         if(Time.time > nextDrawTime){
             nextDrawTime = Time.time + nextSampleTime;
             lrAux.transform.localPosition = new Vector2(-159 + x, -131 + y);
             lrAux.transform.position = new Vector3(lrAux.transform.position.x, lrAux.transform.position.y, -9);
-            lrPoints.Add(lrAux.transform.position);
+            //lrPoints.Add(lrAux.transform.position);
         }
     }
 
@@ -1247,9 +1268,26 @@ public class GraphController : MonoBehaviour {
         GameObject go = (GameObject)Instantiate(lrAux,point,Quaternion.identity);
         go.transform.position = point;
         go.transform.parent = transform.parent;
-        Vector2 aux = go.transform.localPosition;
+        Vector2 pointAux = go.transform.localPosition;
         Destroy(go);
-        return new Vector2(aux.x + 159, (aux.y * (0.8f))/verticalScale + 5f - (zero - 128f));
+        float height = (pointAux.y * (0.8f))/verticalScale + 5f - (zero - 128f);
+        int xPos = Mathf.RoundToInt((pointAux.x + 159)/2);
+        if(points.Count > xPos){
+            float topVal = points[xPos].y;
+            GameObject go2 = (GameObject)Instantiate(lrAux,Vector3.zero,Quaternion.identity);
+            go2.transform.parent = transform.parent;
+            go2.transform.localPosition = new Vector2(xPos,topVal * verticalScale + zero -131);
+            Vector2 topAux = go2.transform.localPosition;
+            Debug.Log(topVal + " | " + pointAux.y + " | " + topAux.y);
+            //nuevo valor
+            height = (topVal * pointAux.y)/topAux.y;
+        }
+        return new Vector2(pointAux.x + 159, height);
+    }
+
+    IEnumerator ReloadLastPD(){
+        yield return new WaitForSeconds(0.1f);
+        lastPD = 0;
     }
 
     void drawNumbersHorizontal()
@@ -1387,6 +1425,7 @@ public class GraphController : MonoBehaviour {
 
     public void adjustTimeFixedScale()
     {
+        StartCoroutine(ReloadLastPD());
         StartCoroutine(adjustTimeFixedScaleCoroutine());
     }
     IEnumerator adjustTimeFixedScaleCoroutine() {
