@@ -76,6 +76,14 @@ public class GraphController : MonoBehaviour {
         points = new List<Vector2>();
     }
 
+    public void ToggleSound()
+    {
+        if (AudioListener.volume <= 0.5f)
+            AudioListener.volume = 1f;
+        else
+            AudioListener.volume = 0f;
+    }
+
     public void WFMAdd()
     {
         WFMLevel++;
@@ -179,6 +187,7 @@ public class GraphController : MonoBehaviour {
     {
         sleep = !sleep;
         DrawLine.Instance.ActivarPanelLineas(sleep);
+        audioSource.enabled = !sleep;
     }
 
     public void reset()
