@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DrawLine : MonoBehaviour {
 	private static DrawLine _instance;
@@ -118,6 +119,11 @@ public class DrawLine : MonoBehaviour {
 			Destroy(VmLineObject);
 			break;
 		}
+		Vector3 point = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+		point.z = -8;
+		if(IsTarget() && !GraphController.Instance.IsInWaveRange(point)){
+			return;
+		}
 		drawingLine = true;
 		GameObject go = Instantiate(lrPrefab,transform.position,transform.rotation,transform);
 		currentLine = go.GetComponent<LineRenderer>();
@@ -140,6 +146,10 @@ public class DrawLine : MonoBehaviour {
 		if(IsTarget()){
 			if(mode != Mode.Vm && lrPoints.Count != 0){
 				point.x = lrPoints[0].x;
+			}
+			if(!GraphController.Instance.IsInWaveRange(point)){
+				StopLine();
+				return;
 			}
 			lrPoints.Add(point);
 			currentLine.positionCount = lrPoints.Count;
@@ -242,6 +252,7 @@ public class DrawLine : MonoBehaviour {
 	}
 
 	public float Max(List<Vector2> list){
+		Normalize(list);
 		if(GraphController.Instance.inverseFunction)
 			return Mathf.Min(list[0].y,list[list.Count-1].y);
 		else
@@ -249,6 +260,7 @@ public class DrawLine : MonoBehaviour {
 	}
 
 	public float Avg(List<Vector2> list){
+		Normalize(list);
 		float sum = 0;
 		foreach(Vector2 v in list)
 			sum += v.y;
@@ -269,6 +281,28 @@ public class DrawLine : MonoBehaviour {
 	}
 
 	public void SetPD(float f){
-		PD = f;
+		PD = Normalize(f);
+	}
+
+	float Normalize(float f){
+        if(SceneManager.GetActiveScene().name == "EcografiaUmbilical")
+            return f * 0.8f;
+		else if(SceneManager.GetActiveScene().name == "EcografiaCerebral")
+            return f * 0.74f;
+		else if(SceneManager.GetActiveScene().name == "EcografiaDuctus")
+            return f * 0.58f;
+        else if(SceneManager.GetActiveScene().name == "EcografiaUtero")
+            return f * 0.53f;
+        else
+            return f * 1f;
+	}
+
+	void Normalize(List<Vector2> list){
+		Vector2 aux;
+		for(int i = 0; i < list.Count; i++){
+			aux = list[i];
+			aux.y = Normalize(aux.y);
+			list[i] = aux;
+		}
 	}
 }

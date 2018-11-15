@@ -1278,6 +1278,7 @@ public class GraphController : MonoBehaviour {
         go.transform.position = point;
         go.transform.parent = transform.parent;
         Vector2 pointAux = go.transform.localPosition;
+        pointAux.y += 6f;
         Destroy(go);
         float height = (pointAux.y * (0.8f))/verticalScale + 5f - (zero - 128f);
         int xPos = Mathf.RoundToInt((pointAux.x + 159)/2);
@@ -1287,11 +1288,71 @@ public class GraphController : MonoBehaviour {
             go2.transform.parent = transform.parent;
             go2.transform.localPosition = new Vector2(xPos,topVal * verticalScale + zero -131);
             Vector2 topAux = go2.transform.localPosition;
-            Debug.Log(topVal + " | " + pointAux.y + " | " + topAux.y);
+            Destroy(go2);
+            topAux.y += (128 - zero);
+            pointAux.y += (128 - zero);
+            //Debug.Log(topVal + " | " + pointAux.y + " | " + topAux.y + " | zero: "+zero);
             //nuevo valor
             height = (topVal * pointAux.y)/topAux.y;
         }
         return new Vector2(pointAux.x + 159, height);
+    }
+
+    public Vector2 GetPoint(Vector3 point){
+        GameObject go = (GameObject)Instantiate(lrAux,point,Quaternion.identity);
+        go.transform.position = point;
+        go.transform.parent = transform.parent;
+        Vector2 pointAux = go.transform.localPosition;
+        return pointAux;
+    }
+
+    public bool IsInWaveRange(Vector3 point){
+        GameObject go = (GameObject)Instantiate(lrAux,point,Quaternion.identity);
+        go.transform.position = point;
+        go.transform.parent = transform.parent;
+        Vector2 pointAux = go.transform.localPosition;
+        pointAux.y += 6f;
+        int xPos = Mathf.RoundToInt((pointAux.x + 159)/2);
+        if(points.Count > xPos){
+            float topVal = points[xPos].y;
+            GameObject go2 = (GameObject)Instantiate(lrAux,Vector3.zero,Quaternion.identity);
+            go2.transform.parent = transform.parent;
+            go2.transform.localPosition = new Vector2(xPos,topVal * verticalScale + zero -131);
+            Vector2 topAux = go2.transform.localPosition;
+            Destroy(go2);
+            topAux.y += (128 - zero);
+            pointAux.y += (128 - zero);
+            Debug.Log("point: "+pointAux.y+" | top: "+topAux.y);
+            float margin = 5f;
+            float pointY = pointAux.y;
+            float topY = topAux.y;
+
+            if(Mathf.Sign(topY) == Mathf.Sign(pointY)){
+                Debug.Log("Same sign");
+                topY = Mathf.Abs(topY);
+                pointY = Mathf.Abs(pointY);
+                if(inverseFunction){
+                    topY *= -1;
+                    pointY *= -1;
+                }
+                   
+            }
+
+            if(inverseFunction){
+                if(pointY >= topY - margin && pointY <= margin/2)
+                    return true;
+                else
+                    return false;
+            }
+            else{
+                if(pointY <= topY + margin && pointY >= -margin/2)
+                    return true;
+                else
+                    return false;
+            }
+        }
+        else
+            return false;
     }
 
     IEnumerator ReloadLastPD(){
@@ -1330,7 +1391,8 @@ public class GraphController : MonoBehaviour {
     }
 
 
-    ArrayList verticalNumbers = new ArrayList(); 
+    ArrayList verticalNumbers = new ArrayList();
+
     void drawNumbersVertical(){
         for (int i = 0; i < verticalNumbers.Count; i++)
         {
@@ -1339,6 +1401,8 @@ public class GraphController : MonoBehaviour {
         verticalNumbers.Clear();
 
         float height = GetWaveHeight(sliderScale.value);
+
+        //height *= AdjustVerticalHeight();
 
         int step = Mathf.RoundToInt(height/2 / 5);
         int reps = Mathf.RoundToInt(sizeVertical/step);
