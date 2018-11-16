@@ -121,9 +121,9 @@ public class DrawLine : MonoBehaviour {
 		}
 		Vector3 point = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		point.z = -8;
-		if(IsTarget() && !GraphController.Instance.IsInWaveRange(point)){
+		/*if(IsTarget() && !GraphController.Instance.IsInWaveRange(point)){
 			return;
-		}
+		}*/
 		drawingLine = true;
 		GameObject go = Instantiate(lrPrefab,transform.position,transform.rotation,transform);
 		currentLine = go.GetComponent<LineRenderer>();
@@ -147,10 +147,10 @@ public class DrawLine : MonoBehaviour {
 			if(mode != Mode.Vm && lrPoints.Count != 0){
 				point.x = lrPoints[0].x;
 			}
-			if(!GraphController.Instance.IsInWaveRange(point)){
+			/*if(!GraphController.Instance.IsInWaveRange(point)){
 				StopLine();
 				return;
-			}
+			}*/
 			lrPoints.Add(point);
 			currentLine.positionCount = lrPoints.Count;
 			currentLine.SetPositions(lrPoints.ToArray());
@@ -173,18 +173,43 @@ public class DrawLine : MonoBehaviour {
 		lrPoints.Clear();
 		switch(mode){
 			case Mode.DV:
-			DVLineObject = currentLine.gameObject;
-			DVLabel.text = Round(Max(DVLine)) + " cm/sec";
+			if(CheckBounds(Max(DVLine))){
+				DV = Max(DVLine);
+				DVLineObject = currentLine.gameObject;
+				DVLabel.text = Round(Max(DVLine)) + " cm/sec";
+			}
+			else{
+				Destroy(currentLine.gameObject);
+				DVLine.Clear();
+				DV = 0;
+			}
 			break;
 			case Mode.PS:
-			PSLineObject = currentLine.gameObject;
-			PSLabel.text = Round(Max(PSLine)) + " cm/sec";
+			if(CheckBounds(Max(PSLine))){
+				PS = Max(PSLine);
+				PSLineObject = currentLine.gameObject;
+				PSLabel.text = Round(Max(PSLine)) + " cm/sec";
+			}
+			else{
+				Destroy(currentLine.gameObject);
+				PSLine.Clear();
+				PS = 0;
+			}
 			break;
 			case Mode.Vm:
+			Vm = Avg(VmLine);
 			VmLineObject = currentLine.gameObject;
 			VMLabel.text = Round(Avg(VmLine)) + " cm/sec";
 			break;
 		}
+	}
+
+	bool CheckBounds(float value){
+		Debug.Log(Mathf.Abs(value));
+		if(Mathf.Abs(value) > 100){
+			return false;
+		}
+		else return true;
 	}
 
 	string Round(float num, int decimals = 2){
@@ -226,26 +251,14 @@ public class DrawLine : MonoBehaviour {
 	}
 
 	public void Calculate(){
-		if(PSLine.Count != 0){
-			PS = Max(PSLine);
-		}
-
-		if(DVLine.Count != 0){
-			DV = Max(DVLine);
-		}
-
-		if(VmLine.Count != 0){
-			Vm = Avg(VmLine);
-		}
-
 		if(PSLine.Count != 0 && DVLine.Count != 0){
-			SD = PS/DV;
-			RI = (PS-PD)/PS;
+			SD = Normalize(PS/DV);
+			RI = Normalize((PS-PD)/PS);
 			SDLabel.text = Round(SD);
 			RILabel.text = Round(RI);
 
 			if(VmLine.Count != 0){
-				PI = (PS-PD)/Vm;
+				PI = Normalize((PS-PD)/Vm);
 				PILabel.text = Round(PI);
 			}
 		}
@@ -286,7 +299,7 @@ public class DrawLine : MonoBehaviour {
 
 	float Normalize(float f){
         if(SceneManager.GetActiveScene().name == "EcografiaUmbilical")
-            return f * 0.8f;
+            return f * 0.82f;
 		else if(SceneManager.GetActiveScene().name == "EcografiaCerebral")
             return f * 0.74f;
 		else if(SceneManager.GetActiveScene().name == "EcografiaDuctus")
