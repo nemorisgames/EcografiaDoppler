@@ -174,8 +174,8 @@ public class DrawLine : MonoBehaviour {
 		switch(mode){
 			case Mode.DV:
 			if(CheckBounds(Max(DVLine))){
-				DV = Max(DVLine);
 				DVLineObject = currentLine.gameObject;
+				DV = Max(DVLine);
 				DVLabel.text = Round(Max(DVLine)) + " cm/sec";
 			}
 			else{
@@ -186,8 +186,8 @@ public class DrawLine : MonoBehaviour {
 			break;
 			case Mode.PS:
 			if(CheckBounds(Max(PSLine))){
-				PS = Max(PSLine);
 				PSLineObject = currentLine.gameObject;
+				PS = Max(PSLine);
 				PSLabel.text = Round(Max(PSLine)) + " cm/sec";
 			}
 			else{
@@ -205,7 +205,7 @@ public class DrawLine : MonoBehaviour {
 	}
 
 	bool CheckBounds(float value){
-		Debug.Log(Mathf.Abs(value));
+		//Debug.Log(Mathf.Abs(value));
 		if(Mathf.Abs(value) > 100){
 			return false;
 		}
@@ -299,13 +299,13 @@ public class DrawLine : MonoBehaviour {
 
 	float Normalize(float f){
         if(SceneManager.GetActiveScene().name == "EcografiaUmbilical")
-            return f * 0.82f;
+            return f * 0.92f;
 		else if(SceneManager.GetActiveScene().name == "EcografiaCerebral")
-            return f * 0.74f;
+            return f * 0.88f;
 		else if(SceneManager.GetActiveScene().name == "EcografiaDuctus")
-            return f * 0.58f;
+            return f * 0.82f;
         else if(SceneManager.GetActiveScene().name == "EcografiaUtero")
-            return f * 0.53f;
+            return f * 0.80f;
         else
             return f * 1f;
 	}

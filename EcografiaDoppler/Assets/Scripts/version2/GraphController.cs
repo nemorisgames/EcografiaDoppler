@@ -1282,7 +1282,7 @@ public class GraphController : MonoBehaviour {
         Destroy(go);
         float height = (pointAux.y * (0.8f))/verticalScale + 5f - (zero - 128f);
         int xPos = Mathf.RoundToInt((pointAux.x + 159)/2);
-        if(points.Count > xPos){
+        if(points.Count > 0 && points.Count > xPos){
             float topVal = points[xPos].y;
             GameObject go2 = (GameObject)Instantiate(lrAux,Vector3.zero,Quaternion.identity);
             go2.transform.parent = transform.parent;
